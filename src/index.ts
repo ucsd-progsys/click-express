@@ -9,6 +9,16 @@ var app = express();
 
 app.set('port', process.env.PORT || 3000);
 
+app.get('/', function(req, res){
+  res.type('text/plain');
+  res.send('Web Clicker: ROOT');
+  });
+
+app.get('/about', function(req, res){
+  res.type('text/plain');
+  res.send('Web Clicker: ABOUT');
+  });
+
 // 404 page
 app.use(function(req, res){
   res.type('text/plain');
