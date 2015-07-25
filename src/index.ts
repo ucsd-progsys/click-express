@@ -8,43 +8,42 @@
 
 import express    = require('express');
 
-declare var hb:any;
+var app = express();
 
-import hb = require('express-handlebars')
-
+import ehb = require('express-handlebars');
+var hb:any = ehb;
 var handlebars = hb.create({ defaultLayout: 'main' });
 
-var app = express();
+app.engine('handlebars', handlebars.engine);
+app.set('view engine', 'handlebars');
 
 app.set('port', process.env.PORT || 3000);
 
-app.get('/', function(req, res){
-  res.type('text/plain');
-  res.send('Web Clicker: ROOT');
+app.get('/', (req, res) => {
+  res.render('home');
   });
 
-app.get('/about', function(req, res){
-  res.type('text/plain');
-  res.send('Web Clicker: ABOUT');
+app.get('/about', (req, res) => {
+  res.render('about');
   });
 
 // 404 page
-app.use(function(req, res){
-  res.type('text/plain');
+app.use((req, res, next) => {
   res.status(404);
-  res.send("404 - I still havent found what you're looking for");
+  res.render('404');
   });
 
 // 500 page
 app.use((err: any, req:any, res:any, next:any) => {
-   res.status(err.status || 500);
-   res.type('text/plain');
-   res.send("500 - Yikes! Server error!");
-});
+  console.error(err.stack);
+  res.status(500);
+  res.render('404');
+  });
 
+// Start me up
 app.listen(app.get('port'), function(){
-  var msg = "Express START: http://localhost:" +
-            app.get('port') +
-            " press Ctrl-C to kill.";
+  var msg = "Express START: http://localhost:"
+          + app.get('port')
+          + " press Ctrl-C to kill.";
   console.log(msg);
 });
