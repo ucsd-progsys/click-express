@@ -1,9 +1,18 @@
-/// <reference path='../typings/node/node.d.ts' />
-/// <reference path='../typings/express/express.d.ts' />
+
+/// <reference path='../typings/tsd.d.ts' />
+
+// <reference path='../typings/node/node.d.ts' />
+// <reference path='../typings/express/express.d.ts' />
+// <reference path='../typings/express-handlebars/express-handlebars.d.ts' />
 // <reference path='../typings/errorhandler/errorhandler.d.ts' />
 
-import express = require('express');
-// import errorHandler = require("errorhandler");
+import express    = require('express');
+
+declare var hb:any;
+
+import hb = require('express-handlebars')
+
+var handlebars = hb.create({ defaultLayout: 'main' });
 
 var app = express();
 
@@ -18,7 +27,7 @@ app.get('/about', function(req, res){
   res.type('text/plain');
   res.send('Web Clicker: ABOUT');
   });
-  
+
 // 404 page
 app.use(function(req, res){
   res.type('text/plain');
