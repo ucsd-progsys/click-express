@@ -7,19 +7,19 @@ Web-based clicker site (written in express)
 The key types are:
 
 ```haskell
-type Teacher = Teacher { id   :: UniqueId
+data Teacher = Teacher { id   :: UniqueId
                        , name :: String
                        }
 
-type Student = Student { id   :: UniqueId
+data Student = Student { id   :: UniqueId
                        , name :: String
                        }
 
-type Problem = Problem { id   :: UniqueId
+data Problem = Problem { id   :: UniqueId
                        , name :: String
                        }
 
-type Click   = Click  { id      :: UniqueId
+data Click   = Click  { id      :: UniqueId
                       , user    :: Student
                       , choice  :: Int
                       , time    :: Time
@@ -27,12 +27,12 @@ type Click   = Click  { id      :: UniqueId
                       , problem :: Problem
                       }
 
-type Course  = Course { id      :: UniqueId
+data Course  = Course { id      :: UniqueId
                       , name    :: String
                       , owner   :: Teacher
                       }
 
-type Enroll  = Enroll { id      :: UniqueId
+data Enroll  = Enroll { id      :: UniqueId
                       , course  :: Course
                       , student :: Student
                       }
