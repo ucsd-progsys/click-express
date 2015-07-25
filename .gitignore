@@ -1,0 +1,4 @@
+# ignore node packages
+node_modules
+
+src/*.js

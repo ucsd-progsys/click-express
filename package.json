@@ -1,0 +1,26 @@
+{
+  "name": "click-express",
+  "version": "0.0.0",
+  "description": "Web-based Classroom Clicker (built using the express framework)",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ucsd-progsys/click-express.git"
+  },
+  "keywords": [
+    "clicker",
+    "express"
+  ],
+  "author": "Ranjit Jhala",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ucsd-progsys/click-express/issues"
+  },
+  "homepage": "https://github.com/ucsd-progsys/click-express",
+  "dependencies": {
+    "express": "^4.13.1"
+  }
+}
