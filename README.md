@@ -7,20 +7,19 @@ Web-based clicker site (written in express)
 The key types are:
 
 ```haskell
-data Teacher = Teacher { id   :: UniqueId
-                       , name :: String
-                       }
+data User = User { id       :: UniqueId
+                 , name     :: String
+                 , email    :: String
+                 , password :: String
+                 }
 
-data Student = Student { id   :: UniqueId
-                       , name :: String
-                       }
-
-data Problem = Problem { id   :: UniqueId
-                       , name :: String
+data Problem = Problem { id     :: UniqueId
+                       , name   :: String
+                       , user   :: User
                        }
 
 data Click   = Click  { id      :: UniqueId
-                      , user    :: Student
+                      , user    :: User
                       , choice  :: Int
                       , time    :: Time
                       , course  :: Course
@@ -29,7 +28,7 @@ data Click   = Click  { id      :: UniqueId
 
 data Course  = Course { id      :: UniqueId
                       , name    :: String
-                      , owner   :: Teacher
+                      , user    :: User
                       }
 
 data Enroll  = Enroll { id      :: UniqueId
@@ -43,3 +42,33 @@ For each type `T` below, we have a **set** or **table**:
 ```haskell
 table T = Map UniqueId T
 ```
+
+## Controls
+
+Pages/Routes
+
++ create account
+
++ login
+
++ pick role
+  * teach 1,2,3,...
+  * learn a,b,c...
+  * analyze p,q,r...
+
++ teach
+  * pose problem
+  * display graph
+  * hide graph
+
++ learn
+  * click
+   
++ analyze
+  * list dates
+     * list problems
+       * show graphs
+
+## Views
+
+Defined by above.
