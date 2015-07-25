@@ -18,7 +18,7 @@ app.get('/about', function(req, res){
   res.type('text/plain');
   res.send('Web Clicker: ABOUT');
   });
-
+  
 // 404 page
 app.use(function(req, res){
   res.type('text/plain');
