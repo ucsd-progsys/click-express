@@ -6,7 +6,9 @@
 // <reference path='../typings/express-handlebars/express-handlebars.d.ts' />
 // <reference path='../typings/errorhandler/errorhandler.d.ts' />
 
-import express    = require('express');
+import tips = require("./tips");
+
+import express = require('express');
 var app = express();
 
 import ehb = require('express-handlebars');
@@ -23,7 +25,7 @@ app.get('/', (req, res) => {
   });
 
 app.get('/about', (req, res) => {
-  var msg = randomTip();
+  var msg = tips.randomTip();
   res.render('about', {tip : msg });
   });
 
@@ -40,9 +42,8 @@ app.use((req, res, next) => {
 app.use((err: any, req:any, res:any, next:any) => {
   console.error(err.stack);
   res.status(500);
-  res.render('404');
+  res.render('500');
   });
-
 
 // Start me up
 app.listen(app.get('port'), function(){
@@ -51,17 +52,3 @@ app.listen(app.get('port'), function(){
           + " press Ctrl-C to kill.";
   console.log(msg);
 });
-
-////////////////////////////////////////////////////////////////////////////////
-// move into another file
-////////////////////////////////////////////////////////////////////////////////
-
-var tips = [ "Man does not live on bread alone"
-           , "Judge not lest ye be judged"
-           , "She works just 3 days a week"
-           ];
-
-function randomTip(){
-  var n = Math.floor(Math.random() * tips.length);
-  return tips[n];
-}
