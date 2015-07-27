@@ -10,5 +10,6 @@
 /// <reference path="express-session/express-session.d.ts" />
 /// <reference path="method-override/method-override.d.ts" />
 /// <reference path="passport-local/passport-local.d.ts" />
+/// <reference path="morgan/morgan.d.ts" />
 
 

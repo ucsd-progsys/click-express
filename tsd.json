@@ -34,6 +34,9 @@
     },
     "method-override/method-override.d.ts": {
       "commit": "f6c8ca47193fb67947944a3170912672ac3e908e"
+    },
+    "morgan/morgan.d.ts": {
+      "commit": "f6c8ca47193fb67947944a3170912672ac3e908e"
     }
   }
 }

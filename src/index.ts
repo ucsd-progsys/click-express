@@ -1,18 +1,7 @@
-
 /// <reference path='../typings/tsd.d.ts' />
 
-import tips = require("./tips");
-
-// import express
-import express = require('express');
-var app = express();
-
-// import handlebars
-import ehb = require('express-handlebars');
-var hb:any = ehb;
-var handlebars = hb.create({ defaultLayout: 'main' });
-
-
+// package imports
+import express        = require('express');
 import cookieParser   = require('cookie-parser');
 import bodyParser     = require('body-parser');
 import methodOverride = require('method-override');
@@ -20,9 +9,19 @@ import session        = require('express-session');
 import passport       = require('passport');
 import LocalStrategy  = require('passport-local');
 
+// local imports
+import tips           = require("./tips");
+
+// import "express-handlebars" (no d.ts)
+import ehb = require('express-handlebars');
+var hb:any = ehb;
+var handlebars = hb.create({ defaultLayout: 'main' });
+
+// express
+var app = express();
+
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
-
 app.set('port', process.env.PORT || 3000);
 
 app.get('/', (req, res) => {
