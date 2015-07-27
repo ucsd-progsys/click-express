@@ -3,12 +3,22 @@
 
 import tips = require("./tips");
 
+// import express
 import express = require('express');
 var app = express();
 
+// import handlebars
 import ehb = require('express-handlebars');
 var hb:any = ehb;
 var handlebars = hb.create({ defaultLayout: 'main' });
+
+
+import cookieParser   = require('cookie-parser');
+import bodyParser     = require('body-parser');
+import methodOverride = require('method-override');
+import session        = require('express-session');
+import passport       = require('passport');
+import LocalStrategy  = require('passport-local');
 
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
