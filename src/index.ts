@@ -1,11 +1,6 @@
 
 /// <reference path='../typings/tsd.d.ts' />
 
-// <reference path='../typings/node/node.d.ts' />
-// <reference path='../typings/express/express.d.ts' />
-// <reference path='../typings/express-handlebars/express-handlebars.d.ts' />
-// <reference path='../typings/errorhandler/errorhandler.d.ts' />
-
 import tips = require("./tips");
 
 import express = require('express');
