@@ -2,6 +2,7 @@
 
 // package imports
 import express        = require('express');
+import logger         = require('morgan');
 import cookieParser   = require('cookie-parser');
 import bodyParser     = require('body-parser');
 import methodOverride = require('method-override');
@@ -20,6 +21,24 @@ var handlebars = hb.create({ defaultLayout: 'main' });
 // express
 var app = express();
 
+// middleware: sessions
+app.use(function(req:any, res:any, next:any){
+  var err = req.session.error,
+      msg = req.session.notice,
+      success = req.session.success;
+
+  delete req.session.error;
+  delete req.session.success;
+  delete req.session.notice;
+
+  if (err) res.locals.error = err;
+  if (msg) res.locals.notice = msg;
+  if (success) res.locals.success = success;
+
+  next();
+});
+
+// middleware: handlebars
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', process.env.PORT || 3000);
