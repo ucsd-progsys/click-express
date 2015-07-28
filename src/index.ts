@@ -14,6 +14,7 @@ import passportLocal  = require('passport-local');
 var LocalStrategy     = passportLocal.Strategy;
 var handlebars        = require('express-handlebars').create({ defaultLayout: 'main' });
 // var favicon           = require('serve-favicon');
+// var flash             = require('connect-flash');
 
 // local imports
 import tips           = require("./tips");
@@ -46,6 +47,7 @@ app.use(cookieParser());
 app.use(session({ secret: 'keyboard cat'
                 , resave: false
                 , saveUninitialized: false }));
+// app.use(flash());
 
 ////////////////////////////////////////////////////////////////////
 // Authentication //////////////////////////////////////////////////

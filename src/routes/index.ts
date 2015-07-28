@@ -5,32 +5,27 @@ import passport = require('passport');
 var Account:any = require('../models/account'); // because the passport-mongoose-local adds stuff to it.
 var router      = express.Router();
 
+////////////////////////////////////////////////////////////////////////
+// Home page ///////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
 router.get('/', function (req, res) {
     res.render('index', { user : req.user });
 });
+
+////////////////////////////////////////////////////////////////////////
+// Register ////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
 router.get('/register', function(req, res) {
     res.render('register', { });
 });
 
-
-/*
-app.get('/', (req, res) => {
-  res.render('home');
-  });
-
-app.get('/about', (req, res) => {
-  var msg = tips.randomTip();
-  res.render('about', {tip : msg });
-  });
-*/
-
-
 router.post('/register', function(req, res) {
   var acc = new Account({ username : req.body.username });
   Account.register(acc, req.body.password, function(err:any, account:any) {
     if (err) {
-      return res.render('register', { account : account });
+      return res.render('register', {info: "Sorry, that username already exists. Try again."});
     }
     passport.authenticate('local')(req, res, function () {
       res.redirect('/');
@@ -38,21 +33,35 @@ router.post('/register', function(req, res) {
   });
 });
 
+////////////////////////////////////////////////////////////////////////
+// Login ///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
 router.get('/login', function(req, res) {
     res.render('login', { user : req.user });
 });
 
-router.post('/login', passport.authenticate('local'), function(req, res) {
-    res.redirect('/');
-});
+router.post('/login', passport.authenticate('local', { successRedirect: '/'
+                                                     , failureRedirect: '/login' }));
 
-router.get('/logout', function(req, res) {
+////////////////////////////////////////////////////////////////////////
+// Logout //////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+router.get('/logout', function(req, res){
     req.logout();
     res.redirect('/');
 });
 
+module.exports = router;
+
+/*
+app.get('/about', (req, res) => {
+  var msg = tips.randomTip();
+  res.render('about', {tip : msg });
+  });
+
 router.get('/ping', function(req, res){
     res.status(200).send("pong!");
 });
-
-module.exports = router;
+*/

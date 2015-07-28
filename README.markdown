@@ -13,23 +13,20 @@ Web-based clicker site (written in express)
 
 ## TODO
 
-1. Users
-2. Click
+1. Users & Authentication
+   > add email to /register
 
-### Users
+2. Home Page
+   > Click
+     + On (home) page, you send a "click" (and again and again)
+   > Review
+     + Print sequence of ALL past clicks
 
-+ Model
-  - `User` database
+3. Roles (instructor/student)
 
-+ View
-  - `/create`
-  - `/login`  
-  - `/home`
+4. Classes
 
-+ Control
-  - `/action/createuser`  
-  - `/action/`
-
+5. Enroll
 
 ### Click
 
@@ -37,9 +34,8 @@ Web-based clicker site (written in express)
   - `Click` database  
 
 + Routes
-  - add buttons to `/home` page
+  - add buttons to `/` page
 
-+ Control
 
 ## Model
 
@@ -48,8 +44,8 @@ The key types are:
 ```haskell
 data User = User { id       :: UniqueId
                  , name     :: String
-                 , email    :: String
                  , password :: String
+                 , email    :: String
                  }
 
 data Problem = Problem { id     :: UniqueId
@@ -107,7 +103,3 @@ Pages/Routes
   * list dates
      * list problems
        * show graphs
-
-## Views
-
-Defined by above.
