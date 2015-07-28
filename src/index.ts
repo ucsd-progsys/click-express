@@ -20,6 +20,7 @@ var handlebars        = require('express-handlebars').create({ defaultLayout: 'm
 import tips           = require("./tips");
 var routes:any        = require('./routes/index');
 import users          = require('./routes/users');
+import models         = require('./models');
 
 
 ////////////////////////////////////////////////////////////////////
@@ -72,7 +73,8 @@ app.use('/', routes);
 // Passport config /////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-var Account = require('./models/account');
+var Account:any = models.Account;
+// require('./models/account');
 passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
@@ -87,18 +89,22 @@ mongoose.connect('mongodb://localhost/click-express-mongoose');
 // Start me up /////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-// 404 page
-app.use((req, res, next) => {
+var handle404:express.ErrorRequestHandler = function(err, req, res, next){
   res.status(404);
   res.render('404');
-  });
+}
 
-// 500 page
-app.use((err: any, req:any, res:any, next:any) => {
+var handle500:express.ErrorRequestHandler = function(err, req, res, next){
   console.error(err.stack);
   res.status(500);
   res.render('500');
-  });
+}
+
+// 404 page
+app.use(handle404);
+
+// 500 page
+app.use(handle500);
 
 app.set('port', process.env.PORT || 3000);
 
