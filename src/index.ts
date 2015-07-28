@@ -8,52 +8,63 @@ import bodyParser     = require('body-parser');
 import methodOverride = require('method-override');
 import session        = require('express-session');
 import passport       = require('passport');
-import LocalStrategy  = require('passport-local');
+import  path          = require('path');
+import passportLocal  = require('passport-local');
+var LocalStrategy     = passportLocal.Strategy;
+var handlebars        = require('express-handlebars').create({ defaultLayout: 'main' });
+// var favicon           = require('serve-favicon');
 
 // local imports
 import tips           = require("./tips");
+var routes:any        = require('./routes/index');
+import users          = require('./routes/users');
 
-// import "express-handlebars" (no d.ts)
-import ehb = require('express-handlebars');
-var hb:any = ehb;
-var handlebars = hb.create({ defaultLayout: 'main' });
 
-// express
+////////////////////////////////////////////////////////////////////
+// Express /////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
 var app = express();
 
-// middleware: sessions
-app.use(function(req:any, res:any, next:any){
-  var err = req.session.error,
-      msg = req.session.notice,
-      success = req.session.success;
+////////////////////////////////////////////////////////////////////
+// Views ///////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
 
-  delete req.session.error;
-  delete req.session.success;
-  delete req.session.notice;
-
-  if (err) res.locals.error = err;
-  if (msg) res.locals.notice = msg;
-  if (success) res.locals.success = success;
-
-  next();
-});
-
-// middleware: handlebars
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
-app.set('port', process.env.PORT || 3000);
 
-app.get('/', (req, res) => {
-  res.render('home');
-  });
+////////////////////////////////////////////////////////////////////
+// Sessions ////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
 
-app.get('/about', (req, res) => {
-  var msg = tips.randomTip();
-  res.render('about', {tip : msg });
-  });
+// uncomment after placing your favicon in /public
+//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(session({ secret: 'keyboard cat'
+                , resave: false
+                , saveUninitialized: false }));
 
-// static
+////////////////////////////////////////////////////////////////////
+// Authentication //////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+////////////////////////////////////////////////////////////////////
+// Static Content //////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+
 app.use(express.static('public'));
+
+////////////////////////////////////////////////////////////////////
+// Views ///////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+
+app.use('/', routes);
+
 
 // 404 page
 app.use((req, res, next) => {
@@ -68,7 +79,12 @@ app.use((err: any, req:any, res:any, next:any) => {
   res.render('500');
   });
 
-// Start me up
+////////////////////////////////////////////////////////////////////
+// Start me up /////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+
+app.set('port', process.env.PORT || 3000);
+
 app.listen(app.get('port'), function(){
   var msg = "Express START: http://localhost:"
           + app.get('port')

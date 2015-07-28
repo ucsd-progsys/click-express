@@ -1,0 +1,8 @@
+{{#if user}}
+  <p>You are currently logged in as BOB {{user.username}} GOB </p>
+  <a href="/logout">Logout<a/>
+{{else}}
+  <a href="/login">Login<a/>
+  <br>
+  <a href="/register">Register<a/>
+{{/if}}
