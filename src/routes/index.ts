@@ -22,7 +22,10 @@ router.get('/register', function(req, res) {
 });
 
 router.post('/register', function(req, res) {
-  var acc = new Account({ username : req.body.username });
+  var acc = new Account({ username : req.body.username
+                        , email    : req.body.email
+                        });
+
   Account.register(acc, req.body.password, function(err:any, account:any) {
     if (err) {
       return res.render('register', {info: "Sorry, that username already exists. Try again."});
