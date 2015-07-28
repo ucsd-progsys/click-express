@@ -8,7 +8,8 @@ import bodyParser     = require('body-parser');
 import methodOverride = require('method-override');
 import session        = require('express-session');
 import passport       = require('passport');
-import  path          = require('path');
+import mongoose       = require('mongoose');
+import path          = require('path');
 import passportLocal  = require('passport-local');
 var LocalStrategy     = passportLocal.Strategy;
 var handlebars        = require('express-handlebars').create({ defaultLayout: 'main' });
@@ -65,6 +66,24 @@ app.use(express.static('public'));
 
 app.use('/', routes);
 
+////////////////////////////////////////////////////////////////////
+// Passport config /////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+
+var Account = require('./models/account');
+passport.use(new LocalStrategy(Account.authenticate()));
+passport.serializeUser(Account.serializeUser());
+passport.deserializeUser(Account.deserializeUser());
+
+////////////////////////////////////////////////////////////////////
+// Mongoose ////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+
+mongoose.connect('mongodb://localhost/click-express-mongoose');
+
+////////////////////////////////////////////////////////////////////
+// Start me up /////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
 
 // 404 page
 app.use((req, res, next) => {
@@ -78,10 +97,6 @@ app.use((err: any, req:any, res:any, next:any) => {
   res.status(500);
   res.render('500');
   });
-
-////////////////////////////////////////////////////////////////////
-// Start me up /////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////
 
 app.set('port', process.env.PORT || 3000);
 
