@@ -4,48 +4,47 @@ var passport = require('passport');
 var models = require('./models');
 var Account = models.Account;
 var router = express.Router();
-router.get('/', function (req, res) {
-    if (req.isAuthenticated()) {
-        res.redirect('/home');
-    }
-    else {
-        res.render('index', { user: req.user });
-    }
-});
-router.get('/register', function (req, res) {
-    res.render('register', {});
-});
-router.post('/register', function (req, res) {
+var msgUserExists = { info: "Sorry, that username already exists. Try again." };
+exports.registerWith = function (z) {
+    var h = function (req, res, next) { return res.render('register', z); };
+    return h;
+};
+function register(req, res) {
     var acc = new Account({ username: req.body.username,
-        email: req.body.email
-    });
+        email: req.body.email });
     Account.register(acc, req.body.password, function (err, account) {
-        if (err) {
-            return res.render('register', { info: "Sorry, that username already exists. Try again." });
-        }
-        passport.authenticate('local')(req, res, function () {
-            res.redirect('/');
-        });
+        if (err)
+            return exports.registerWith(msgUserExists)(req, res, undefined);
+        passport.authenticate('local')(req, res, function () { return res.redirect('/'); });
     });
-});
-router.get('/login', function (req, res) {
+}
+exports.register = register;
+exports.getLogin = function (req, res, next) {
     res.render('login', { user: req.user });
-});
-router.post('/login', passport.authenticate('local', { successRedirect: '/home',
-    failureRedirect: '/login' }));
-var ensureAuthenticated = function (req, res, next) {
+};
+exports.postLogin = passport.authenticate('local', { successRedirect: '/home',
+    failureRedirect: '/login' });
+exports.auth = function (req, res, next) {
     if (req.isAuthenticated())
         return next();
-    res.redirect('/login');
+    res.render('index');
 };
-router.get('/home', ensureAuthenticated, function (req, res) {
+exports.redirectHome = function (req, res) {
+    res.redirect('/home');
+};
+exports.home = function (req, res) {
     res.render('home', { user: req.user });
-});
-router.get('/view', ensureAuthenticated, function (req, res) {
+};
+exports.view = function (req, res) {
     res.render('view', { user: req.user });
-});
-router.get('/logout', function (req, res) {
+};
+exports.logout = function (req, res) {
     req.logout();
     res.redirect('/');
-});
-module.exports = router;
+};
+exports.postClick = function (req, res) {
+    return undefined;
+};
+exports.getClicks = function (req, res) {
+    return undefined;
+};

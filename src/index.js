@@ -24,7 +24,15 @@ app.use(session({ secret: 'keyboard cat',
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static('public'));
-app.use('/', routes);
+app.get('/register', routes.registerWith({}));
+app.post('/register', routes.register);
+app.get('/', routes.auth, routes.redirectHome);
+app.get('/home', routes.auth, routes.home);
+app.get('/view', routes.auth, routes.view);
+app.get('/login', routes.getLogin);
+app.post('/login', routes.postLogin);
+app.post('/click', routes.auth, routes.postClick);
+app.get('/logout', routes.logout);
 var Account = models.Account;
 passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());

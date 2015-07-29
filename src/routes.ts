@@ -5,52 +5,44 @@ import passport = require('passport');
 import models   = require('./models');
 var Account:any = models.Account;
 var router      = express.Router();
+type Request    = express.Request;
+type Response   = express.Response;
+type RequestH   = express.RequestHandler;
 
 ////////////////////////////////////////////////////////////////////////
-// Home page ///////////////////////////////////////////////////////////
+// Messages ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-router.get('/', function (req, res) {
-  if (req.isAuthenticated()) {
-    res.redirect('/home');
-  } else {
-    res.render('index', { user : req.user });
-  }
-});
+var msgUserExists = {info: "Sorry, that username already exists. Try again."};
 
 ////////////////////////////////////////////////////////////////////////
 // Register ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-router.get('/register', function(req, res) {
-    res.render('register', { });
-});
+export var registerWith = (z:Object) => {
+  var h:RequestH = (req, res, next) => res.render('register', z);
+  return h;
+}
 
-router.post('/register', function(req, res) {
+export function register(req:Request, res:Response){
   var acc = new Account({ username : req.body.username
-                        , email    : req.body.email
-                        });
-
+                        , email    : req.body.email   });
   Account.register(acc, req.body.password, function(err:any, account:any) {
-    if (err) {
-      return res.render('register', {info: "Sorry, that username already exists. Try again."});
-    }
-    passport.authenticate('local')(req, res, function () {
-      res.redirect('/');
-    });
+    if (err) return registerWith(msgUserExists)(req, res, undefined);
+    passport.authenticate('local')(req, res, () => res.redirect('/')) ;
   });
-});
+}
 
 ////////////////////////////////////////////////////////////////////////
 // Login ///////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-router.get('/login', function(req, res) {
-    res.render('login', { user : req.user });
-});
+export var getLogin:RequestH = (req, res, next) => {
+  res.render('login', { user : req.user });
+}
 
-router.post('/login', passport.authenticate('local', { successRedirect: '/home'
-                                                     , failureRedirect: '/login' }));
+export var postLogin = passport.authenticate('local', { successRedirect: '/home'
+                                                    , failureRedirect: '/login' });
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -63,42 +55,43 @@ router.post('/login', passport.authenticate('local', { successRedirect: '/home'
 //   the request will proceed.  Otherwise, the user will be redirected to the
 //   login page.
 
-var ensureAuthenticated : express.RequestHandler = function (req, res, next){
-  if (req.isAuthenticated())
-    return next();
-  res.redirect('/login')
+export var auth:RequestH = (req, res, next) => {
+  if (req.isAuthenticated()) return next();
+  res.render('index');
 }
 
-// INVARIANT: Should ONLY be here if authenticated/logged in.
-router.get('/home', ensureAuthenticated, function(req, res) {
+// INVARIANT: AUTH
+export var redirectHome:RequestH = (req, res) => {
+  res.redirect('/home');
+}
+
+// INVARIANT: AUTH
+export var home : RequestH = (req, res) => {
   res.render('home', { user : req.user });
-});
+};
 
-
-// INVARIANT: Should ONLY be here if authenticated/logged in.
-router.get('/view', ensureAuthenticated, function(req, res) {
+// INVARIANT: AUTH
+export var view : RequestH = (req, res) => {
   res.render('view', { user : req.user });
-});
+}
 
+export var logout : RequestH = (req,res) => {
+  req.logout();
+  res.redirect('/');
+}
 
 ////////////////////////////////////////////////////////////////////////
-// Logout //////////////////////////////////////////////////////////////
+// Post a new Click ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-router.get('/logout', function(req, res){
-    req.logout();
-    res.redirect('/');
-});
+export var postClick: RequestH = (req, res) => {
+  // req --> user, clickData
+  // update model with user, clickData
+  // respond with JSON("ok")
+  return undefined;
+}
 
-module.exports = router;
-
-/*
-app.get('/about', (req, res) => {
-  var msg = tips.randomTip();
-  res.render('about', {tip : msg });
-  });
-
-router.get('/ping', function(req, res){
-    res.status(200).send("pong!");
-});
-*/
+export var getClicks: RequestH = (req, res) => {
+  // req --> user --> JSON-with-clicks -> render view-with-json
+  return undefined;
+}

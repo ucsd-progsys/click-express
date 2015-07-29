@@ -63,10 +63,20 @@ app.use(passport.session());
 app.use(express.static('public'));
 
 ////////////////////////////////////////////////////////////////////
-// Views ///////////////////////////////////////////////////////////
+// Routes //////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-app.use('/', routes);
+// app.use('/', routes);
+app.get( '/register' ,              routes.registerWith({}));
+app.post('/register' ,              routes.register);
+app.get( '/'         , routes.auth, routes.redirectHome);
+app.get( '/home'     , routes.auth, routes.home);
+app.get( '/view'     , routes.auth, routes.view);
+app.get( '/login'    ,              routes.getLogin);
+app.post('/login'    ,              routes.postLogin);
+app.post('/click'    , routes.auth, routes.postClick);
+app.get('/logout'    ,              routes.logout);
+
 
 ////////////////////////////////////////////////////////////////////
 // Passport config /////////////////////////////////////////////////
