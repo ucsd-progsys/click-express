@@ -9,7 +9,7 @@ var mongoose = require('mongoose');
 var passportLocal = require('passport-local');
 var LocalStrategy = passportLocal.Strategy;
 var handlebars = require('express-handlebars').create({ defaultLayout: 'main' });
-var routes = require('./routes/index');
+var routes = require('./routes');
 var models = require('./models');
 var app = express();
 app.engine('handlebars', handlebars.engine);

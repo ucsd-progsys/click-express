@@ -1,11 +1,10 @@
-/// <reference path='../../typings/tsd.d.ts' />
+/// <reference path='../typings/tsd.d.ts' />
 
 import express  = require('express');
 import passport = require('passport');
-import models   = require('../models');
+import models   = require('./models');
 var Account:any = models.Account;
 var router      = express.Router();
-// var Account:any = require('../models/account'); // because the passport-mongoose-local adds stuff to it.
 
 ////////////////////////////////////////////////////////////////////////
 // Home page ///////////////////////////////////////////////////////////

@@ -1,7 +1,7 @@
-/// <reference path='../../typings/tsd.d.ts' />
+/// <reference path='../typings/tsd.d.ts' />
 var express = require('express');
 var passport = require('passport');
-var models = require('../models');
+var models = require('./models');
 var Account = models.Account;
 var router = express.Router();
 router.get('/', function (req, res) {
