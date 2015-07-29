@@ -16,12 +16,23 @@
     <header><img src="/img/logo.png" alt="ClickExpress"></header>
     {{{body}}}
 
-    <!-- BEGIN: angular demo -->
+    <!-- BEGIN: angular demo-->
+    <br>
+    <br>
+    <br>
+    <br>
+
     <button ng-click="count = count + 1" ng-init="count=0">
       Increment
     </button>
+
+    <br>
+    <br>
+
     <span>
-      <b>count:</b> <span ng-bind="count"></span>
+      <b>count:</b>
+      <span ng-bind="label"></span>
+      <span ng-bind="count"></span>
     </span>
     <!-- END: angular demo -->
 
@@ -29,20 +40,6 @@
 
   <script src="http://code.jquery.com/jquery.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-  <!-- <script src="/js/clicker.js"></script> -->
+  <script src="/js/clicker.js"></script>
 
-  <script>
-    function clickCtrl($scope, $http, $location) {
-      // $scope.label = "Hoo. Ha.";
-    }
-
-    var click = angular.module('click', []);
-
-    /* clickExpress.config(function($interpolateProvider) {
-      $interpolateProvider.startSymbol('{[{');
-      $interpolateProvider.endSymbol('}]}');
-    }); */
-
-    click.controller('click', clickCtrl);
-  </script>
 </html>

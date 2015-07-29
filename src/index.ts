@@ -18,8 +18,7 @@ var handlebars        = require('express-handlebars').create({ defaultLayout: 'm
 
 // local imports
 import tips           = require("./tips");
-var routes:any        = require('./routes/index');
-import users          = require('./routes/users');
+var routes:any        = require('./routes');
 import models         = require('./models');
 
 

@@ -22,8 +22,7 @@
     "files": [
         "./index.ts",
         "./models.ts",
-        "./routes/index.ts",
-        "./routes/users.ts",
+        "./routes.ts",
         "./tips.ts"
     ]
 }
