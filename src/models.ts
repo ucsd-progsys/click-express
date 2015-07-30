@@ -13,20 +13,22 @@ var AccountS = new Schema({ username: String
                           , email   : String });
 AccountS.plugin(plm);
 
-var ProblemS = new Schema({ userId     : ObjectId
+var ProblemS = new Schema({ userId     : String
                           , description: String });
 
-var CourseS  = new Schema({ userId     : ObjectId
+var CourseS  = new Schema({ userId     : String
                           , descripton : String });
 
-var ClickS   = new Schema({ userId     : ObjectId
+var ClickS   = new Schema({ userId     : String
                           , choice     : Number // {v:number | 1 <= v <= 5}
                           , submitTime : Date
-                          , courseId   : ObjectId
-                          , problemId  : ObjectId });
+                          , courseId   : String
+                          , problemId  : String
+                          });
 
-var EnrollS  = new Schema({ courseId   : ObjectId
-                          , studentId  : ObjectId });
+var EnrollS  = new Schema({ userId     : String
+                          , courseId   : String
+                          });
 
 ////////////////////////////////////////////////////////////////////////
 // Models //////////////////////////////////////////////////////////////
@@ -35,25 +37,17 @@ var EnrollS  = new Schema({ courseId   : ObjectId
 export var Account = mongoose.model('Account', AccountS);
 export var Problem = mongoose.model('Problem', ProblemS);
 export var Course  = mongoose.model('Course' , CourseS );
-export var Click   = mongoose.model('Click'  , ProblemS);
+export var Click   = mongoose.model('Click'  , ClickS);
 export var Enroll  = mongoose.model('Enroll' , EnrollS);
 
-/*
-export type ClickModel = mongoose.Model<mongoose.Document>;
+export type UserId    = string; //  mongoose.Types.ObjectId;
+export type CourseId  = string; //  mongoose.Types.ObjectId;
+export type ProblemId = string; //  mongoose.Types.ObjectId;
 
-export interface ClickModels {
-  Account: ClickModel;
-  Problem: ClickModel;
-  Course : ClickModel;
-  Click  : ClickModel;
-  Enroll : ClickModel;
+export interface ClickI {
+    userId     : UserId
+  , choice     : number // {v:number | 1 <= v <= 5}
+  , submitTime : number// Date
+  , courseId   : CourseId
+  , problemId  : ProblemId
 }
-
-export var models : ClickModels = {
-    Account : mongoose.model('Account', AccountS)
-  , Problem : mongoose.model('Problem', ProblemS)
-  , Course  : mongoose.model('Course' , CourseS )
-  , Click   : mongoose.model('Click'  , ProblemS)
-  , Enroll  : mongoose.model('Enroll' , EnrollS)
-}
-*/

@@ -3,8 +3,11 @@ var express = require('express');
 var passport = require('passport');
 var models = require('./models');
 var Account = models.Account;
+var Click = models.Click;
 var router = express.Router();
 var msgUserExists = { info: "Sorry, that username already exists. Try again." };
+var msgClickFail = { status: false };
+var msgClickOk = function (n) { return ({ status: true, value: n }); };
 exports.registerWith = function (z) {
     var h = function (req, res, next) { return res.render('register', z); };
     return h;
@@ -42,9 +45,39 @@ exports.logout = function (req, res) {
     req.logout();
     res.redirect('/');
 };
+function requestClick(req) {
+    return { userId: requestUserId(req),
+        choice: req.body.choice,
+        submitTime: Date.now(),
+        courseId: "CSE 130",
+        problemId: "1"
+    };
+}
+function requestUserId(req) {
+    return req.body.username;
+}
 exports.postClick = function (req, res) {
-    return undefined;
+    var ci = requestClick(req);
+    new Click(ci).save(function (err, click) {
+        if (err) {
+            console.log(err);
+            res.json(msgClickFail);
+        }
+        else {
+            res.json(msgClickOk(ci.choice));
+        }
+        ;
+    });
 };
 exports.getClicks = function (req, res) {
-    return undefined;
+    var myId = requestUserId(req);
+    Click.find({ userId: myId }, function (err, clicks) {
+        if (err) {
+            console.log(err);
+            res.render('view', { error: err.toString() });
+        }
+        else {
+            res.render('view', { clicks: clicks });
+        }
+    });
 };

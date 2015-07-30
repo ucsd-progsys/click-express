@@ -4,6 +4,7 @@ import express  = require('express');
 import passport = require('passport');
 import models   = require('./models');
 var Account:any = models.Account;
+var Click       = models.Click;
 var router      = express.Router();
 type Request    = express.Request;
 type Response   = express.Response;
@@ -14,6 +15,8 @@ type RequestH   = express.RequestHandler;
 ////////////////////////////////////////////////////////////////////////
 
 var msgUserExists = {info: "Sorry, that username already exists. Try again."};
+var msgClickFail  = {status: false}
+var msgClickOk    = (n:number) => ({status: true, value: n})
 
 ////////////////////////////////////////////////////////////////////////
 // Register ////////////////////////////////////////////////////////////
@@ -84,14 +87,39 @@ export var logout : RequestH = (req,res) => {
 // Post a new Click ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
+function requestClick(req:Request):models.ClickI {
+  return { userId     : requestUserId(req)
+         , choice     : req.body.choice
+         , submitTime : Date.now()
+         , courseId   : "CSE 130"
+         , problemId  : "1"
+         }
+}
+
+function requestUserId(req:Request):models.UserId {
+  return req.body.username;
+}
+
 export var postClick: RequestH = (req, res) => {
-  // req --> user, clickData
-  // update model with user, clickData
-  // respond with JSON("ok")
-  return undefined;
+  var ci = requestClick(req);
+  new Click(ci).save(function( err, click ){
+    if (err) {
+      console.log(err);
+      res.json( msgClickFail )
+    } else {
+      res.json( msgClickOk(ci.choice) )
+    };
+  });
 }
 
 export var getClicks: RequestH = (req, res) => {
-  // req --> user --> JSON-with-clicks -> render view-with-json
-  return undefined;
+  var myId = requestUserId(req);
+  Click.find( {userId : myId }, function ( err:any, clicks:any){
+    if (err) {
+      console.log(err);
+      res.render ('view', { error : err.toString() })
+    } else {
+      res.render( 'view', { clicks : clicks } );
+    }
+  });
 }
