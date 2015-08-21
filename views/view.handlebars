@@ -4,12 +4,10 @@
   <p>Oops, cannot find any clicks, because I hit an error!</>
   <p> {{ error }} </p>
 {{else}}
-  <a href="/register">Register<a/>
-  <br>
+  <b>These are all your clicks </b>
   <ul>
-    {{#each people}}
-    <li>{{this.choice}} at {{ this.submitTime }}</li>
+    {{#each clicks}}
+    <li>{{choice}} at {{ submitTime }}</li>
     {{/each}}
   </ul>
-
 {{/if}}

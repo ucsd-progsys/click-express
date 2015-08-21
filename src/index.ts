@@ -9,7 +9,7 @@ import methodOverride = require('method-override');
 import session        = require('express-session');
 import passport       = require('passport');
 import mongoose       = require('mongoose');
-import path          = require('path');
+import path           = require('path');
 import passportLocal  = require('passport-local');
 var LocalStrategy     = passportLocal.Strategy;
 var handlebars        = require('express-handlebars').create({ defaultLayout: 'main' });
@@ -18,7 +18,7 @@ var handlebars        = require('express-handlebars').create({ defaultLayout: 'm
 
 // local imports
 import tips           = require("./tips");
-var routes:any        = require('./routes');
+import routes         = require('./routes');
 import models         = require('./models');
 
 
@@ -26,6 +26,8 @@ import models         = require('./models');
 // Express /////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 var app = express();
+app.set('port', process.env.PORT || 3000);
+var serverURL = app.get('port');
 
 ////////////////////////////////////////////////////////////////////
 // Views ///////////////////////////////////////////////////////////
@@ -66,17 +68,15 @@ app.use(express.static('public'));
 // Routes //////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-// app.use('/', routes);
 app.get( '/register' ,              routes.registerWith({}));
 app.post('/register' ,              routes.register);
 app.get( '/'         , routes.auth, routes.redirectHome);
-app.get( '/home'     , routes.auth, routes.home);
+app.get( '/home'     , routes.auth, routes.home(serverURL));
 app.get( '/view'     , routes.auth, routes.view);
 app.get( '/login'    ,              routes.getLogin);
+app.get( '/logout'   ,              routes.logout);
 app.post('/login'    ,              routes.postLogin);
 app.post('/click'    , routes.auth, routes.postClick);
-app.get('/logout'    ,              routes.logout);
-
 
 ////////////////////////////////////////////////////////////////////
 // Passport config /////////////////////////////////////////////////
@@ -115,11 +115,10 @@ app.use(handle404);
 // 500 page
 app.use(handle500);
 
-app.set('port', process.env.PORT || 3000);
 
 app.listen(app.get('port'), function(){
   var msg = "Express START: http://localhost:"
-          + app.get('port')
+          + serverURL // app.get('port')
           + " press Ctrl-C to kill.";
   console.log(msg);
 });

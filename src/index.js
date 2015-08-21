@@ -12,6 +12,8 @@ var handlebars = require('express-handlebars').create({ defaultLayout: 'main' })
 var routes = require('./routes');
 var models = require('./models');
 var app = express();
+app.set('port', process.env.PORT || 3000);
+var serverURL = app.get('port');
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.use(logger('dev'));
@@ -27,12 +29,12 @@ app.use(express.static('public'));
 app.get('/register', routes.registerWith({}));
 app.post('/register', routes.register);
 app.get('/', routes.auth, routes.redirectHome);
-app.get('/home', routes.auth, routes.home);
+app.get('/home', routes.auth, routes.home(serverURL));
 app.get('/view', routes.auth, routes.view);
 app.get('/login', routes.getLogin);
+app.get('/logout', routes.logout);
 app.post('/login', routes.postLogin);
 app.post('/click', routes.auth, routes.postClick);
-app.get('/logout', routes.logout);
 var Account = models.Account;
 passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
@@ -49,10 +51,9 @@ var handle500 = function (err, req, res, next) {
 };
 app.use(handle404);
 app.use(handle500);
-app.set('port', process.env.PORT || 3000);
 app.listen(app.get('port'), function () {
     var msg = "Express START: http://localhost:"
-        + app.get('port')
+        + serverURL
         + " press Ctrl-C to kill.";
     console.log(msg);
 });

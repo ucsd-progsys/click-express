@@ -19,8 +19,8 @@ Web-based clicker site (written in express)
 2. Home Page
    > Click
      + On (home) page, you send a "click" (and again and again)
-   > HEREHEREHEREHERE
    > add route "POST:click" with code to SAVE "POST:click"
+   > HEREHEREHEREHERE
    > add route "GET:view" with code that renders with ALL past clicks
 
 3. Roles (instructor/student)

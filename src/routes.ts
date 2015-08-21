@@ -69,13 +69,9 @@ export var redirectHome:RequestH = (req, res) => {
 }
 
 // INVARIANT: AUTH
-export var home : RequestH = (req, res) => {
-  res.render('home', { user : req.user });
-};
-
-// INVARIANT: AUTH
-export var view : RequestH = (req, res) => {
-  res.render('view', { user : req.user });
+export function home(url:string): RequestH {
+  return (req, res) => { res.render('home', { user      : req.user
+                                            , serverURL : url}); }
 }
 
 export var logout : RequestH = (req,res) => {
@@ -87,6 +83,14 @@ export var logout : RequestH = (req,res) => {
 // Post a new Click ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
+function requestUserId(req:Request):models.UserId {
+  var uid = req.user.username;
+  console.log("UID: BEGIN");
+  console.log(uid);
+  console.log("UID: END");
+  return uid;
+}
+
 function requestClick(req:Request):models.ClickI {
   return { userId     : requestUserId(req)
          , choice     : req.body.choice
@@ -96,9 +100,6 @@ function requestClick(req:Request):models.ClickI {
          }
 }
 
-function requestUserId(req:Request):models.UserId {
-  return req.body.username;
-}
 
 export var postClick: RequestH = (req, res) => {
   var ci = requestClick(req);
@@ -112,13 +113,27 @@ export var postClick: RequestH = (req, res) => {
   });
 }
 
-export var getClicks: RequestH = (req, res) => {
+
+////////////////////////////////////////////////////////////////////////
+// View Previous Clicks ////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+// INVARIANT: AUTH
+// export var view : RequestH = (req, res) => {
+//  res.render('view', { user : req.user });
+// }
+
+export var view: RequestH = (req, res) => {
   var myId = requestUserId(req);
+  console.log(myId);
   Click.find( {userId : myId }, function ( err:any, clicks:any){
     if (err) {
       console.log(err);
       res.render ('view', { error : err.toString() })
     } else {
+      console.log("Your clicks are: BEGIN");
+      console.log(clicks);
+      console.log("Your clicks are: END");
       res.render( 'view', { clicks : clicks } );
     }
   });
