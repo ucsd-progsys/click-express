@@ -22,11 +22,14 @@ Web-based clicker site (written in express)
 
 + Enroll
 
-### Sockets [HEREHEREHERE]
+### Sockets
 
 + server: create socket // with room named: `defaults.courseId`
 + server: add route `app.get('/quiz' /* , auth */ , postQuiz)`
           which `io.emit` (to each socket) the "message: current time"
+
+  HEREHEREHERE
+
 + client: create socket // with room named: `defaults.courseId`
 + client: on receiving on socket should print out the `message`
 
@@ -99,6 +102,14 @@ Pages/Routes
   * list dates
      * list problems
        * show graphs
+
+## States
+
+
+[off]  --- quizstart   ---> [quiz]
+[quiz] --- response(i) ---> [wait]
+[wait] --- ack         ---> [quiz]
+[quiz] --- quizend     ---> [off]
 
 ## Links
 

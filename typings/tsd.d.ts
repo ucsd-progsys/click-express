@@ -1,4 +1,6 @@
 
+
+/// <reference path="./types.d.ts" />
 /// <reference path="express/express.d.ts" />
 /// <reference path="node/node.d.ts" />
 /// <reference path="mongodb/mongodb.d.ts" />
@@ -12,5 +14,3 @@
 /// <reference path="passport-local/passport-local.d.ts" />
 /// <reference path="morgan/morgan.d.ts" />
 /// <reference path="socket.io/socket.io.d.ts" />
-
-

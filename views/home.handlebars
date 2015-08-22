@@ -4,33 +4,40 @@
 
 <br>
 
-<h3>Your last choice: <span ng-bind="label"></span> </h3>
+<div ng-hide="isOff">
 
-<br>
-<br>
+  <h3>Quiz: <span ng-bind="quiz"></span> </h3>
+  <br>
+  <h3>Your Choice: <span ng-bind="label"></span> </h3>
 
-<button ng-click="clickChoose(1)" type="button" class="btn btn-default btn-lg btn-danger">
-  A
-</button>
 
-<button ng-click="clickChoose(2)" type="button" class="btn btn-default btn-lg btn-primary">
-  B
-</button>
+  <br>
+  <br>
 
-<button ng-click="clickChoose(3)" type="button" class="btn btn-default btn-lg btn-success">
-  C
-</button>
+  <button ng-disabled="isClicked" ng-click="clickChoose(1)" type="button" class="btn btn-default btn-lg btn-danger">
+    A
+  </button>
 
-<button ng-click="clickChoose(4)" type="button" class="btn btn-default btn-lg btn-warning">
-  D
-</button>
+  <button ng-disabled="isClicked" ng-click="clickChoose(2)" type="button" class="btn btn-default btn-lg btn-primary">
+    B
+  </button>
 
-<button ng-click="clickChoose(5)" type="button" class="btn btn-default btn-lg btn-info">
-  E
-</button>
+  <button ng-disabled="isClicked" ng-click="clickChoose(3)" type="button" class="btn btn-default btn-lg btn-success">
+    C
+  </button>
 
-<br>
-<br>
+  <button ng-disabled="isClicked" ng-click="clickChoose(4)" type="button" class="btn btn-default btn-lg btn-warning">
+    D
+  </button>
+
+  <button ng-disabled="isClicked" ng-click="clickChoose(5)" type="button" class="btn btn-default btn-lg btn-info">
+    E
+  </button>
+
+  <br>
+  <br>
+
+</div>
 
 <!--
 <a href="/logout">Logout<a/>

@@ -2,12 +2,19 @@
 var express = require('express');
 var passport = require('passport');
 var models = require('./models');
+var t = require('./types');
 var Account = models.Account;
 var Click = models.Click;
 var router = express.Router();
-var msgUserExists = { info: "Sorry, that username already exists. Try again." };
-var msgClickFail = { status: false };
-var msgClickOk = function (n) { return ({ status: true, value: n }); };
+var msgUserExists = { kind: t.Message.UserExists,
+    info: "Sorry, that username already exists. Try again." };
+var msgClickFail = { kind: t.Message.ClickFail,
+    info: false };
+var msgClickOk = function (n) { return ({ kind: t.Message.ClickOk,
+    info: n }); };
+var msgQuiz = function (msg) { return ({ kind: msg,
+    info: Date.now() }); };
+var msgQuizAck = { kind: t.Message.QuizAck };
 exports.registerWith = function (z) {
     var h = function (req, res, next) { return res.render('register', z); };
     return h;
@@ -73,10 +80,10 @@ exports.postClick = function (req, res) {
         ;
     });
 };
-function postQuiz(io) {
+function postQuiz(io, msg) {
     return function (req, res) {
-        res.render('home', { user: req.user,
-            serverURL: url });
+        io.emit('message', msgQuiz(msg));
+        res.json(msgQuizAck);
     };
 }
 exports.postQuiz = postQuiz;

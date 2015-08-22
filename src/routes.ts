@@ -4,6 +4,7 @@ import express  = require('express');
 import passport = require('passport');
 import models   = require('./models');
 import socketIO = require('socket.io');
+import t        = require('./types');
 
 var Account:any = models.Account;
 var Click       = models.Click;
@@ -18,9 +19,25 @@ type RequestH   = express.RequestHandler;
 // Messages ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-var msgUserExists = {info: "Sorry, that username already exists. Try again."};
-var msgClickFail  = {status: false}
-var msgClickOk    = (n:number) => ({status: true, value: n})
+
+var msgUserExists = { kind   : t.Message.UserExists
+                    , info   : "Sorry, that username already exists. Try again."};
+
+var msgClickFail  = { kind   : t.Message.ClickFail
+                    , info   : false }
+
+var msgClickOk    = (n:number) => (
+                    { kind   : t.Message.ClickOk
+                    , info   : n }
+                    )
+
+var msgQuiz       = (msg:t.Message) => (
+                    { kind   : msg
+                    , info   : Date.now() }
+                    )
+
+var msgQuizAck    = { kind   : t.Message.QuizAck }
+
 
 ////////////////////////////////////////////////////////////////////////
 // Register ////////////////////////////////////////////////////////////
@@ -122,12 +139,13 @@ export var postClick: RequestH = (req, res) => {
 ////////////////////////////////////////////////////////////////////////
 
 // INVARIANT: AUTH
-export function postQuiz(io:SocketIO.Server): RequestH {
-  // TODO which `io.emit` (to each socket) the "message: current time"
-  // HEREHEREHERE  
-  return (req, res) => { res.render('home', { user      : req.user
-                                            , serverURL : url}); }
+export function postQuiz(io:SocketIO.Server, msg:t.Message): RequestH {
+  return (req, res) => {
+    io.emit('message', msgQuiz(msg));
+    res.json( msgQuizAck );
+  }
 }
+
 ////////////////////////////////////////////////////////////////////////
 // View Previous Clicks ////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
