@@ -3,6 +3,8 @@
 import express  = require('express');
 import passport = require('passport');
 import models   = require('./models');
+import socketIO = require('socket.io');
+
 var Account:any = models.Account;
 var Click       = models.Click;
 var router      = express.Router();
@@ -86,11 +88,7 @@ export var logout : RequestH = (req,res) => {
 ////////////////////////////////////////////////////////////////////////
 
 function requestUserId(req:Request):models.UserId {
-  var uid = req.user.username;
-  console.log("UID: BEGIN");
-  console.log(uid);
-  console.log("UID: END");
-  return uid;
+  return req.user.username;
 }
 
 var defaults = { courseId  : "CSE 130"
@@ -120,6 +118,17 @@ export var postClick: RequestH = (req, res) => {
 
 
 ////////////////////////////////////////////////////////////////////////
+// Post a new Quiz  ////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+// INVARIANT: AUTH
+export function postQuiz(io:SocketIO.Server): RequestH {
+  // TODO which `io.emit` (to each socket) the "message: current time"
+  // HEREHEREHERE  
+  return (req, res) => { res.render('home', { user      : req.user
+                                            , serverURL : url}); }
+}
+////////////////////////////////////////////////////////////////////////
 // View Previous Clicks ////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
@@ -130,15 +139,15 @@ export var postClick: RequestH = (req, res) => {
 
 export var view: RequestH = (req, res) => {
   var myId = requestUserId(req);
-  console.log(myId);
+  // console.log(myId);
   Click.find( {userId : myId }, function ( err:any, clicks:any){
     if (err) {
-      console.log(err);
+      // console.log(err);
       res.render ('view', { error : err.toString() })
     } else {
-      console.log("Your clicks are: BEGIN");
-      console.log(clicks);
-      console.log("Your clicks are: END");
+      // console.log("Your clicks are: BEGIN");
+      // console.log(clicks);
+      // console.log("Your clicks are: END");
       res.render( 'view', { clicks : clicks } );
     }
   });

@@ -7,11 +7,12 @@ var session = require('express-session');
 var passport = require('passport');
 var mongoose = require('mongoose');
 var passportLocal = require('passport-local');
+var socketIO = require('socket.io');
 var LocalStrategy = passportLocal.Strategy;
 var handlebars = require('express-handlebars').create({ defaultLayout: 'main' });
 var app = express();
 var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var io = socketIO(http);
 var routes = require('./routes');
 var models = require('./models');
 app.set('port', process.env.PORT || 3000);
@@ -37,11 +38,20 @@ app.get('/login', routes.getLogin);
 app.get('/logout', routes.logout);
 app.post('/login', routes.postLogin);
 app.post('/click', routes.auth, routes.postClick);
+app.post('/quiz', routes.auth, routes.postQuiz(io));
 var Account = models.Account;
 passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
 mongoose.connect('mongodb://localhost/click-express-mongoose');
+var users = 0;
+io.on('connection', function (socket) {
+    var n = users++;
+    console.log('user connected: ' + n);
+    socket.on('disconnect', function () {
+        console.log('bye-bye user: ' + n);
+    });
+});
 var handle404 = function (err, req, res, next) {
     res.status(404);
     res.render('404');

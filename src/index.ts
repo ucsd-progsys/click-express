@@ -11,13 +11,15 @@ import passport       = require('passport');
 import mongoose       = require('mongoose');
 import path           = require('path');
 import passportLocal  = require('passport-local');
+import socketIO       = require('socket.io');
+
 var LocalStrategy     = passportLocal.Strategy;
 var handlebars        = require('express-handlebars').create({ defaultLayout: 'main' });
 // var favicon        = require('serve-favicon');
 // var flash          = require('connect-flash');
 var app               = express();
 var http              = require('http').Server(app);
-var io                = require('socket.io')(http);
+var io                = socketIO(http);
 
 // local imports
 import tips           = require("./tips");
@@ -80,6 +82,7 @@ app.get( '/login'    ,              routes.getLogin);
 app.get( '/logout'   ,              routes.logout);
 app.post('/login'    ,              routes.postLogin);
 app.post('/click'    , routes.auth, routes.postClick);
+app.post('/quiz'     , routes.auth, routes.postQuiz(io));
 
 ////////////////////////////////////////////////////////////////////
 // Passport config /////////////////////////////////////////////////
@@ -96,6 +99,21 @@ passport.deserializeUser(Account.deserializeUser());
 ////////////////////////////////////////////////////////////////////
 
 mongoose.connect('mongodb://localhost/click-express-mongoose');
+
+
+////////////////////////////////////////////////////////////////////
+// WebSockets: Pushing Questions to Clients ////////////////////////
+////////////////////////////////////////////////////////////////////
+
+var users = 0;
+
+io.on('connection', function(socket){
+  var n = users++;
+  console.log('user connected: ' + n);
+  socket.on('disconnect', function(){
+    console.log('bye-bye user: ' + n);
+  });
+});
 
 ////////////////////////////////////////////////////////////////////
 // Start me up /////////////////////////////////////////////////////

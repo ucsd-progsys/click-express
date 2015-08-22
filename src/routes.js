@@ -47,11 +47,7 @@ exports.logout = function (req, res) {
     res.redirect('/');
 };
 function requestUserId(req) {
-    var uid = req.user.username;
-    console.log("UID: BEGIN");
-    console.log(uid);
-    console.log("UID: END");
-    return uid;
+    return req.user.username;
 }
 var defaults = { courseId: "CSE 130",
     problemId: "1"
@@ -77,18 +73,20 @@ exports.postClick = function (req, res) {
         ;
     });
 };
+function postQuiz(io) {
+    return function (req, res) {
+        res.render('home', { user: req.user,
+            serverURL: url });
+    };
+}
+exports.postQuiz = postQuiz;
 exports.view = function (req, res) {
     var myId = requestUserId(req);
-    console.log(myId);
     Click.find({ userId: myId }, function (err, clicks) {
         if (err) {
-            console.log(err);
             res.render('view', { error: err.toString() });
         }
         else {
-            console.log("Your clicks are: BEGIN");
-            console.log(clicks);
-            console.log("Your clicks are: END");
             res.render('view', { clicks: clicks });
         }
     });
