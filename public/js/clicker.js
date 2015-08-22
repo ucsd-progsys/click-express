@@ -38,8 +38,7 @@ function getClickURL() {
     return serverURL + "/click";
 }
 function clickCtrl($scope, $http, $location) {
-    $scope.statusPending =
-        $scope.label = "(none)";
+    $scope.label = "(none)";
     socket.on('message', function (msg) {
         setQuiz($scope, msg);
     });

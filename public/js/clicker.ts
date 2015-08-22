@@ -64,13 +64,14 @@ function getClickURL(){
 }
 
 function clickCtrl($scope, $http, $location) {
-  $scope.statusPending =
   $scope.label = "(none)";
 
+  // RECV: quiz notifications (over socket)
   socket.on('message', function(msg){
     setQuiz($scope, msg);
   });
 
+  // SEND: click responses
   $scope.clickChoose = function(n){
     var cn       = choices[n];
     $scope.label = cn + "(pending)";
