@@ -10,6 +10,8 @@ type Request    = express.Request;
 type Response   = express.Response;
 type RequestH   = express.RequestHandler;
 
+
+
 ////////////////////////////////////////////////////////////////////////
 // Messages ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
@@ -91,15 +93,18 @@ function requestUserId(req:Request):models.UserId {
   return uid;
 }
 
+var defaults = { courseId  : "CSE 130"
+               , problemId : "1"
+               };
+
 function requestClick(req:Request):models.ClickI {
   return { userId     : requestUserId(req)
          , choice     : req.body.choice
          , submitTime : Date.now()
-         , courseId   : "CSE 130"
-         , problemId  : "1"
+         , courseId   : defaults.courseId
+         , problemId  : defaults.problemId
          }
 }
-
 
 export var postClick: RequestH = (req, res) => {
   var ci = requestClick(req);

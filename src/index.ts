@@ -13,8 +13,11 @@ import path           = require('path');
 import passportLocal  = require('passport-local');
 var LocalStrategy     = passportLocal.Strategy;
 var handlebars        = require('express-handlebars').create({ defaultLayout: 'main' });
-// var favicon           = require('serve-favicon');
-// var flash             = require('connect-flash');
+// var favicon        = require('serve-favicon');
+// var flash          = require('connect-flash');
+var app               = express();
+var http              = require('http').Server(app);
+var io                = require('socket.io')(http);
 
 // local imports
 import tips           = require("./tips");
@@ -25,7 +28,7 @@ import models         = require('./models');
 ////////////////////////////////////////////////////////////////////
 // Express /////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
-var app = express();
+
 app.set('port', process.env.PORT || 3000);
 var serverURL = app.get('port');
 
@@ -115,8 +118,8 @@ app.use(handle404);
 // 500 page
 app.use(handle500);
 
-
-app.listen(app.get('port'), function(){
+// Go!
+http.listen(app.get('port'), function(){
   var msg = "Express START: http://localhost:"
           + serverURL // app.get('port')
           + " press Ctrl-C to kill.";

@@ -9,9 +9,11 @@ var mongoose = require('mongoose');
 var passportLocal = require('passport-local');
 var LocalStrategy = passportLocal.Strategy;
 var handlebars = require('express-handlebars').create({ defaultLayout: 'main' });
+var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 var routes = require('./routes');
 var models = require('./models');
-var app = express();
 app.set('port', process.env.PORT || 3000);
 var serverURL = app.get('port');
 app.engine('handlebars', handlebars.engine);
@@ -51,7 +53,7 @@ var handle500 = function (err, req, res, next) {
 };
 app.use(handle404);
 app.use(handle500);
-app.listen(app.get('port'), function () {
+http.listen(app.get('port'), function () {
     var msg = "Express START: http://localhost:"
         + serverURL
         + " press Ctrl-C to kill.";

@@ -53,12 +53,15 @@ function requestUserId(req) {
     console.log("UID: END");
     return uid;
 }
+var defaults = { courseId: "CSE 130",
+    problemId: "1"
+};
 function requestClick(req) {
     return { userId: requestUserId(req),
         choice: req.body.choice,
         submitTime: Date.now(),
-        courseId: "CSE 130",
-        problemId: "1"
+        courseId: defaults.courseId,
+        problemId: defaults.problemId
     };
 }
 exports.postClick = function (req, res) {
