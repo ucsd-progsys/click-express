@@ -10,20 +10,24 @@ var ObjectId    = Schema.Types.ObjectId;
 
 var AccountS = new Schema({ username: String
                           , password: String
-                          , email   : String });
+                          , email   : String
+                          });
+
 AccountS.plugin(plm);
 
 var ProblemS = new Schema({ userId     : String
-                          , description: String });
+                          , courseId   : String
+                          , startTime  : Date
+                          });
 
 var CourseS  = new Schema({ userId     : String
-                          , descripton : String });
+                          , description: String });
 
 var ClickS   = new Schema({ userId     : String
                           , choice     : Number // {v:number | 1 <= v <= 5}
                           , submitTime : Date
                           , courseId   : String
-                          , problemId  : String
+                          , startTime  : String
                           });
 
 var EnrollS  = new Schema({ userId     : String

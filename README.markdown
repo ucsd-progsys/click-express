@@ -9,10 +9,6 @@ Web-based clicker site (written in express)
 ## TODO
 
 + Home Page
-   > add click: On (home) page, you send a "click" (and again and again)
-   > add route "POST:click" with code to SAVE "POST:click"
-   > add route "GET:view" with code that renders with ALL past clicks
-   HEREHERE
    > add sockets: to allow instructor to post question
    > add NAVBAR [ home | role | view | logout ]
 
@@ -22,19 +18,61 @@ Web-based clicker site (written in express)
 
 + Enroll
 
-### Sockets
+## Controls
 
-+ server: create socket // with room named: `defaults.courseId`
-+ server: add route `app.get('/quiz' /* , auth */ , postQuiz)`
-          which `io.emit` (to each socket) the "message: current time"
+Pages/Routes
 
-  HEREHEREHERE
++ register  
 
-+ client: create socket // with room named: `defaults.courseId`
-+ client: on receiving on socket should print out the `message`
++ login
 
-+ LATER: refine the socket to add a ["room" for each class][5]
++ learn
+  * click
 
++ teach [HEREHEREHEREHERE]
+m
+  * Main  : [Start | Stop | Graph ]
+  * Graph : [Prev | Next]
+
++ role
+  * teach   1,2,3,...
+  * learn   a,b,c...
+  * analyze p,q,r...
+
++ analyze
+  * list dates
+     * list problems
+       * show graphs
+
+### teach: step 1
+
++ client: [start | stop | graph]
+  + start: POST quizstart
+  + stop: POST quizstop
+
++ server: done already
+
+### teach: step 2
+
+@client
+
++ QUIZ: mode, then periodic (per 2 seconds?) poll POST/quizstat(n)?
+        where 'n' is offset from current quiz. so:
+        n=0 means NOW,
+        n=1 means PREV,
+        n=2 means TWO-quizzes back etc.
+
++ SHOW: graph (d3 etc.?) // for now, just vector. A = ..., B = ..., C = ... etc.
+
+@server
+
++ ROUTE: POST/quizstat(n), reply with JSON {a:..., b:...}
+
+## Roles
+
++ multiple classes
++ only teacher can start/stop
++ refine the socket to add a ["room" for each class][5]
 
 ## Model
 
@@ -76,35 +114,7 @@ For each type `T` below, we have a **set** or **table**:
 ```haskell
 table T = Map UniqueId T
 ```
-
-## Controls
-
-Pages/Routes
-
-+ register  
-
-+ login
-
-+ role
-  * teach   1,2,3,...
-  * learn   a,b,c...
-  * analyze p,q,r...
-
-+ teach
-  * pose problem
-  * display graph
-  * hide graph
-
-+ learn
-  * click
-
-+ analyze
-  * list dates
-     * list problems
-       * show graphs
-
 ## States
-
 
 [off]  --- quizstart   ---> [quiz]
 [quiz] --- response(i) ---> [wait]
