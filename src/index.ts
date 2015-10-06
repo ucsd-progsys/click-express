@@ -74,22 +74,17 @@ app.use(express.static('public'));
 // Routes //////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-app.get( '/register'  ,              routes.registerWith({}));
-app.post('/register'  ,              routes.register);
-app.get( '/'          , routes.auth, routes.redirectHome);
-app.get( '/home'      , routes.auth, routes.home(serverURL));
-app.get( '/view'      , routes.auth, routes.view);
-app.get( '/login'     ,              routes.getLogin);
-app.get( '/logout'    ,              routes.logout);
-app.post('/login'     ,              routes.postLogin);
-
-// TODO: auth-student
-app.post('/click'     , routes.auth, routes.postClick);
-
-// TODO: auth-instructor
-app.post('/quizstart' , routes.auth, routes.postQuiz(io, t.Message.QuizStart));
-app.post('/quizstop'  , routes.auth, routes.postQuiz(io, t.Message.QuizStop));
-
+app.get( '/register' ,              routes.registerWith({}));
+app.post('/register' ,              routes.register);
+app.get( '/'         , routes.auth, routes.redirectHome);
+app.get( '/home'     , routes.auth, routes.home(serverURL));
+app.get( '/view'     , routes.auth, routes.view);
+app.get( '/login'    ,              routes.getLogin);
+app.get( '/logout'   ,              routes.logout);
+app.post('/login'    ,              routes.postLogin);
+app.post('/click'    , routes.auth, routes.postClick);                         // TODO: auth-student
+app.get('/quizstart' , routes.auth, routes.postQuiz(io, t.Message.QuizStart)); // TODO: auth-instructor
+app.get('/quizstop'  , routes.auth, routes.postQuiz(io, t.Message.QuizStop));  // TODO: auth-instructor
 
 ////////////////////////////////////////////////////////////////////
 // Passport config /////////////////////////////////////////////////
@@ -106,7 +101,6 @@ passport.deserializeUser(Account.deserializeUser());
 ////////////////////////////////////////////////////////////////////
 
 mongoose.connect('mongodb://localhost/click-express-mongoose');
-
 
 ////////////////////////////////////////////////////////////////////
 // WebSockets: Pushing Questions to Clients ////////////////////////

@@ -13,31 +13,42 @@ type Request    = express.Request;
 type Response   = express.Response;
 type RequestH   = express.RequestHandler;
 
-
-
 ////////////////////////////////////////////////////////////////////////
 // Messages ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
+var msgUserExists = {
+    kind   : t.Message.UserExists
+  , info   : "Sorry, that username already exists. Try again."
+}
 
-var msgUserExists = { kind   : t.Message.UserExists
-                    , info   : "Sorry, that username already exists. Try again."};
+var msgClickFail  = {
+    kind   : t.Message.ClickFail
+  , info   : false
+}
 
-var msgClickFail  = { kind   : t.Message.ClickFail
-                    , info   : false }
+var msgClickOk = (n:number) => ({
+    kind   : t.Message.ClickOk
+  , info   : n
+})
 
-var msgClickOk    = (n:number) => (
-                    { kind   : t.Message.ClickOk
-                    , info   : n }
-                    )
+var msgQuiz = (msg:t.Message) => ({
+    kind   : msg
+  , info   : Date.now()
+})
 
-var msgQuiz       = (msg:t.Message) => (
-                    { kind   : msg
-                    , info   : Date.now() }
-                    )
+var msgQuizAck : t.SocketEvent = {
+    kind   : t.Message.QuizAck
+  , info   : true
+}
 
-var msgQuizAck    = { kind   : t.Message.QuizAck }
+function sendSocket(io:SocketIO.Server, e:t.SocketEvent) {
+  io.emit('message', e);
+}
 
+function sendHttp(res:express.Response, e:t.SocketEvent) {
+  res.json(e);
+}
 
 ////////////////////////////////////////////////////////////////////////
 // Register ////////////////////////////////////////////////////////////
@@ -51,6 +62,8 @@ export var registerWith = (z:Object) => {
 export function register(req:Request, res:Response){
   var acc = new Account({ username : req.body.username
                         , email    : req.body.email   });
+  console.log('USER: ' + req.body.username);
+  console.log('PASS: ' + req.body.password);
   Account.register(acc, req.body.password, function(err:any, account:any) {
     if (err) return registerWith(msgUserExists)(req, res, undefined);
     passport.authenticate('local')(req, res, () => res.redirect('/')) ;
@@ -66,7 +79,7 @@ export var getLogin:RequestH = (req, res, next) => {
 }
 
 export var postLogin = passport.authenticate('local', { successRedirect: '/home'
-                                                    , failureRedirect: '/login' });
+                                                      , failureRedirect: '/login' });
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -80,7 +93,11 @@ export var postLogin = passport.authenticate('local', { successRedirect: '/home'
 //   login page.
 
 export var auth:RequestH = (req, res, next) => {
-  if (req.isAuthenticated()) return next();
+  if (req.isAuthenticated()) {
+    console.log('auth: OK'); // , req.user.username)
+    return next();
+  }
+  console.log('auth: FAIL'); // , req.user.username)
   res.render('index');
 }
 
@@ -126,9 +143,9 @@ export var postClick: RequestH = (req, res) => {
   new Click(ci).save(function( err, click ){
     if (err) {
       console.log(err);
-      res.json( msgClickFail )
+      sendHttp(res, msgClickFail)
     } else {
-      res.json( msgClickOk(ci.choice) )
+      sendHttp(res, msgClickOk(ci.choice))
     };
   });
 }
@@ -141,8 +158,8 @@ export var postClick: RequestH = (req, res) => {
 // INVARIANT: AUTH
 export function postQuiz(io:SocketIO.Server, msg:t.Message): RequestH {
   return (req, res) => {
-    io.emit('message', msgQuiz(msg));
-    res.json( msgQuizAck );
+    sendSocket(io, msgQuiz(msg));
+    sendHttp(res, msgQuizAck);
   }
 }
 

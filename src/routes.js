@@ -6,15 +6,32 @@ var t = require('./types');
 var Account = models.Account;
 var Click = models.Click;
 var router = express.Router();
-var msgUserExists = { kind: t.Message.UserExists,
-    info: "Sorry, that username already exists. Try again." };
-var msgClickFail = { kind: t.Message.ClickFail,
-    info: false };
-var msgClickOk = function (n) { return ({ kind: t.Message.ClickOk,
-    info: n }); };
-var msgQuiz = function (msg) { return ({ kind: msg,
-    info: Date.now() }); };
-var msgQuizAck = { kind: t.Message.QuizAck };
+var msgUserExists = {
+    kind: 3,
+    info: "Sorry, that username already exists. Try again."
+};
+var msgClickFail = {
+    kind: 4,
+    info: false
+};
+var msgClickOk = function (n) { return ({
+    kind: 5,
+    info: n
+}); };
+var msgQuiz = function (msg) { return ({
+    kind: msg,
+    info: Date.now()
+}); };
+var msgQuizAck = {
+    kind: 2,
+    info: true
+};
+function sendSocket(io, e) {
+    io.emit('message', e);
+}
+function sendHttp(res, e) {
+    res.json(e);
+}
 exports.registerWith = function (z) {
     var h = function (req, res, next) { return res.render('register', z); };
     return h;
@@ -22,6 +39,8 @@ exports.registerWith = function (z) {
 function register(req, res) {
     var acc = new Account({ username: req.body.username,
         email: req.body.email });
+    console.log('USER: ' + req.body.username);
+    console.log('PASS: ' + req.body.password);
     Account.register(acc, req.body.password, function (err, account) {
         if (err)
             return exports.registerWith(msgUserExists)(req, res, undefined);
@@ -35,8 +54,11 @@ exports.getLogin = function (req, res, next) {
 exports.postLogin = passport.authenticate('local', { successRedirect: '/home',
     failureRedirect: '/login' });
 exports.auth = function (req, res, next) {
-    if (req.isAuthenticated())
+    if (req.isAuthenticated()) {
+        console.log('auth: OK');
         return next();
+    }
+    console.log('auth: FAIL');
     res.render('index');
 };
 exports.redirectHome = function (req, res) {
@@ -72,18 +94,18 @@ exports.postClick = function (req, res) {
     new Click(ci).save(function (err, click) {
         if (err) {
             console.log(err);
-            res.json(msgClickFail);
+            sendHttp(res, msgClickFail);
         }
         else {
-            res.json(msgClickOk(ci.choice));
+            sendHttp(res, msgClickOk(ci.choice));
         }
         ;
     });
 };
 function postQuiz(io, msg) {
     return function (req, res) {
-        io.emit('message', msgQuiz(msg));
-        res.json(msgQuizAck);
+        sendSocket(io, msgQuiz(msg));
+        sendHttp(res, msgQuizAck);
     };
 }
 exports.postQuiz = postQuiz;
