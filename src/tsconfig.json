@@ -23,7 +23,6 @@
         "./index.ts",
         "./models.ts",
         "./routes.ts",
-        "./tips.ts",
-        "./types.ts"
+        "./tips.ts"
     ]
 }
