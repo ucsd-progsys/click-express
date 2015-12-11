@@ -18,6 +18,65 @@
 
 
     <!-- Navbar ================================================== -->
+    
+    {{#if user}}    
+        <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            
+            <div class="navbar-header pull-right">
+            <button type="button" class="navbar-toggle" 
+                    data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+                
+            <p class="navbar-text">
+                <b> {{user.username}} </b>
+                <a href="/logout" class="navbar-link">Logout</a>&nbsp;
+            </p>  
+            </div>
+            
+            <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/home">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+            </div>
+    
+        </div>
+        </div>
+     {{else}}
+        <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            
+            <div class="navbar-header pull-right">
+            <button type="button" class="navbar-toggle" 
+                    data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+                
+            <p class="navbar-text">
+                <a href="/login" class="navbar-link">Login</a>&nbsp;
+                <a href="/register" class="navbar-link">Register</a>&nbsp;          
+            </p>  
+            </div>
+            
+            <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/home">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+            </div>
+    
+        </div>
+        </div> 
+     {{/if}}
+    
     <!--
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">

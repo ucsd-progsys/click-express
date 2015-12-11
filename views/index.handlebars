@@ -1,10 +1,6 @@
-<h1>Welcome to ClickExpress</h1>
 
 {{#if user}}
-  <p>Hello, {{user.username}}! </p>
-  <a href="/logout">Logout<a/>
+  {{> page/nav}}
 {{else}}
-  <a href="/login">Login<a/>
-  <br>
-  <a href="/register">Register<a/>
+  {{> page/nav-init}}
 {{/if}}

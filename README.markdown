@@ -6,6 +6,11 @@ Web-based clicker site (written in express)
 + [mongodb/mongoose][3]
 + [sessions][4]
 
+## Installation instructions
+
+    sudo apt-get install libkrb5-dev
+    sudo apt-get install mongodb
+
 ## TODO
 
 + Home Page
@@ -30,7 +35,7 @@ Pages/Routes
   * click
 
 + teach [HEREHEREHEREHERE]
-m
+
   * Main  : [Start | Stop | Graph ]
   * Graph : [Prev | Next]
 

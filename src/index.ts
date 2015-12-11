@@ -16,7 +16,7 @@ import t              = require('./types');
 
 var LocalStrategy     = passportLocal.Strategy;
 var handlebars        = require('express-handlebars').create({ defaultLayout: 'main' });
-// var favicon        = require('serve-favicon');
+var favicon           = require('serve-favicon');
 // var flash          = require('connect-flash');
 var app               = express();
 var http              = require('http').Server(app);
@@ -47,7 +47,7 @@ app.set('view engine', 'handlebars');
 ////////////////////////////////////////////////////////////////////
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(__dirname + '/public/icons/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -83,8 +83,8 @@ app.get( '/login'    ,              routes.getLogin);
 app.get( '/logout'   ,              routes.logout);
 app.post('/login'    ,              routes.postLogin);
 app.post('/click'    , routes.auth, routes.postClick);                         // TODO: auth-student
-app.get('/quizstart' , routes.auth, routes.postQuiz(io, t.Message.QuizStart)); // TODO: auth-instructor
-app.get('/quizstop'  , routes.auth, routes.postQuiz(io, t.Message.QuizStop));  // TODO: auth-instructor
+app.get( '/quizstart', routes.auth, routes.postQuiz(io, t.Message.QuizStart)); // TODO: auth-instructor
+app.get( '/quizstop' , routes.auth, routes.postQuiz(io, t.Message.QuizStop));  // TODO: auth-instructor
 
 ////////////////////////////////////////////////////////////////////
 // Passport config /////////////////////////////////////////////////
