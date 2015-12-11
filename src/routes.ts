@@ -78,9 +78,9 @@ export var getLogin:RequestH = (req, res, next) => {
   res.render('login', { user : req.user });
 }
 
-export var postLogin = passport.authenticate('local', { successRedirect: '/home'
-                                                      , failureRedirect: '/login' });
-
+export var postLogin = 
+    passport.authenticate('local', { successRedirect: '/home'
+                                   , failureRedirect: '/login' });
 
 ////////////////////////////////////////////////////////////////////////
 // Authenticated Zone //////////////////////////////////////////////////
@@ -108,8 +108,14 @@ export var redirectHome:RequestH = (req, res) => {
 
 // INVARIANT: AUTH
 export function home(url:string): RequestH {
-  return (req, res) => { res.render('home', { user      : req.user
-                                            , serverURL : url}); }
+  return (req, res) => {
+    if (req.user.username === 'instructor') {
+      res.render('instructor-home', { user: req.user, serverURL : url});          
+    } 
+    else {
+      res.render('home', { user: req.user, serverURL : url});
+    } 
+  }
 }
 
 export var logout : RequestH = (req,res) => {
@@ -157,6 +163,7 @@ export var postClick: RequestH = (req, res) => {
 
 // INVARIANT: AUTH
 export function postQuiz(io:SocketIO.Server, msg:t.Message): RequestH {
+  console.log("Posting Quiz ...");
   return (req, res) => {
     sendSocket(io, msgQuiz(msg));
     sendHttp(res, msgQuizAck);
