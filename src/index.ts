@@ -109,27 +109,38 @@ mongoose.connect('mongodb://localhost/click-express-mongoose');
 
 var users = 0;
 
-io.on('connection', function(socket){
-  var n = users++;
-  console.log('user connected: ' + n);
-  socket.on('disconnect', function(){
-    console.log('bye-bye user: ' + n);
-  });
+io.on('connection', (socket) => {
+    var n = users++;
+    console.log('user connected: ' + n);
+    // io.sockets.sockets.forEach(element => {
+    //     console.log(element.id);
+    // });
+  
+    // Disconnect
+    socket.on('disconnect', () => console.log('bye-bye user: ' + n));
+    
+    // Posted question
+    socket.on('question:post', (msg: string) => {
+        console.log('Received question: ' + msg);
+        console.log('Broadcasting ...');        
+        io.emit('question:new', msg);                
+    });
+
 });
 
 ////////////////////////////////////////////////////////////////////
 // Start me up /////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-var handle404:express.ErrorRequestHandler = function(err, req, res, next){
-  res.status(404);
-  res.render('404');
+var handle404: express.ErrorRequestHandler = (err, req, res, next) => {
+    res.status(404);
+    res.render('404');
 }
 
-var handle500:express.ErrorRequestHandler = function(err, req, res, next){
-  console.error(err.stack);
-  res.status(500);
-  res.render('500');
+var handle500: express.ErrorRequestHandler = (err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500);
+    res.render('500');
 }
 
 // 404 page

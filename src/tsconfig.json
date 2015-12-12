@@ -12,12 +12,11 @@
         "removeComments": true,
         "noLib": false,
         "preserveConstEnums": false,
-        "suppressImplicitAnyIndexErrors": false
+        "suppressImplicitAnyIndexErrors": false,
+        "watch": true       
     },
     "filesGlob": [
-        "./**/*.ts",
-        "./**/*.tsx",
-        "!./node_modules/**/*"
+        ".*.ts"
     ],
     "files": [
         "./index.ts",
