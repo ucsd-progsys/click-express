@@ -98,6 +98,10 @@ function serverError($scope, data, status, e) {
     alert(msg);
 }
 
+function formatQuestion(msg: string) {
+    return "<div><blockquote>" + msg + "</blockquote></div>";
+}
+
 ///////////////////////////////////////////////////////////////////////
 
 
@@ -112,6 +116,7 @@ function clickCtrl($scope, $http, $location) {
     
     socket.on('question:new', (msg) => {
         console.log('Got message: ' + msg);
+        angular.element(document.getElementById('space-for-questions')).append(formatQuestion(msg));
     });
     
 
@@ -168,5 +173,4 @@ function clickCtrl($scope, $http, $location) {
 }
 
 var click = angular.module('click', []);
-
 click.controller('clickCtrl', clickCtrl);
