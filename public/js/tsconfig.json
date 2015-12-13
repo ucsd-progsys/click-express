@@ -13,10 +13,12 @@
         "noLib": false,
         "preserveConstEnums": false,
         "suppressImplicitAnyIndexErrors": false,
-        "watch": true       
+        "watch": true
     },
     "files": [
         "./clicker.ts",
-        "../../src/types.ts"
+        "./clicker-student.ts",
+        "./clicker-instructor.ts"
     ]
+                
 }

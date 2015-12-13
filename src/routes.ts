@@ -102,25 +102,22 @@ export var auth:RequestH = (req, res, next) => {
 }
 
 // INVARIANT: AUTH
-export var redirectHome:RequestH = (req, res) => {
-  res.redirect('/home');
+export var redirectHome: RequestH = (req, res) => {
+    res.redirect('/home');
 }
 
 // INVARIANT: AUTH
 export function home(url:string): RequestH {
-  return (req, res) => {
-    if (req.user.username === 'instructor') {
-      res.render('instructor-home', { user: req.user, serverURL : url});          
-    } 
-    else {
-      res.render('home', { user: req.user, serverURL : url});
-    } 
-  }
+    return (req, res) => {
+        (req.user.username === 'instructor') ?
+            res.render('instructor-home', { user: req.user, serverURL : url}):          
+            res.render('student-home', { user: req.user, serverURL : url});     
+    }
 }
 
 export var logout : RequestH = (req,res) => {
-  req.logout();
-  res.redirect('/');
+    req.logout();
+    res.redirect('/');
 }
 
 ////////////////////////////////////////////////////////////////////////
