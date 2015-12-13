@@ -83,9 +83,9 @@ app.get( '/view'     , routes.auth, routes.view);
 app.get( '/login'    ,              routes.getLogin);
 app.get( '/logout'   ,              routes.logout);
 app.post('/login'    ,              routes.postLogin);
-app.post('/click'    , routes.auth, routes.postClick);                         // TODO: auth-student
-app.get( '/quizstart', routes.auth, routes.postQuiz(io, t.Message.QuizStart)); // TODO: auth-instructor
-app.get( '/quizstop' , routes.auth, routes.postQuiz(io, t.Message.QuizStop));  // TODO: auth-instructor
+// app.post('/click'    , routes.auth, routes.postClick);                          // TODO: auth-student
+// app.get( '/quizstart', routes.auth, routes.postQuiz(io, t.QUIZ_CREATE)); // TODO: auth-instructor
+// app.get( '/quizstop' , routes.auth, routes.postQuiz(io, t.QUIZ_STOP));   // TODO: auth-instructor
 
 ////////////////////////////////////////////////////////////////////
 // Passport config /////////////////////////////////////////////////
@@ -109,9 +109,16 @@ mongoose.connect('mongodb://localhost/click-express-mongoose');
 
 var users = 0;
 
+let allSockets: SocketIO.Socket[] = []
+
 io.on('connection', (socket) => {
     var n = users++;
     console.log('user connected: ' + n);
+    
+    // Register socket
+    allSockets.push(socket);
+    
+    
     // io.sockets.sockets.forEach(element => {
     //     console.log(element.id);
     // });
@@ -120,10 +127,9 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => console.log('bye-bye user: ' + n));
     
     // Posted question
-    socket.on('question:post', (msg: string) => {
-        console.log('Received question: ' + msg);
-        console.log('Broadcasting ...');        
-        io.emit('question:new', msg);                
+    socket.on(t.QUIZ_CREATE, (msg: t.QuizPost) => {
+        console.log(msg.name + ' created a question: ' + msg.message);
+        io.emit(t.QUIZ_BCAST, msg);        
     });
 
 });

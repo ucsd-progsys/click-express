@@ -37,10 +37,10 @@ var msgQuiz = (msg:t.Message) => ({
   , info   : Date.now()
 })
 
-var msgQuizAck : t.SocketEvent = {
-    kind   : t.Message.QuizAck
-  , info   : true
-}
+// var msgQuizAck : t.SocketEvent = {
+//     kind   : t.Message.QuizAck
+//   , info   : true
+// }
 
 function sendSocket(io:SocketIO.Server, e:t.SocketEvent) {
   io.emit('message', e);
@@ -144,31 +144,31 @@ function requestClick(req:Request):models.ClickI {
          }
 }
 
-export var postClick: RequestH = (req, res) => {
-  var ci = requestClick(req);
-  new Click(ci).save(function( err, click ){
-    if (err) {
-      console.log(err);
-      sendHttp(res, msgClickFail)
-    } else {
-      sendHttp(res, msgClickOk(ci.choice))
-    };
-  });
-}
+// export var postClick: RequestH = (req, res) => {
+//   var ci = requestClick(req);
+//   new Click(ci).save(function( err, click ){
+//     if (err) {
+//       console.log(err);
+//       sendHttp(res, msgClickFail)
+//     } else {
+//       sendHttp(res, msgClickOk(ci.choice))
+//     };
+//   });
+// }
 
 
 ////////////////////////////////////////////////////////////////////////
 // Post a new Quiz  ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-// INVARIANT: AUTH
-export function postQuiz(io:SocketIO.Server, msg:t.Message): RequestH {
-  console.log("Posting Quiz ...");
-  return (req, res) => {
-    sendSocket(io, msgQuiz(msg));
-    sendHttp(res, msgQuizAck);
-  }
-}
+// // INVARIANT: AUTH
+// export function postQuiz(io:SocketIO.Server, msg:t.Message): RequestH {
+//   console.log("Posting Quiz ...");
+//   return (req, res) => {
+//     sendSocket(io, msgQuiz(msg));
+//     sendHttp(res, msgQuizAck);
+//   }
+// }
 
 ////////////////////////////////////////////////////////////////////////
 // View Previous Clicks ////////////////////////////////////////////////
