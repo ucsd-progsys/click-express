@@ -2,6 +2,7 @@
 declare var serverURL: string;
 declare var angular: any;
 declare var io: any;
+declare var markdown: any;
 
 ////////////////////////////////////////////////////////////////////////
 // Globally Useful Type Definitions ////////////////////////////////////
@@ -109,16 +110,19 @@ function setStatus($scope, s: t.Status) {
 //     // alert($scope.quiz);
 // }
 
-function serverError($scope, data, status, e) {
+let serverError = ($scope, data, status, e) => {
     var s = "Request failed: " + e;
     $scope.label = s;
     var msg = (data || s) + status;
     alert(msg);
 }
 
-function formatQuestion(msg: string) {
-    return "<div>" + msg + "</div>";
-}
+let wrapIn = (msg: string, symbol: string) => '<' + symbol + '>' + msg + '</' + symbol + '>';    
+let wrapInDiv = (s: string) => wrapIn(s, 'div');
+let wrapInP = (s: string) => wrapIn(s, 'p');
+let wrapInBlockQuote = (s: string) => wrapIn(s, 'blockquote');  
+let formatQuiz = (msg: string) => wrapInBlockQuote(wrapInP(msg));   
+
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -132,12 +136,9 @@ function clickCtrl($scope, $http, $location) {
     let userName = "DEFAULT_USER";      // TODO     
     
     // Student    
+    let quizzes: { [x: number]: t.QuizPost} = {};    
     
-    let quizzes: { [x: number]: t.QuizPost} = {};
-    
-    
-    // Instructor 
-    
+    // Instructor    
     // Quiz count 
     let quizCount = 0;
 
@@ -145,20 +146,19 @@ function clickCtrl($scope, $http, $location) {
     // socket.on('message', (msg) => $scope.$apply(() => setQuiz($scope, msg)));
     
     socket.on(QUIZ_BCAST, (msg: t.QuizPost) => {        
-        console.log('Checking for ' + msg.id + ' in keys: ' + 
-            Object.getOwnPropertyNames(quizzes).join(', ') + ' ' + 
-            quizzes.hasOwnProperty(msg.id.toString()));        
+        // console.log('Checking for ' + msg.id + ' in keys: ' + 
+        //     Object.getOwnPropertyNames(quizzes).join(', ') + ' ' + 
+        //     quizzes.hasOwnProperty(msg.id.toString()));        
 
-        // Check for duplicate
-        if (quizzes.hasOwnProperty(msg.id.toString())) { 
-            console.log("Found key"); 
-            return;
-        }
-
-        quizzes[msg.id] = msg;
+        // // Check for duplicate
+        // if (quizzes.hasOwnProperty(msg.id.toString())) { 
+        //     console.log("Found key"); 
+        //     return;
+        // }
+        // quizzes[msg.id] = msg;
         
         console.log(QUIZ_BCAST + ' from ' + msg.name + ' message: ' + msg.message);
-        angular.element(document.getElementById('space-for-questions')).append(formatQuestion(msg.message));
+        angular.element(document.getElementById('space-for-questions')).append(markdown.toHTML(msg.message));
     });
     
 
@@ -222,6 +222,9 @@ function clickCtrl($scope, $http, $location) {
             message: text
         };        
     }
+    
+    
+    
 }
 
 var click = angular.module('click', []);

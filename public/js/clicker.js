@@ -48,15 +48,17 @@ function setStatus($scope, s) {
     $scope.isWaiting = (s === t.Status.Clicked);
     $scope.isOff = (s === t.Status.Off);
 }
-function serverError($scope, data, status, e) {
+var serverError = function ($scope, data, status, e) {
     var s = "Request failed: " + e;
     $scope.label = s;
     var msg = (data || s) + status;
     alert(msg);
-}
-function formatQuestion(msg) {
-    return "<div>" + msg + "</div>";
-}
+};
+var wrapIn = function (msg, symbol) { return '<' + symbol + '>' + msg + '</' + symbol + '>'; };
+var wrapInDiv = function (s) { return wrapIn(s, 'div'); };
+var wrapInP = function (s) { return wrapIn(s, 'p'); };
+var wrapInBlockQuote = function (s) { return wrapIn(s, 'blockquote'); };
+var formatQuiz = function (msg) { return wrapInBlockQuote(wrapInP(msg)); };
 function clickCtrl($scope, $http, $location) {
     $scope.label = "(none)";
     setStatus($scope, t.Status.Off);
@@ -64,16 +66,11 @@ function clickCtrl($scope, $http, $location) {
     var quizzes = {};
     var quizCount = 0;
     socket.on(QUIZ_BCAST, function (msg) {
-        console.log('Checking for ' + msg.id + ' in keys: ' +
-            Object.getOwnPropertyNames(quizzes).join(', ') + ' ' +
-            quizzes.hasOwnProperty(msg.id.toString()));
-        if (quizzes.hasOwnProperty(msg.id.toString())) {
-            console.log("Found key");
-            return;
-        }
-        quizzes[msg.id] = msg;
+        // console.log('Checking for ' + msg.id + ' in keys: ' + 
+        //     Object.getOwnPropertyNames(quizzes).join(', ') + ' ' + 
+        //     quizzes.hasOwnProperty(msg.id.toString()));        
         console.log(QUIZ_BCAST + ' from ' + msg.name + ' message: ' + msg.message);
-        angular.element(document.getElementById('space-for-questions')).append(formatQuestion(msg.message));
+        angular.element(document.getElementById('space-for-questions')).append(markdown.toHTML(msg.message));
     });
     $scope.submit = function () {
         if ($scope.text) {
