@@ -1,5 +1,4 @@
 
-var choices = { 1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E' };
 var debug = false;
 var socket = io(); // initSocket();
 
@@ -20,34 +19,52 @@ function studentClickCtrl($scope, $uibModal, $location) {
     $scope.label = "(none)";
     setStatus($scope, t.Status.Off);
     let converter = new showdown.Converter();
-    
+
+    $scope.choices = [
+        { id: 0, text: 'A', class: "btn-primary" },
+        { id: 1, text: 'B', class: "btn-success" },
+        { id: 2, text: 'C', class: "btn-info"    },
+        { id: 3, text: 'D', class: "btn-warning" },
+        { id: 4, text: 'E', class: "btn-danger"  }
+    ];
+
+    $scope.response = { rsp: ERROR_RESPONCE };
+
     socket.on(QUIZ_BCAST, (quiz: t.QuizPost) => {
-        // console.log(quiz.message);        
-        // angular.element(document.getElementById('space-for-questions')).append(formatQuiz(markdown.toHTML(msg.message)));
-  
-        var modalInstance = $uibModal.open({
+        let modalInstance = $uibModal.open({
             animation: true,
             templateUrl: 'myModalContent.html',
             controller: 'ModalInstanceCtrl',
             resolve: {
-                question: () => converter.makeHtml(quiz.message)
+                question: () => converter.makeHtml(quiz.message),
+                choices : () => $scope.choices,
+                response: () => $scope.response
             },
             backdrop: 'static',
             keyboard: false
         });
 
-        modalInstance.result.then(function(selectedItem) {
-            $scope.selected = selectedItem;
-        }, function() {
-            console.log('Modal dismissed at: ' + new Date());
-        });
+        modalInstance.result.then(
+            (answer: string) => {
+                // return the selection through the socket
+                socket.emit(QUIZ_ANS, {
+                    quizId: quiz.id,
+                    userId: userName,
+                    answer: answer,
+                    time: new Date()
+                });
+            },
+            () => { console.log('Question dismissed at: ' + new Date()) }
+        );
     });
 }
 
-function modalInstanceCtrl($scope, $uibModalInstance, question) {
-    $scope.quiz   = () => question;    
-    $scope.ok     = () => {} // $uibModalInstance.close($scope.selected.item);    
-    $scope.cancel = () => { $uibModalInstance.dismiss('cancel'); } 
+function modalInstanceCtrl($scope, $uibModalInstance, question, choices, response) {
+    $scope.quiz     = { val: question };
+    $scope.choices  = { val: choices };
+    $scope.response = { val : ERROR_RESPONCE };
+    $scope.ok       = () => { $uibModalInstance.close($scope.response.rsp); };
+    $scope.cancel   = () => { $uibModalInstance.dismiss('cancel'); }
 };
 
 click.controller('studentClickCtrl', studentClickCtrl);

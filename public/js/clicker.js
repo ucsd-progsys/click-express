@@ -18,6 +18,8 @@ function initSocket() { return (isHomeURL()) ? io() : null; }
 var QUIZ_CREATE = "QUIZ_CREATE";
 var QUIZ_BCAST = "QUIZ_BCAST";
 var QUIZ_STOP = "QUIZ_STOP";
+var QUIZ_ANS = "QUIZ_ANS";
+var ERROR_RESPONCE = "ERROR";
 var t;
 (function (t) {
     (function (Message) {

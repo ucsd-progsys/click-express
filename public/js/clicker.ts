@@ -40,8 +40,11 @@ function initSocket() { return (isHomeURL()) ? io() : null; }
 ////////////////////////////////////////////////////////////////////////
 
 const QUIZ_CREATE = "QUIZ_CREATE";
-const QUIZ_BCAST = "QUIZ_BCAST";
-const QUIZ_STOP = "QUIZ_STOP";
+const QUIZ_BCAST  = "QUIZ_BCAST";
+const QUIZ_STOP   = "QUIZ_STOP";
+const QUIZ_ANS    = "QUIZ_ANS";
+
+const ERROR_RESPONCE = "ERROR";
 
 
 module t {
@@ -74,6 +77,13 @@ module t {
 		name: string;       // Instructors name
 		message: string;    // Question (TODO: in Markdown) 
 	}
+	
+	export interface QuizAnswer {
+		quizId: number;
+		userId: string;
+		answer: string;		// ['A'..'E']
+		time: Date;
+	}
 
 }
 
@@ -86,11 +96,11 @@ let serverError = ($scope, data, status, e) => {
 }
 
 
-let wrapIn = (msg: string, symbol: string) => '<' + symbol + '>' + msg + '</' + symbol + '>';
-let wrapInDiv = (s: string) => wrapIn(s, 'div');
-let wrapInP = (s: string) => wrapIn(s, 'p');
+let wrapIn 			 = (msg: string, symbol: string) => '<' + symbol + '>' + msg + '</' + symbol + '>';
+let wrapInDiv 		 = (s: string) => wrapIn(s, 'div');
+let wrapInP 		 = (s: string) => wrapIn(s, 'p');
 let wrapInBlockQuote = (s: string) => wrapIn(s, 'blockquote');
-let formatQuiz = (msg: string) => wrapInBlockQuote(wrapInP(msg));   
+let formatQuiz 		 = (msg: string) => wrapInBlockQuote(wrapInP(msg));   
 
 
 var click = angular.module('click', [

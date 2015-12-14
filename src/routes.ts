@@ -59,15 +59,14 @@ export var registerWith = (z:Object) => {
   return h;
 }
 
-export function register(req: Request, res: Response){
-  var acc = new Account({ username : req.body.username
-                        , email    : req.body.email   });
-  console.log('USER: ' + req.body.username);
-  console.log('PASS: ' + req.body.password);
-  Account.register(acc, req.body.password, function(err:any, account:any) {
-    if (err) return registerWith(msgUserExists)(req, res, undefined);
-    passport.authenticate('local')(req, res, () => res.redirect('/')) ;
-  });
+export function register(req: Request, res: Response) {
+    let acc = new Account({ username: req.body.username, email: req.body.email });
+    console.log('USER: ' + req.body.username);
+    console.log('PASS: ' + req.body.password);
+    Account.register(acc, req.body.password, (err:any, account:any) => {
+        if (err) return registerWith(msgUserExists)(req, res, undefined);
+        passport.authenticate('local')(req, res, () => res.redirect('/'));
+    });
 }
 
 ////////////////////////////////////////////////////////////////////////

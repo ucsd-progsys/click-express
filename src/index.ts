@@ -127,11 +127,15 @@ io.on('connection', (socket) => {
     // Disconnect
     socket.on('disconnect', () => console.log('bye-bye user: ' + n));
     
-    // Posted question
+    // Instructor posted a question
     socket.on(t.QUIZ_CREATE, (msg: t.QuizPost) => {
-        console.log(msg.name + ' created a question: ' + msg.message);
         io.emit(t.QUIZ_BCAST, msg);        
     });
+    
+    // Student sent a click
+    socket.on(t.QUIZ_ANS, (click: t.QuizAnswer) => {
+        console.log(click.time + ' :: ' + click.userId + ' answered to ' + click.quizId + ' with ' + click.answer);
+    })
 
 });
 

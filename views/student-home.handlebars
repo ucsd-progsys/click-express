@@ -9,11 +9,18 @@
             <h3 class="modal-title">Question</h3>
         </div>
         <div class="modal-body">            
-        <p ng-bind-html="quiz()"></p>
+            <p ng-bind-html="quiz.val"></p>
+            <span ng-repeat="choice in choices.val">
+                <button class="btn \{{ choice.class }}" 
+                        type="button" 
+                        ng-click="$event.preventDefault(); response.rsp = choice.text; ok()">\{{ choice.text }}</button>
+            </span>        
         </div>
+                
         <div class="modal-footer">
-            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+            <div>
+                <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+            </div>
         </div>
     </script>           
     

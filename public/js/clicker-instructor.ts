@@ -23,11 +23,7 @@ function instructorClickCtrl($scope, $http, $location) {
         }
     }
 
-    $scope.preview = () => { 
-        let result = converter.makeHtml($scope.text);
-        console.log(result);
-        return result;
-    }
+    $scope.preview = () => converter.makeHtml($scope.text);
 
     function makeQuiz(text: string): t.QuizPost {
         return {
