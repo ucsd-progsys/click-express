@@ -1,12 +1,15 @@
 
 var debug = false;
 var socket = io(); // initSocket();
- 
-function instructorClickCtrl($scope, $http, $location) {
+
+function instructorClickCtrl($scope, $http, $location) {        
         
     // INIT
     $scope.label = "(none)";
     // setStatus($scope, t.Status.Off);
+    
+    let converter = new showdown.Converter();
+    
     
     // Instructor    
     // Quiz count 
@@ -16,9 +19,14 @@ function instructorClickCtrl($scope, $http, $location) {
     $scope.submit = () => {
         if ($scope.text) {
             let quiz = makeQuiz($scope.text);
-            // console.log(QUIZ_CREATE + ' : ' + $scope.text);
             socket.emit(QUIZ_CREATE, quiz);
         }
+    }
+
+    $scope.preview = () => { 
+        let result = converter.makeHtml($scope.text);
+        console.log(result);
+        return result;
     }
 
     function makeQuiz(text: string): t.QuizPost {
@@ -31,6 +39,7 @@ function instructorClickCtrl($scope, $http, $location) {
 }
 
 click.controller('instructorClickCtrl', instructorClickCtrl);
+
 
 /////////////////////////////////////////////////////////////////////////////
 

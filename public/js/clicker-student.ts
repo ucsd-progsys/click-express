@@ -19,22 +19,18 @@ function studentClickCtrl($scope, $uibModal, $location) {
     // INIT
     $scope.label = "(none)";
     setStatus($scope, t.Status.Off);
-
-    let userName = "DEFAULT_USER";      // TODO     
+    let converter = new showdown.Converter();
     
-    socket.on(QUIZ_BCAST, (msg: t.QuizPost) => {
-        // console.log(QUIZ_BCAST + ' from ' + msg.name + ' message: ' + msg.message);        
+    socket.on(QUIZ_BCAST, (quiz: t.QuizPost) => {
+        // console.log(quiz.message);        
         // angular.element(document.getElementById('space-for-questions')).append(formatQuiz(markdown.toHTML(msg.message)));
   
         var modalInstance = $uibModal.open({
-            animation: $scope.animationsEnabled,
+            animation: true,
             templateUrl: 'myModalContent.html',
             controller: 'ModalInstanceCtrl',
             resolve: {
-                question: msg.message,
-                items: function() {
-                    return $scope.items;
-                }
+                question: () => converter.makeHtml(quiz.message)
             },
             backdrop: 'static',
             keyboard: false
@@ -48,19 +44,11 @@ function studentClickCtrl($scope, $uibModal, $location) {
     });
 }
 
-function modalInstanceCtrl($scope, $uibModalInstance, items) {
-    $scope.items = items;
-    $scope.selected = {
-        item: $scope.items[0]
-    };
-    $scope.ok = function() {
-        $uibModalInstance.close($scope.selected.item);
-    };
-    $scope.cancel = function() {
-        $uibModalInstance.dismiss('cancel');
-    };
+function modalInstanceCtrl($scope, $uibModalInstance, question) {
+    $scope.quiz   = () => question;    
+    $scope.ok     = () => {} // $uibModalInstance.close($scope.selected.item);    
+    $scope.cancel = () => { $uibModalInstance.dismiss('cancel'); } 
 };
-
 
 click.controller('studentClickCtrl', studentClickCtrl);
 click.controller('ModalInstanceCtrl', modalInstanceCtrl); 

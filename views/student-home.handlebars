@@ -9,16 +9,16 @@
             <h3 class="modal-title">Question</h3>
         </div>
         <div class="modal-body">            
-                <div>{{ question }}</div>
+        <p ng-bind-html="quiz()"></p>
         </div>
         <div class="modal-footer">
             <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
             <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
         </div>
-    </script>
+    </script>           
     
-    <button type="button" class="btn btn-default" ng-click="open()">Open me!</button>
-    <div ng-show="selected">Selection from a modal: {{ selected }}</div>
+    <!--<button type="button" class="btn btn-default" ng-click="open()">Open me!</button>
+    <div ng-show="selected">Selection from a modal: {{ selected }}</div>-->
 
 </section>
 

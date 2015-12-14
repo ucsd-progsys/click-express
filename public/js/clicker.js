@@ -48,4 +48,8 @@ var wrapInDiv = function (s) { return wrapIn(s, 'div'); };
 var wrapInP = function (s) { return wrapIn(s, 'p'); };
 var wrapInBlockQuote = function (s) { return wrapIn(s, 'blockquote'); };
 var formatQuiz = function (msg) { return wrapInBlockQuote(wrapInP(msg)); };
-var click = angular.module('click', ['ngAnimate', 'ui.bootstrap']);
+var click = angular.module('click', [
+    'ngAnimate',
+    'ui.bootstrap',
+    'ngSanitize'
+]);

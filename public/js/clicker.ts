@@ -6,7 +6,7 @@ var userName: string = userName || "UNKNOWN_USER";
 
 declare var serverURL: string;
 declare var io: any;
-declare var markdown: any;
+declare let showdown;
 
 ///////////////////////////////////////////////////////////////////////
 // URL API ////////////////////////////////////////////////////////////
@@ -93,4 +93,8 @@ let wrapInBlockQuote = (s: string) => wrapIn(s, 'blockquote');
 let formatQuiz = (msg: string) => wrapInBlockQuote(wrapInP(msg));   
 
 
-var click = angular.module('click', ['ngAnimate', 'ui.bootstrap']);
+var click = angular.module('click', [
+	'ngAnimate', 		// Modal element (optional)
+	'ui.bootstrap', 	// Modal element
+	'ngSanitize'  		// Markdown html sanitization
+	]);
