@@ -10,12 +10,9 @@ function instructorClickCtrl($scope, $http, $location) {
     
     let converter = new showdown.Converter();
     
-    
-    // Instructor    
-    // Quiz count 
+    // Quiz count -- TODO: server should assing IDs 
     let quizCount = 0;
-    
-    
+        
     // Select time
     $scope.times = [ 15, 30, 60 ];
     $scope.selectedTime = $scope.times[2];  // default

@@ -6,11 +6,10 @@
 
     <script type="text/ng-template" id="myModalContent.html">
         <div class="modal-header">
-            <h3 class="modal-title">Question</h3>
+            <h2 class="modal-title">Question</h2>
+            <b>Time remaining: </b><span ng-bind="counter.val.cnt"></span> seconds                            
         </div>
-        <div class="modal-body">
-            <p ng-bind="counter.val.cnt"></p>
-                            
+        <div class="modal-body">                            
             <p ng-bind-html="quiz.val"></p>
             <span ng-repeat="choice in choices.val">
                 <button class="btn \{{ choice.class }}" 
@@ -20,9 +19,7 @@
         </div>
                 
         <div class="modal-footer">
-            <div>
-                <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-            </div>
+                <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>            
         </div>
     </script>           
     
