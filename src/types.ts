@@ -34,12 +34,13 @@ export interface SocketEvent {
 export interface QuizPost {
     id: number;
     name: string;       // Instructors name
-    message: string;    // Question (TODO: in Markdown) 
+    message: string;    // Question
+    time: number;       // of seconds 
 }
 
 export interface QuizAnswer {
     quizId: number;
     userId: string;
     answer: string;		// ['A'..'E']
-    time: Date;
+    submissionTime: Date;
 }

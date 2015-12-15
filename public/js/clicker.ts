@@ -32,7 +32,6 @@ function isHomeURL() {
     return (window.location.pathname === '/home');
 }
 
-
 function initSocket() { return (isHomeURL()) ? io() : null; }
 
 ////////////////////////////////////////////////////////////////////////
@@ -75,14 +74,15 @@ module t {
 	export interface QuizPost {
 		id: number;
 		name: string;       // Instructors name
-		message: string;    // Question (TODO: in Markdown) 
+		message: string;    // Question
+		time: number;		// Time to answer
 	}
 	
 	export interface QuizAnswer {
 		quizId: number;
 		userId: string;
 		answer: string;		// ['A'..'E']
-		time: Date;
+		submissionTime: Date;		
 	}
 
 }
@@ -106,5 +106,6 @@ let formatQuiz 		 = (msg: string) => wrapInBlockQuote(wrapInP(msg));
 var click = angular.module('click', [
 	'ngAnimate', 		// Modal element (optional)
 	'ui.bootstrap', 	// Modal element
-	'ngSanitize'  		// Markdown html sanitization
+	'ngSanitize',  		// Markdown html sanitization
+	'ng.bs.dropdown'
 	]);

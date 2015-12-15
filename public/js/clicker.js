@@ -53,5 +53,6 @@ var formatQuiz = function (msg) { return wrapInBlockQuote(wrapInP(msg)); };
 var click = angular.module('click', [
     'ngAnimate',
     'ui.bootstrap',
-    'ngSanitize'
+    'ngSanitize',
+    'ng.bs.dropdown'
 ]);

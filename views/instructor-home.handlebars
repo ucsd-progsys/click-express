@@ -1,6 +1,14 @@
 
 
 <div ng-controller="instructorClickCtrl">
+	<p><label for="question">Time (sec)</label>	
+	<div bs-dropdown 
+		 bs-dropdown-display="TimesDropDown" 
+		 bs-dropdown-items="times" 
+		 ng-model="selectedTime" 
+		 ng-change="changeTime()">
+	</div></p>
+	
 	<p><label for="question">Post a Question</label></p>
 	<p><textarea class="form-control" ng-model="text" btf-markdown rows="4"></textarea></p>
 	<hr>

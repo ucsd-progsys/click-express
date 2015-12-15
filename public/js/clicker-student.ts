@@ -13,13 +13,13 @@ function setStatus($scope, s: t.Status) {
 
 ///////////////////////////////////////////////////////////////////////
 
-function studentClickCtrl($scope, $uibModal, $location) {
+function studentClickCtrl($scope, $uibModal, $location, $timeout) {
 
     // INIT
     $scope.label = "(none)";
     setStatus($scope, t.Status.Off);
     let converter = new showdown.Converter();
-        
+
     $scope.choices = [
         { id: 0, text: 'A', class: "btn-primary" },
         { id: 1, text: 'B', class: "btn-success" },
@@ -28,6 +28,14 @@ function studentClickCtrl($scope, $uibModal, $location) {
         { id: 4, text: 'E', class: "btn-danger"  }
     ];
 
+    $scope.counter = { cnt: 0 };
+    $scope.countdown = function() {
+        $timeout(function() {
+            $scope.counter.cnt--;
+            $scope.countdown();
+        }, 1000 /* miliseconds */);
+    };
+   
     $scope.response = { rsp: ERROR_RESPONCE };
 
     socket.on(QUIZ_BCAST, (quiz: t.QuizPost) => {
@@ -38,7 +46,8 @@ function studentClickCtrl($scope, $uibModal, $location) {
             resolve: {
                 question: () => converter.makeHtml(quiz.message),
                 choices : () => $scope.choices,
-                response: () => $scope.response
+                counter : () => $scope.counter,
+                response: () => $scope.response                
             },
             backdrop: 'static',
             keyboard: false
@@ -56,19 +65,24 @@ function studentClickCtrl($scope, $uibModal, $location) {
             },
             () => { console.log('Question dismissed at: ' + new Date()) }
         );
+        console.log(quiz.time);
+        $scope.counter.cnt = quiz.time;
+        $scope.countdown();       
+
     });
 }
 
-function modalInstanceCtrl($scope, $uibModalInstance, question, choices, response) {
+function modalInstanceCtrl($scope, $uibModalInstance, question, choices, counter, response) {
     $scope.quiz     = { val: question };
     $scope.choices  = { val: choices };
-    $scope.response = { val : ERROR_RESPONCE };
+    $scope.counter  = { val: counter };
+    $scope.response = { val: ERROR_RESPONCE };
     $scope.ok       = () => { $uibModalInstance.close($scope.response.rsp); };
     $scope.cancel   = () => { $uibModalInstance.dismiss('cancel'); }
 };
 
 click.controller('studentClickCtrl', studentClickCtrl);
-click.controller('ModalInstanceCtrl', modalInstanceCtrl); 
+click.controller('ModalInstanceCtrl', modalInstanceCtrl);
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -90,8 +104,8 @@ click.controller('ModalInstanceCtrl', modalInstanceCtrl);
     // }
 
     // RECV: quiz notifications (over socket)
-    // socket.on('message', (msg) => $scope.$apply(() => setQuiz($scope, msg)));        
-    
+    // socket.on('message', (msg) => $scope.$apply(() => setQuiz($scope, msg)));
+
 
     // // SEND: click responses
     // $scope.clickChoose = (n) => {
@@ -108,8 +122,8 @@ click.controller('ModalInstanceCtrl', modalInstanceCtrl);
     //             serverError($scope, data, status, "click");
     //         });
     // }
-    
-    
+
+
     // // SEND: Start QUIZ
     // $scope.quizStart = () => {
     //     setStatus($scope, t.Status.Waiting);
@@ -135,4 +149,3 @@ click.controller('ModalInstanceCtrl', modalInstanceCtrl);
     //         })
     //     return;
     // }
-    

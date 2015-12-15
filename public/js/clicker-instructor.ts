@@ -14,22 +14,29 @@ function instructorClickCtrl($scope, $http, $location) {
     // Instructor    
     // Quiz count 
     let quizCount = 0;
+    
+    
+    // Select time
+    $scope.times = [ 15, 30, 60 ];
+    $scope.selectedTime = $scope.times[2];  // default
+    $scope.changeTime = () => {};
   
     // SUBMIT: post question
     $scope.submit = () => {
         if ($scope.text) {
-            let quiz = makeQuiz($scope.text);
+            let quiz = makeQuiz($scope.text, 10);
             socket.emit(QUIZ_CREATE, quiz);
         }
     }
 
     $scope.preview = () => converter.makeHtml($scope.text);
 
-    function makeQuiz(text: string): t.QuizPost {
+    function makeQuiz(text: string, time: number /* of seconds */): t.QuizPost {
         return {
             id: quizCount++,
             name: userName,
-            message: text
+            message: text,
+            time: $scope.selectedTime          
         };
     }
 }
