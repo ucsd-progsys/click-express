@@ -13,6 +13,8 @@ Web-based clicker site (written in express)
 
 ## TODO
 
++ Only allow one question at a time
+
 + Home Page
    > add sockets: to allow instructor to post question
    > add NAVBAR [ home | role | view | logout ]

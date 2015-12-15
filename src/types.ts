@@ -4,10 +4,9 @@
 
 export type MessageDscr = string;
 
-export const QUIZ_CREATE = "QUIZ_CREATE";
-export const QUIZ_BCAST  = "QUIZ_BCAST";
-export const QUIZ_STOP   = "QUIZ_STOP";
-export const QUIZ_ANS    = "QUIZ_ANS";
+export const QUIZ_START = "QUIZ_START";
+export const QUIZ_STOP  = "QUIZ_STOP";
+export const QUIZ_ANS   = "QUIZ_ANS";
 
 
 export enum Message {

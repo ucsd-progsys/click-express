@@ -9,12 +9,13 @@
 	</div></p>
 	
 	<p><label for="question">Post a Question</label></p>
-	<p><textarea class="form-control" ng-model="text" btf-markdown rows="4"></textarea></p>
+	<p><textarea class="form-control" ng-model="text" ng-disabled="quizInProgress" btf-markdown rows="4"></textarea></p>
 	<hr>
 	<p><label>Preview</label></p>
 	<p ng-bind-html="preview()"></p>
 	<hr>
 	<!--<p><button ng-submit="submit()" class="btn btn-default">Submit</button>-->
-	<p><button class="btn btn-default" ng-click="submit()">Submit</button></p>
-	
+	<button class="btn btn-success" ng-disabled="quizInProgress" ng-click="startQuiz()">Start quiz</button>
+	<button class="btn btn-danger"  ng-click="stopQuiz()">Stop quiz</button>
+	<p style="float:right"> Elapsed Time \{{ counter }} seconds</p>	
 </div>

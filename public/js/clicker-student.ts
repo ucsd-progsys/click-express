@@ -5,10 +5,9 @@ var socket = io(); // initSocket();
 ////////////////////////////////////////////////////////////////////////
 
 function setStatus($scope, s: t.Status) {
-    $scope.status = s;
+    $scope.status    = s;
     $scope.isWaiting = (s === t.Status.Clicked);
-    $scope.isOff = (s === t.Status.Off);
-    // debug             = $scope.isOff;
+    $scope.isOff     = (s === t.Status.Off);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -36,9 +35,9 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout) {
         }, 1000 /* miliseconds */);
     };
    
-    $scope.response = { rsp: ERROR_RESPONCE };
+    $scope.response = { rsp: ERROR_RESPONCE };        
 
-    socket.on(QUIZ_BCAST, (quiz: t.QuizPost) => {
+    socket.on(QUIZ_START, (quiz: t.QuizPost) => {
         let modalInstance = $uibModal.open({
             animation: true,
             templateUrl: 'myModalContent.html',
@@ -52,6 +51,8 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout) {
             backdrop: 'static',
             keyboard: false
         });
+        
+        $scope.currentModal = modalInstance;
 
         modalInstance.result.then(
             (answer: string) => {
@@ -65,11 +66,19 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout) {
             },
             () => { console.log('Question dismissed at: ' + new Date()) }
         );
-        console.log(quiz.time);
+        
         $scope.counter.cnt = quiz.time;
         $scope.countdown();       
 
     });
+    
+    // If instructor calls stop -> dismiss the modal instance
+    socket.on(QUIZ_STOP, (data: any) => {
+        console.log("dismiss modal");
+        if ($scope.currentModal) 
+            $scope.currentModal.dismiss('cancel');
+    });
+    
 }
 
 function modalInstanceCtrl($scope, $uibModalInstance, question, choices, counter, response) {

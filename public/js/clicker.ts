@@ -38,10 +38,9 @@ function initSocket() { return (isHomeURL()) ? io() : null; }
 // Globally Useful Type Definitions ////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-const QUIZ_CREATE = "QUIZ_CREATE";
-const QUIZ_BCAST  = "QUIZ_BCAST";
-const QUIZ_STOP   = "QUIZ_STOP";
-const QUIZ_ANS    = "QUIZ_ANS";
+const QUIZ_START = "QUIZ_START";
+const QUIZ_STOP  = "QUIZ_STOP";
+const QUIZ_ANS   = "QUIZ_ANS";
 
 const ERROR_RESPONCE = "ERROR";
 

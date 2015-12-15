@@ -92,7 +92,7 @@ app.post('/login'    ,              routes.postLogin);
 // Passport config /////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-var Account:any = models.Account;
+var Account: any = models.Account;
 // require('./models/account');
 passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
@@ -109,6 +109,7 @@ mongoose.connect('mongodb://localhost/click-express-mongoose');
 ////////////////////////////////////////////////////////////////////
 
 var users = 0;
+var quizInProgress = false;
 
 io.on('connection', (socket) => {
 
@@ -118,9 +119,14 @@ io.on('connection', (socket) => {
     // Disconnect
     socket.on('disconnect', () => console.log('bye-bye user: ' + n));
 
-    // Instructor posted a question
-    socket.on(t.QUIZ_CREATE, (msg: t.QuizPost) => {
-        io.emit(t.QUIZ_BCAST, msg);
+    // Instructor started a quiz - broadcast it!
+    socket.on(t.QUIZ_START, (msg: t.QuizPost) => {
+        io.emit(t.QUIZ_START, msg);
+    });
+    
+    // Instructor stopped a quiz - broadcast it!
+    socket.on(t.QUIZ_STOP, (data: any) => {
+        io.emit(t.QUIZ_STOP, data); 
     });
 
     // Student sent a click

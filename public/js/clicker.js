@@ -15,8 +15,7 @@ function isHomeURL() {
     return (window.location.pathname === '/home');
 }
 function initSocket() { return (isHomeURL()) ? io() : null; }
-var QUIZ_CREATE = "QUIZ_CREATE";
-var QUIZ_BCAST = "QUIZ_BCAST";
+var QUIZ_START = "QUIZ_START";
 var QUIZ_STOP = "QUIZ_STOP";
 var QUIZ_ANS = "QUIZ_ANS";
 var ERROR_RESPONCE = "ERROR";
