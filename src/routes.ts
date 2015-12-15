@@ -131,62 +131,36 @@ var defaults = { courseId  : "CSE 130"
                , problemId : "1"
                };
 
-function requestClick(req:Request):models.ClickI {
-  return { userId     : requestUserId(req)
-         , choice     : req.body.choice
+export function requestClick(a: t.QuizAnswer): models.ClickI {
+  return { userId     : a.userId
+         , choice     : a.answer
          , submitTime : Date.now()
          , courseId   : defaults.courseId
          , problemId  : defaults.problemId
          }
 }
 
-// export var postClick: RequestH = (req, res) => {
-//   var ci = requestClick(req);
-//   new Click(ci).save(function( err, click ){
-//     if (err) {
-//       console.log(err);
-//       sendHttp(res, msgClickFail)
-//     } else {
-//       sendHttp(res, msgClickOk(ci.choice))
-//     };
-//   });
-// }
-
-
-////////////////////////////////////////////////////////////////////////
-// Post a new Quiz  ////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////
-
-// // INVARIANT: AUTH
-// export function postQuiz(io:SocketIO.Server, msg:t.Message): RequestH {
-//   console.log("Posting Quiz ...");
-//   return (req, res) => {
-//     sendSocket(io, msgQuiz(msg));
-//     sendHttp(res, msgQuizAck);
-//   }
-// }
-
 ////////////////////////////////////////////////////////////////////////
 // View Previous Clicks ////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-// INVARIANT: AUTH
-// export var view : RequestH = (req, res) => {
-//  res.render('view', { user : req.user });
-// }
+// // INVARIANT: AUTH
+// // export var view : RequestH = (req, res) => {
+// //  res.render('view', { user : req.user });
+// // }
 
-export var view: RequestH = (req, res) => {
-  var myId = requestUserId(req);
-  // console.log(myId);
-  Click.find( {userId : myId }, function ( err:any, clicks:any){
-    if (err) {
-      // console.log(err);
-      res.render ('view', { error : err.toString() })
-    } else {
-      // console.log("Your clicks are: BEGIN");
-      // console.log(clicks);
-      // console.log("Your clicks are: END");
-      res.render( 'view', { clicks : clicks } );
-    }
-  });
-}
+// export var view: RequestH = (req, res) => {
+//   var myId = requestUserId(req);
+//   // console.log(myId);
+//   Click.find( {userId : myId }, function ( err:any, clicks:any){
+//     if (err) {
+//       // console.log(err);
+//       res.render ('view', { error : err.toString() })
+//     } else {
+//       // console.log("Your clicks are: BEGIN");
+//       // console.log(clicks);
+//       // console.log("Your clicks are: END");
+//       res.render( 'view', { clicks : clicks } );
+//     }
+//   });
+// }

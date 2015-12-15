@@ -24,7 +24,7 @@ var CourseS  = new Schema({ userId     : String
                           , description: String });
 
 var ClickS   = new Schema({ userId     : String
-                          , choice     : Number // {v:number | 1 <= v <= 5}
+                          , choice     : String
                           , submitTime : Date
                           , courseId   : String
                           , startTime  : String
@@ -50,8 +50,8 @@ export type ProblemId = string; //  mongoose.Types.ObjectId;
 
 export interface ClickI {
     userId     : UserId
-  , choice     : number // {v:number | 1 <= v <= 5}
-  , submitTime : number// Date
+  , choice     : string
+  , submitTime : number         // Date
   , courseId   : CourseId
   , problemId  : ProblemId
 }

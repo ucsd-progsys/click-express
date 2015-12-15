@@ -111,22 +111,29 @@ mongoose.connect('mongodb://localhost/click-express-mongoose');
 var users = 0;
 
 io.on('connection', (socket) => {
-    
+
     var n = users++;
     console.log('user connected: ' + n);
-    
+
     // Disconnect
     socket.on('disconnect', () => console.log('bye-bye user: ' + n));
-    
+
     // Instructor posted a question
     socket.on(t.QUIZ_CREATE, (msg: t.QuizPost) => {
-        io.emit(t.QUIZ_BCAST, msg);        
+        io.emit(t.QUIZ_BCAST, msg);
     });
-    
+
     // Student sent a click
     socket.on(t.QUIZ_ANS, (click: t.QuizAnswer) => {
-        console.log(click.time + ' :: ' + click.userId + ' answered to ' + click.quizId + ' with ' + click.answer);
-    })
+        // console.log(click.time + ' :: ' + 
+        //             click.userId + ' answered to ' + 
+        //             click.quizId + ' with ' + 
+        //             click.answer);
+        let ci = routes.requestClick(click);
+        new models.Click(ci).save((err, click) => {
+            if (err) console.log(err);
+        });
+    });
 
 });
 
