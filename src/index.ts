@@ -110,20 +110,11 @@ mongoose.connect('mongodb://localhost/click-express-mongoose');
 
 var users = 0;
 
-let allSockets: SocketIO.Socket[] = []
-
 io.on('connection', (socket) => {
+    
     var n = users++;
     console.log('user connected: ' + n);
     
-    // Register socket
-    allSockets.push(socket);
-    
-    
-    // io.sockets.sockets.forEach(element => {
-    //     console.log(element.id);
-    // });
-  
     // Disconnect
     socket.on('disconnect', () => console.log('bye-bye user: ' + n));
     

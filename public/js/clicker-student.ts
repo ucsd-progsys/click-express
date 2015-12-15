@@ -19,7 +19,7 @@ function studentClickCtrl($scope, $uibModal, $location) {
     $scope.label = "(none)";
     setStatus($scope, t.Status.Off);
     let converter = new showdown.Converter();
-
+        
     $scope.choices = [
         { id: 0, text: 'A', class: "btn-primary" },
         { id: 1, text: 'B', class: "btn-success" },
