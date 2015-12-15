@@ -15,7 +15,7 @@ import socketIO       = require('socket.io');
 import t              = require('./types');
 
 var LocalStrategy     = passportLocal.Strategy;
-var handlebars        = require('express-handlebars').create({ defaultLayout: 'main' });
+var handlebars        = require('express-handlebars');
 var favicon           = require('serve-favicon');
 // var flash          = require('connect-flash');
 var app               = express();
@@ -36,11 +36,16 @@ import models         = require('./models');
 app.set('port', process.env.PORT || 3000);
 var serverURL = app.get('port');
 
-////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////    
 // Views ///////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-app.engine('handlebars', handlebars.engine);
+app.set('views', path.join(__dirname, '/../client/views'));
+app.engine('handlebars', handlebars({ 
+    defaultLayout: 'main', 
+    extname: '.handlebars',
+    layoutsDir: path.join(__dirname, '../client/views/layouts')
+}));
 app.set('view engine', 'handlebars');
 
 ////////////////////////////////////////////////////////////////////
@@ -48,7 +53,7 @@ app.set('view engine', 'handlebars');
 ////////////////////////////////////////////////////////////////////
 
 // uncomment after placing your favicon in /public
-app.use(favicon(__dirname + '/../public/icons/favicon.ico'));
+app.use(favicon(path.join(__dirname, '../client/assets/favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -56,7 +61,9 @@ app.use(cookieParser());
 app.use(session({ secret: 'keyboard cat'
                 , resave: false
                 , saveUninitialized: false }));
+                
 // app.use(flash());
+
 
 ////////////////////////////////////////////////////////////////////
 // Authentication //////////////////////////////////////////////////
@@ -69,7 +76,7 @@ app.use(passport.session());
 // Static Content //////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-app.use(express.static('public'));
+app.use(express.static('client'));
 app.use(express.static('node_modules'));
 
 ////////////////////////////////////////////////////////////////////

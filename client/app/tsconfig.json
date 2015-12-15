@@ -16,9 +16,9 @@
         "watch": true
     },
     "files": [
-        "./clicker.ts",
-        "./clicker-student.ts",
-        "./clicker-instructor.ts"
+        "./clicker.app.ts",
+        "./components/post-question/post-question.ts",
+        "./components/render-question/render-question.ts"
     ]
                 
 }

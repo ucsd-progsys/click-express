@@ -6,24 +6,22 @@
     <meta name="viewport"    content="width=device-width, initial-scale=1.0">
     <meta name="description" content="ClickExpress">
     <meta name="author"      content="Ranjit Jhala">
+    
+    <!--Stylesheets-->
     <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet" media="screen">        
     <link rel="stylesheet" href="/stylesheets/bootstrap-readable.css">
     <link rel="stylesheet" href="/stylesheets/style.css">
 
+    <!--Libs-->
     <script src="http://code.jquery.com/jquery.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular-sanitize.js"></script>
-    <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.14.3.js"></script>
-    
+    <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.14.3.js"></script>    
     <script src="https://cdn.rawgit.com/showdownjs/showdown/1.3.0/dist/showdown.min.js"></script>     
-
-    <!--testing-->
-    <script src="/scripts/bsDropdown.min.js"></script>
-
+    <script src="/vendor/dropdown/bsDropdown.min.js"></script>
 
   </head>
   
@@ -99,9 +97,8 @@
   {{/if}}
   </script>
   
-  <script src="/js/clicker.js"></script>
-  <script src="/js/clicker-instructor.js"></script>
-  <script src="/js/clicker-student.js"></script>
-
+  <script src="/app/clicker.app.js"></script>
+  <script src="/app/components/post-question/post-question.js"></script>
+  <script src="/app/components/render-question/render-question.js"></script>
 
 </html>

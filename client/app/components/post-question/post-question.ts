@@ -17,6 +17,7 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
     // Select time
     $scope.times = [15, 30, 60];
     $scope.selectedTime = $scope.times[2];  // default
+    
     $scope.changeTime = () => { };
 
     $scope.counter = 0;

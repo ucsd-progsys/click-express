@@ -109,8 +109,8 @@ export var redirectHome: RequestH = (req, res) => {
 export function home(url:string): RequestH {
     return (req, res) => {
         (req.user.username === 'instructor') ?
-            res.render('instructor-home', { user: req.user, serverURL : url}):          
-            res.render('student-home', { user: req.user, serverURL : url});     
+            res.render('post-question', { user: req.user, serverURL : url}):          
+            res.render('render-question', { user: req.user, serverURL : url});     
     }
 }
 
