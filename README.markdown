@@ -13,7 +13,7 @@ Web-based clicker site (written in express)
 
 ## TODO
 
-+ Only allow one question at a time
++ Show if answer was correct or not in history
 
 + Home Page
    > add sockets: to allow instructor to post question

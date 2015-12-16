@@ -54,9 +54,9 @@ function sendHttp(res:express.Response, e:t.SocketEvent) {
 // Register ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-export var registerWith = (z:Object) => {
-  var h:RequestH = (req, res, next) => res.render('register', z);
-  return h;
+export var registerWith = (z: Object) => {
+    var h: RequestH = (req, res, next) => res.render('register', z);
+    return h;
 }
 
 export function register(req: Request, res: Response) {
@@ -74,7 +74,7 @@ export function register(req: Request, res: Response) {
 ////////////////////////////////////////////////////////////////////////
 
 export var getLogin:RequestH = (req, res, next) => {
-  res.render('login', { user : req.user });
+    res.render('login', { user : req.user });
 }
 
 export var postLogin = 
@@ -91,13 +91,13 @@ export var postLogin =
 //   the request will proceed.  Otherwise, the user will be redirected to the
 //   login page.
 
-export var auth:RequestH = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    console.log('auth: OK'); // , req.user.username)
-    return next();
-  }
-  console.log('auth: FAIL'); // , req.user.username)
-  res.render('index');
+export var auth: RequestH = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        console.log('auth: OK'); // , req.user.username)
+        return next();
+    }
+    console.log('auth: FAIL'); // , req.user.username)
+    res.render('index');
 }
 
 // INVARIANT: AUTH
@@ -123,12 +123,12 @@ export var logout : RequestH = (req,res) => {
 // Post a new Click ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-function requestUserId(req:Request):models.UserId {
-  return req.user.username;
+function requestUserId(req: Request): models.UserId {
+    return req.user.username;
 }
 
-var defaults = { courseId  : "CSE 130"
-               , problemId : "1"
+var defaults = { courseId : "CSE 130"
+               , quizId   : "1"
                };
 
 export function requestClick(a: t.QuizAnswer): models.ClickI {
@@ -136,31 +136,29 @@ export function requestClick(a: t.QuizAnswer): models.ClickI {
          , choice     : a.answer
          , submitTime : Date.now()
          , courseId   : defaults.courseId
-         , problemId  : defaults.problemId
+         , quizId     : defaults.quizId
          }
 }
 
 ////////////////////////////////////////////////////////////////////////
-// View Previous Clicks ////////////////////////////////////////////////
+// View Click History //////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-// // INVARIANT: AUTH
-// // export var view : RequestH = (req, res) => {
-// //  res.render('view', { user : req.user });
-// // }
+// INVARIANT: AUTH
 
-// export var view: RequestH = (req, res) => {
-//   var myId = requestUserId(req);
-//   // console.log(myId);
-//   Click.find( {userId : myId }, function ( err:any, clicks:any){
-//     if (err) {
-//       // console.log(err);
-//       res.render ('view', { error : err.toString() })
-//     } else {
-//       // console.log("Your clicks are: BEGIN");
-//       // console.log(clicks);
-//       // console.log("Your clicks are: END");
-//       res.render( 'view', { clicks : clicks } );
-//     }
-//   });
-// }
+export var history: RequestH = (req, res) => {
+    res.render('history');
+}
+
+export var historyData: RequestH = (req, res) => {
+    var myId = requestUserId(req);
+    // console.log('Looking for history from ' + myId);
+    Click.find({ userId: myId }).exec((err: any, clicks: any) => {
+        if (err) {
+            res.render('history', { error: err.toString() })
+        } else {
+            // console.log(clicks);
+            res.json(clicks);
+        }
+    });
+}

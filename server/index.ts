@@ -83,15 +83,18 @@ app.use(express.static('node_modules'));
 // Routes //////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-app.get( '/register' ,              routes.registerWith({}));
-app.post('/register' ,              routes.register);
-app.get( '/'         , routes.auth, routes.redirectHome);
-app.get( '/home'     , routes.auth, routes.home(serverURL));
-// app.get( '/view'     , routes.auth, routes.view);
-app.get( '/login'    ,              routes.getLogin);
-app.get( '/logout'   ,              routes.logout);
-app.post('/login'    ,              routes.postLogin);
-// app.post('/click'    , routes.auth, routes.postClick);                          // TODO: auth-student
+app.get( '/register'    ,              routes.registerWith({}));
+app.post('/register'    ,              routes.register);
+app.get( '/'            , routes.auth, routes.redirectHome);
+app.get( '/home'        , routes.auth, routes.home(serverURL));
+app.get( '/login'       ,              routes.getLogin);
+app.get( '/logout'      ,              routes.logout);
+app.get( '/history'     , routes.auth, routes.history);
+app.get( '/history-data', routes.auth, routes.historyData);
+
+app.post('/login'       ,              routes.postLogin);
+
+// app.post('/click'    , routes.auth, routes.postClick);                   // TODO: auth-student
 // app.get( '/quizstart', routes.auth, routes.postQuiz(io, t.QUIZ_CREATE)); // TODO: auth-instructor
 // app.get( '/quizstop' , routes.auth, routes.postQuiz(io, t.QUIZ_STOP));   // TODO: auth-instructor
 
@@ -112,7 +115,7 @@ passport.deserializeUser(Account.deserializeUser());
 mongoose.connect('mongodb://localhost/click-express-mongoose');
 
 ////////////////////////////////////////////////////////////////////
-// WebSockets: Pushing Questions to Clients ////////////////////////
+// Socket.io: Pushing Questions to Clients /////////////////////////
 ////////////////////////////////////////////////////////////////////
 
 var users = 0;
@@ -138,10 +141,11 @@ io.on('connection', (socket) => {
 
     // Student sent a click
     socket.on(t.QUIZ_ANS, (click: t.QuizAnswer) => {
-        // console.log(click.time + ' :: ' + 
-        //             click.userId + ' answered to ' + 
-        //             click.quizId + ' with ' + 
-        //             click.answer);
+        // let msg = click.time + ' :: ' 
+        //         + click.userId + ' answered to ' 
+        //         + click.quizId + ' with ' 
+        //         + click.answer;
+        // console.log(msg);
         let ci = routes.requestClick(click);
         new models.Click(ci).save((err, click) => {
             if (err) console.log(err);
@@ -172,8 +176,8 @@ app.use(handle404);
 app.use(handle500);
 
 // Go!
-http.listen(app.get('port'), function(){
-  var msg = "Express START: http://localhost:"
+http.listen(app.get('port'), () => {
+  let msg = "Express START: http://localhost:"
           + serverURL // app.get('port')
           + " press Ctrl-C to kill.";
   console.log(msg);

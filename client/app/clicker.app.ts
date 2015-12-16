@@ -1,3 +1,6 @@
+
+/// <reference path='../../typings/tsd.d.ts' />
+
 declare var angular;
 
 // locals
@@ -26,6 +29,10 @@ function getQuizStartURL() {
 
 function getQuizStopURL() {
     return getServerURL() + '/quizstop';
+}
+
+function getHistoryURL() {
+    return getServerURL() + '/history';
 }
 
 function isHomeURL() {
@@ -76,12 +83,24 @@ module t {
 		message: string;    // Question
 		time: number;		// Time to answer
 	}
-	
+
 	export interface QuizAnswer {
 		quizId: number;
 		userId: string;
 		answer: string;		// ['A'..'E']
-		submissionTime: Date;		
+		submissionTime: Date;
+	}
+
+	export type UserId   = string;
+	export type CourseId = string;
+	export type QuizId   = string;
+
+	export interface ClickI {
+		userId: UserId,
+		choice: string,
+		submitTime: number,
+		courseId: CourseId,
+		quizId: QuizId
 	}
 
 }
@@ -99,7 +118,7 @@ let wrapIn 			 = (msg: string, symbol: string) => '<' + symbol + '>' + msg + '</
 let wrapInDiv 		 = (s: string) => wrapIn(s, 'div');
 let wrapInP 		 = (s: string) => wrapIn(s, 'p');
 let wrapInBlockQuote = (s: string) => wrapIn(s, 'blockquote');
-let formatQuiz 		 = (msg: string) => wrapInBlockQuote(wrapInP(msg));   
+let formatQuiz 		 = (msg: string) => wrapInBlockQuote(wrapInP(msg));
 
 
 var click = angular.module('click', [

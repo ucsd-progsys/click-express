@@ -46,6 +46,9 @@
     },
     "mime/mime.d.ts": {
       "commit": "05557455c49043ff0189182e27c9e04403a70802"
+    },
+    "underscore/underscore.d.ts": {
+      "commit": "24e12a7af994afa2226af70fbfae0adc78736a9e"
     }
   }
 }

@@ -23,11 +23,11 @@ var ProblemS = new Schema({ userId     : String
 var CourseS  = new Schema({ userId     : String
                           , description: String });
 
-var ClickS   = new Schema({ userId     : String
+var ClickS   = new Schema({ userId     : String                              
                           , choice     : String
                           , submitTime : Date
-                          , courseId   : String
-                          , startTime  : String
+                          , courseId   : ObjectId       // Ref to course's _id
+                          , quizId     : ObjectId       // Ref to quiz's _id   
                           });
 
 var EnrollS  = new Schema({ userId     : String
@@ -38,20 +38,20 @@ var EnrollS  = new Schema({ userId     : String
 // Models //////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-export var Account = mongoose.model('Account', AccountS);
-export var Problem = mongoose.model('Problem', ProblemS);
-export var Course  = mongoose.model('Course' , CourseS );
-export var Click   = mongoose.model('Click'  , ClickS);
-export var Enroll  = mongoose.model('Enroll' , EnrollS);
+export var Account   = mongoose.model('Account', AccountS);
+export var Problem   = mongoose.model('Problem', ProblemS);
+export var Course    = mongoose.model('Course' , CourseS );
+export var Click     = mongoose.model('Click'  , ClickS);
+export var Enroll    = mongoose.model('Enroll' , EnrollS);
 
-export type UserId    = string; //  mongoose.Types.ObjectId;
-export type CourseId  = string; //  mongoose.Types.ObjectId;
-export type ProblemId = string; //  mongoose.Types.ObjectId;
+export type UserId   = string; //  mongoose.Types.ObjectId;
+export type CourseId = string; //  mongoose.Types.ObjectId;
+export type QuizId   = string; //  mongoose.Types.ObjectId;
 
 export interface ClickI {
     userId     : UserId
   , choice     : string
   , submitTime : number         // Date
   , courseId   : CourseId
-  , problemId  : ProblemId
+  , quizId     : QuizId
 }

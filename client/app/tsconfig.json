@@ -18,7 +18,8 @@
     "files": [
         "./clicker.app.ts",
         "./components/post-question/post-question.ts",
-        "./components/render-question/render-question.ts"
+        "./components/render-question/render-question.ts",
+        "./components/history/history.ts"
     ]
                 
 }
