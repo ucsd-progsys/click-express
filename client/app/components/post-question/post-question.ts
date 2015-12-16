@@ -37,7 +37,7 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
     };
 
     // Preview
-    $scope.preview = () => questionToHtml($scope.text, $scope.choices);
+    $scope.preview = () => fullQuestionToHtml($scope.text, $scope.choices);
 
     // Running the quiz
     $scope.counter = 0;

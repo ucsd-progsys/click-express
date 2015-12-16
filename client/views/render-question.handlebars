@@ -6,12 +6,17 @@
             <h2 class="modal-title">Question</h2>
             <!-- b>Time remaining: </b><span ng-bind="counter.val.cnt"></span> seconds -->                             
         </div>
+        
         <div class="modal-body">                            
             <p ng-bind-html="quiz.val"></p>
-            <span ng-repeat="choice in choices.val">
-                <button class="btn \{{ choice.class }}"
-                        type="button" 
-                        ng-click="$event.preventDefault(); response.rsp = choice.text; ok()">\{{ choice.text }}</button>
+            <span ng-repeat="option in options.val">
+                <p>
+                    <button class="btn" type="button" 
+                            ng-click="$event.preventDefault(); 
+                                    response.rsp = option.index; 
+                                    ok()"><b>\{{ option.index }}.</b> \{{ option.text }}
+                    </button>
+                </p>                
             </span>        
         </div>
                 

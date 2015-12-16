@@ -19,7 +19,8 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout) {
     setStatus($scope, Status.Off);
     let converter = new showdown.Converter();
 
-    $scope.choices = [
+    
+    $scope.options = [
         { id: 0, text: 'A', class: "btn-primary" },
         { id: 1, text: 'B', class: "btn-success" },
         { id: 2, text: 'C', class: "btn-info"    },
@@ -37,14 +38,14 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout) {
    
     $scope.response = { rsp: ERROR_RESPONCE };        
 
-    socket.on(QUIZ_START, (quizContent: Quiz) => {
+    socket.on(QUIZ_START, (quiz: Quiz) => {
         let modalInstance = $uibModal.open({
             animation: true,
             templateUrl: 'myModalContent.html',
             controller: 'ModalInstanceCtrl',
             resolve: {
-                question: () => quizContentToHtml(quizContent.data),
-                choices : () => $scope.choices,
+                question: () => questionToHtml(quiz.data),
+                options : () => quiz.data.options, // $scope.options,
                 // counter : () => $scope.counter,
                 response: () => $scope.response                
             },
@@ -58,7 +59,7 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout) {
             (answer: string) => {
                 // return the selection through the socket
                 socket.emit(QUIZ_ANS, {
-                    quizId: quizContent.id,
+                    quizId: quiz.id,
                     userId: userName,
                     answer: answer,
                     time: new Date()
@@ -81,9 +82,9 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout) {
     
 }
 
-function modalInstanceCtrl($scope, $uibModalInstance, question, choices, /*counter, */ response) {
+function modalInstanceCtrl($scope, $uibModalInstance, question, options, /*counter, */ response) {
     $scope.quiz     = { val: question };
-    $scope.choices  = { val: choices };
+    $scope.options  = { val: options };
     // $scope.counter  = { val: counter };
     $scope.response = { val: ERROR_RESPONCE };
     $scope.ok       = () => { $uibModalInstance.close($scope.response.rsp); };

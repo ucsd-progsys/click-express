@@ -72,15 +72,16 @@ let formatQuiz 		 = (msg: string) => wrapInBlockQuote(wrapInP(msg));
 
 let converter = new showdown.Converter();
 
-function questionToHtml(question: string, opts: Options) {
+function fullQuestionToHtml(question: string, opts: Options) {
     let withUndef = o => (o) ? o : "";
     let optStrs   = opts.map(o => wrapInBold(o.index) + '. ' + withUndef(o.text));
     let fullStr   = [question].concat(optStrs).join('\n\n');
     return converter.makeHtml(fullStr);
 }
 
-let quizContentToHtml = (q: QuizContent) => questionToHtml(q.descr, q.options);
-
+function questionToHtml(q: QuizContent) {    
+    return converter.makeHtml(q.descr);
+}
 ////////////////////////////////////////////////////////////////////////
 // App Declaration /////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
