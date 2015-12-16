@@ -18,21 +18,21 @@ type RequestH   = express.RequestHandler;
 ////////////////////////////////////////////////////////////////////////
 
 var msgUserExists = {
-    kind   : t.Message.UserExists
+    kind   : Message.UserExists
   , info   : "Sorry, that username already exists. Try again."
 }
 
 var msgClickFail  = {
-    kind   : t.Message.ClickFail
+    kind   : Message.ClickFail
   , info   : false
 }
 
 var msgClickOk = (n:number) => ({
-    kind   : t.Message.ClickOk
+    kind   : Message.ClickOk
   , info   : n
 })
 
-var msgQuiz = (msg:t.Message) => ({
+var msgQuiz = (msg: Message) => ({
     kind   : msg
   , info   : Date.now()
 })
@@ -42,11 +42,11 @@ var msgQuiz = (msg:t.Message) => ({
 //   , info   : true
 // }
 
-function sendSocket(io:SocketIO.Server, e:t.SocketEvent) {
+function sendSocket(io:SocketIO.Server, e: SocketEvent) {
   io.emit('message', e);
 }
 
-function sendHttp(res:express.Response, e:t.SocketEvent) {
+function sendHttp(res:express.Response, e:SocketEvent) {
   res.json(e);
 }
 
@@ -131,14 +131,14 @@ var defaults = { courseId : "CSE 130"
                , quizId   : "1"
                };
 
-export function requestClick(a: t.QuizAnswer): models.ClickI {
-  return { userId     : a.userId
-         , choice     : a.answer
-         , submitTime : Date.now()
-         , courseId   : defaults.courseId
-         , quizId     : defaults.quizId
-         }
-}
+// export function requestClick(a: t.StudentClick): models.ClickI {
+//   return { userId     : a.userId
+//          , choice     : a.choice
+//          , submitTime : a.submissionTime
+//          , courseId   : defaults.courseId
+//          , quizId     : defaults.quizId
+//          }
+// }
 
 ////////////////////////////////////////////////////////////////////////
 // View Click History //////////////////////////////////////////////////

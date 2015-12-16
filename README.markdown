@@ -13,13 +13,11 @@ Web-based clicker site (written in express)
 
 ## TODO
 
++ FIX: history shows student signed off
+
++ Move socket service to separate module
+
 + Show if answer was correct or not in history
-
-+ Home Page
-   > add sockets: to allow instructor to post question
-   > add NAVBAR [ home | role | view | logout ]
-
-+ Roles (instructor/student)
 
 + Classes
 
@@ -36,7 +34,7 @@ Pages/Routes
 + learn
   * click
 
-+ teach [HEREHEREHEREHERE]
++ teach
 
   * Main  : [Start | Stop | Graph ]
   * Graph : [Prev | Next]

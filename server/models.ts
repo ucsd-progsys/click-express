@@ -15,19 +15,23 @@ var AccountS = new Schema({ username: String
 
 AccountS.plugin(plm);
 
-var ProblemS = new Schema({ userId     : String
-                          , courseId   : String
+var QuizS    = new Schema({ courseId   : String         // Foreign key
+                          , descr      : String
+                          , options    : [{ id: String, name: String }]
+                          , correct    : String
+                          , author     : String         // Foreign key
                           , startTime  : Date
                           });
 
-var CourseS  = new Schema({ userId     : String
-                          , description: String });
+var CourseS  = new Schema({ name       : String
+                          , description: String
+                          , instructor : String         // Foreign key
+                          });
 
-var ClickS   = new Schema({ userId     : String                              
+var ClickS   = new Schema({ userId     : String
+                          , quizId     : String         // Foreign key                                                       
                           , choice     : String
                           , submitTime : Date
-                          , courseId   : ObjectId       // Ref to course's _id
-                          , quizId     : ObjectId       // Ref to quiz's _id   
                           });
 
 var EnrollS  = new Schema({ userId     : String
@@ -39,7 +43,7 @@ var EnrollS  = new Schema({ userId     : String
 ////////////////////////////////////////////////////////////////////////
 
 export var Account   = mongoose.model('Account', AccountS);
-export var Problem   = mongoose.model('Problem', ProblemS);
+export var Quiz      = mongoose.model('Quiz'   , QuizS);
 export var Course    = mongoose.model('Course' , CourseS );
 export var Click     = mongoose.model('Click'  , ClickS);
 export var Enroll    = mongoose.model('Enroll' , EnrollS);
@@ -47,11 +51,3 @@ export var Enroll    = mongoose.model('Enroll' , EnrollS);
 export type UserId   = string; //  mongoose.Types.ObjectId;
 export type CourseId = string; //  mongoose.Types.ObjectId;
 export type QuizId   = string; //  mongoose.Types.ObjectId;
-
-export interface ClickI {
-    userId     : UserId
-  , choice     : string
-  , submitTime : number         // Date
-  , courseId   : CourseId
-  , quizId     : QuizId
-}

@@ -1,4 +1,3 @@
-declare var clicks; 
 
 function historyCtrl($scope, $http) {
 	

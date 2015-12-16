@@ -36,13 +36,13 @@ import models         = require('./models');
 app.set('port', process.env.PORT || 3000);
 var serverURL = app.get('port');
 
-////////////////////////////////////////////////////////////////////    
+////////////////////////////////////////////////////////////////////
 // Views ///////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
 app.set('views', path.join(__dirname, '/../client/views'));
-app.engine('handlebars', handlebars({ 
-    defaultLayout: 'main', 
+app.engine('handlebars', handlebars({
+    defaultLayout: 'main',
     extname: '.handlebars',
     layoutsDir: path.join(__dirname, '../client/views/layouts')
 }));
@@ -61,7 +61,7 @@ app.use(cookieParser());
 app.use(session({ secret: 'keyboard cat'
                 , resave: false
                 , saveUninitialized: false }));
-                
+
 // app.use(flash());
 
 
@@ -130,23 +130,45 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => console.log('bye-bye user: ' + n));
 
     // Instructor started a quiz - broadcast it!
-    socket.on(t.QUIZ_START, (msg: t.QuizPost) => {
-        io.emit(t.QUIZ_START, msg);
+    socket.on(t.QUIZ_START, (quizData: QuizContent) => {
+        new models.Quiz({
+            courseId : "TODO-courseId",
+            descr    : quizData.descr,
+            options  : quizData.options,
+            correct  : quizData.correct,
+            author   : quizData.author,
+            startTime: new Date()
+        }).save((err: any, quiz: any) => {
+            if (err) {
+                console.log(err)
+            }
+            else {
+                let qid = quiz._id.valueOf();
+                console.log('new quiz added to store: ' + qid);
+                let newQuiz: Quiz = {
+                    id  : qid,
+                    data: quizData
+                }
+                io.emit(t.QUIZ_START, newQuiz);
+            }
+        })
+
     });
-    
+
     // Instructor stopped a quiz - broadcast it!
     socket.on(t.QUIZ_STOP, (data: any) => {
-        io.emit(t.QUIZ_STOP, data); 
+        io.emit(t.QUIZ_STOP, data);
     });
 
     // Student sent a click
-    socket.on(t.QUIZ_ANS, (click: t.QuizAnswer) => {
-        // let msg = click.time + ' :: ' 
-        //         + click.userId + ' answered to ' 
-        //         + click.quizId + ' with ' 
+    socket.on(t.QUIZ_ANS, (click: Click) => {
+        // let msg = click.time + ' :: '
+        //         + click.userId + ' answered to '
+        //         + click.quizId + ' with '
         //         + click.answer;
         // console.log(msg);
-        let ci = routes.requestClick(click);
+
+        let ci = click // routes.requestClick(click);
         new models.Click(ci).save((err, click) => {
             if (err) console.log(err);
         });

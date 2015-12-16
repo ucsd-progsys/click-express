@@ -45,81 +45,45 @@ function initSocket() { return (isHomeURL()) ? io() : null; }
 // Globally Useful Type Definitions ////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-const QUIZ_START = "QUIZ_START";
-const QUIZ_STOP  = "QUIZ_STOP";
-const QUIZ_ANS   = "QUIZ_ANS";
-
+const QUIZ_START     = "QUIZ_START";
+const QUIZ_STOP      = "QUIZ_STOP";
+const QUIZ_ANS       = "QUIZ_ANS";
 const ERROR_RESPONCE = "ERROR";
 
-
-module t {
-
-	export type MessageDscr = string;
-
-	export enum Message {
-		QuizCreate,
-		QuizBCast,
-		QuizStop,
-		QuizAck,
-		UserExists,
-		ClickFail,
-		ClickOk
-	}
-
-	export enum Status {
-		Off,
-		Quiz,
-		Clicked
-	}
-
-	export interface SocketEvent {
-		kind: MessageDscr,
-		info: any
-	}
-
-	export interface QuizPost {
-		id: number;
-		name: string;       // Instructors name
-		message: string;    // Question
-		time: number;		// Time to answer
-	}
-
-	export interface QuizAnswer {
-		quizId: number;
-		userId: string;
-		answer: string;		// ['A'..'E']
-		submissionTime: Date;
-	}
-
-	export type UserId   = string;
-	export type CourseId = string;
-	export type QuizId   = string;
-
-	export interface ClickI {
-		userId: UserId,
-		choice: string,
-		submitTime: number,
-		courseId: CourseId,
-		quizId: QuizId
-	}
-
-}
-
+////////////////////////////////////////////////////////////////////////
+// Globally Useful Functions ///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
 let serverError = ($scope, data, status, e) => {
-    var s = "Request failed: " + e;
+    let s = "Request failed: " + e;
     $scope.label = s;
-    var msg = (data || s) + status;
+    let msg = (data || s) + status;
     alert(msg);
 }
 
-
-let wrapIn 			 = (msg: string, symbol: string) => '<' + symbol + '>' + msg + '</' + symbol + '>';
+// HTML generation
+let wrapIn 			 = (msg: string, symbol: string) => '<'  + symbol + '>' + msg + 
+                                                        '</' + symbol + '>';
 let wrapInDiv 		 = (s: string) => wrapIn(s, 'div');
 let wrapInP 		 = (s: string) => wrapIn(s, 'p');
 let wrapInBlockQuote = (s: string) => wrapIn(s, 'blockquote');
+let wrapInBold		 = (s: string) => wrapIn(s, 'b');
 let formatQuiz 		 = (msg: string) => wrapInBlockQuote(wrapInP(msg));
 
+let converter = new showdown.Converter();
+
+function questionToHtml(question: string, opts: Options) {
+    let withUndef = o => (o) ? o : "";
+    let optStrs   = opts.map(o => wrapInBold(o.index) + '. ' + withUndef(o.text));
+    let fullStr   = [question].concat(optStrs).join('\n\n');
+    return converter.makeHtml(fullStr);
+}
+
+let quizContentToHtml = (q: QuizContent) => questionToHtml(q.descr, q.options);
+
+////////////////////////////////////////////////////////////////////////
+// App Declaration /////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
 var click = angular.module('click', [
 	'ngAnimate', 		// Modal element (optional)
