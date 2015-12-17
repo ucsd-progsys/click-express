@@ -26,6 +26,7 @@ var io                = socketIO(http);
 import tips           = require("./tips");
 import routes         = require('./routes');
 import models         = require('./models');
+import socket         = require('./sockets');
 
 
 ////////////////////////////////////////////////////////////////////
@@ -33,7 +34,7 @@ import models         = require('./models');
 ////////////////////////////////////////////////////////////////////
 
 app.set('port', process.env.PORT || 3000);
-var serverURL = app.get('port');
+var serverPort = app.get('port');
 
 ////////////////////////////////////////////////////////////////////
 // Views ///////////////////////////////////////////////////////////
@@ -85,7 +86,7 @@ app.use(express.static('node_modules'));
 app.get( '/register'    ,              routes.registerWith({}));
 app.post('/register'    ,              routes.register);
 app.get( '/'            , routes.auth, routes.redirectHome);
-app.get( '/home'        , routes.auth, routes.home(serverURL));
+app.get( '/home'        , routes.auth, routes.home(serverPort));
 app.get( '/login'       ,              routes.getLogin);
 app.get( '/logout'      ,              routes.logout);
 app.get( '/history'     , routes.auth, routes.history);
@@ -119,61 +120,7 @@ mongoose.connect('mongodb://localhost/click-express-mongoose');
 // Socket.io: Pushing Questions to Clients /////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-var users = 0;
-var quizInProgress = false;
-
-io.on('connection', (socket) => {
-
-    var n = users++;
-    console.log('user connected: ' + n);
-
-    // Disconnect
-    socket.on('disconnect', () => console.log('bye-bye user: ' + n));
-
-    // Instructor started a quiz - broadcast it!
-    socket.on(t.QUIZ_START, (quizData: QuizContent) => {
-        new models.Quiz({
-            courseId : "TODO-courseId",
-            descr    : quizData.description,
-            options  : quizData.options,
-            correct  : quizData.correct,
-            author   : quizData.author,
-            startTime: new Date()
-        }).save((err: any, quiz: any) => {
-            if (err) {
-                console.log(err)
-            }
-            else {
-                let qid = quiz._id.valueOf();
-                console.log('new quiz added to store: ' + qid);
-                let newQuiz: Quiz = {
-                    id  : qid,
-                    data: quizData
-                }
-                io.emit(t.QUIZ_START, newQuiz);
-            }
-        })
-    });
-
-    // Instructor stopped a quiz - broadcast it!
-    socket.on(t.QUIZ_STOP, (data: any) => {
-        io.emit(t.QUIZ_STOP, data);
-    });
-
-    // Student sent a click
-    socket.on(t.QUIZ_ANS, (click: Click) => {
-        // let msg = click.time + ' :: '
-        //         + click.userId + ' answered to '
-        //         + click.quizId + ' with '
-        //         + click.answer;
-        // console.log(msg);
-
-        new models.Click(click).save((err, _) => {
-            if (err) console.log(err);
-        });
-    });
-
-});
+io.on('connection', socket.onConnection(io)); 
 
 ////////////////////////////////////////////////////////////////////
 // Start me up /////////////////////////////////////////////////////
@@ -198,8 +145,8 @@ app.use(handle500);
 
 // Go!
 http.listen(app.get('port'), () => {
-  let msg = "Express START: http://localhost:"
-          + serverURL // app.get('port')
-          + " press Ctrl-C to kill.";
-  console.log(msg);
+    let msg = "Express START: http://localhost:"
+            + serverPort // app.get('port')
+            + " press Ctrl-C to kill.";
+    console.log(msg);
 });

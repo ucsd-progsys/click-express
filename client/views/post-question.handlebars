@@ -1,7 +1,3 @@
-
-
-
-
 <div ng-controller="instructorClickCtrl">    
 
 <div style="width: 100%;">
@@ -44,10 +40,10 @@
    <div style="float:right; width: 30%">
        <!--Play/Stop buttons-->
        <p>
-        <button class="btn btn-success" ng-disabled="quizInProgress" ng-click="startQuiz()">
+        <button class="btn btn-success" ng-disabled="quizInProgress" ng-click="startQuiz()" tooltip-class="btn" tooltip-placement="top" uib-tooltip="Start the Quiz!">
             <span class="glyphicon glyphicon-play"/>
         </button>
-        <button class="btn btn-danger"  ng-click="stopQuiz()">
+        <button class="btn btn-danger"  ng-click="stopQuiz()" tooltip-class="btn" tooltip-placement="top" uib-tooltip="Stop the Quiz!">
             <span class="glyphicon glyphicon-stop"/>
         </button>
         </p>
