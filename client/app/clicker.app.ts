@@ -80,7 +80,7 @@ function fullQuestionToHtml(question: string, opts: Options) {
 }
 
 function questionToHtml(q: QuizContent) {    
-    return converter.makeHtml(q.descr);
+    return converter.makeHtml(q.description);
 }
 ////////////////////////////////////////////////////////////////////////
 // App Declaration /////////////////////////////////////////////////////

@@ -39,6 +39,10 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout) {
     $scope.response = { rsp: ERROR_RESPONCE };        
 
     socket.on(QUIZ_START, (quiz: Quiz) => {
+        
+        console.log(quiz.data.description);
+        console.log(questionToHtml(quiz.data));
+        
         let modalInstance = $uibModal.open({
             animation: true,
             templateUrl: 'myModalContent.html',
