@@ -8,28 +8,30 @@ var ObjectId    = Schema.Types.ObjectId;
 // Schemas//////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-var AccountS = new Schema({ username: String
+var AccountS = new Schema({ username: { type: String
+                                      , index: true }
                           , password: String
                           , email   : String
                           });
 
 AccountS.plugin(plm);
 
-var QuizS    = new Schema({ courseId   : String         // Foreign key
+var QuizS    = new Schema({ courseId   : String         // coursename
                           , descr      : String
                           , options    : [{ id: String, name: String }]
                           , correct    : String
-                          , author     : String         // Foreign key
+                          , author     : String         // username
                           , startTime  : Date
                           });
 
-var CourseS  = new Schema({ name       : String
+var CourseS  = new Schema({ name       : { type: String
+                                         , index: true }
                           , description: String
-                          , instructor : String         // Foreign key
+                          , instructor : String         // username
                           });
 
-var ClickS   = new Schema({ userId     : String
-                          , quizId     : String         // Foreign key                                                       
+var ClickS   = new Schema({ username   : String
+                          , quizId     : ObjectId      // quiz id
                           , choice     : String
                           , submitTime : Date
                           });

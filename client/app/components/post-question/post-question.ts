@@ -9,25 +9,39 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
     // setStatus($scope, t.Status.Off);
     $scope.testInProgress = false;
 
-    // Quiz count -- TODO: server should assing IDs
-    let quizCount = 0;
+    // Select from sample questions
+    $scope.questionPool = [];
+    $scope.selectedQuestion = undefined;
+    $scope.textarea = "";
 
-    // Select time
+    // // Select time
     // $scope.times = [15, 30, 60];
     // $scope.selectedTime = $scope.times[2];  // default
 
     // Create Quiz
-    //
     // http://mrngoitall.net/blog/2013/10/02/adding-form-fields-dynamically-in-angularjs/
-    //
     let charFromInt = (n) => String.fromCharCode(65 + n);
 
+    // Load existing question
+	$scope.updateQuestion = () => {
+        let newQuestion: QuizContent = JSON.parse($scope.selectedQuestion);
+        $scope.textarea = newQuestion.description;
+        // Remove all existing choices
+        $scope.choices = [];
+        // Add the new ones
+        newQuestion.options.forEach(v => {
+            $scope.addNewChoice(v.index, v.text);
+        });
+    }
+
+    // New Post Form
     $scope.choices = [];
 
-    $scope.addNewChoice = () => {
+    // The default values are for when the button is used
+    $scope.addNewChoice = (idx = charFromInt($scope.choices.length), txt = "") => {
         let newChoice: Option = {
-            index: charFromInt($scope.choices.length),
-            text : ""
+            index: idx,
+            text : txt
         };
         $scope.choices.push(newChoice);
     };
@@ -37,7 +51,7 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
     };
 
     // Preview
-    $scope.preview = () => fullQuestionToHtml($scope.text, $scope.choices);
+    $scope.preview = () => fullQuestionToHtml($scope.textarea, $scope.choices);
 
     // Running the quiz
     $scope.counter = 0;
@@ -49,11 +63,12 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
 
     function makeQuiz(text: string, options: Options): QuizContent {
         return {
-            courseId: "TODO-courseId",
-            descr   : text,
-            options : options,
-            correct : "TODO-correct",
-            author  : "TODO-author"
+            courseId   : "TODO-courseId",
+            description: text,
+            options    : options,
+            correct    : "TODO-correct",
+            author     : "TODO-author",
+            startTime  : new Date()
         };
     }
 
@@ -67,7 +82,7 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
 
     $scope.startQuiz = () => {
         // If string is empty, don't do anything
-        let msg = $scope.text;
+        let msg = $scope.textarea;
         let options = $scope.choices;
         if (!msg) return;
         let quiz = makeQuiz(msg, $scope.choices);
@@ -82,8 +97,6 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
         resetCounter();
         socket.emit(QUIZ_STOP, {});
     }
-
-
 }
 
 click.controller('instructorClickCtrl', instructorClickCtrl);

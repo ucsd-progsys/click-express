@@ -5,6 +5,8 @@ import passport = require('passport');
 import models   = require('./models');
 import socketIO = require('socket.io');
 import t        = require('./types');
+import path     = require('path');
+import fs       = require('fs');
 
 var Account:any = models.Account;
 var Click       = models.Click;
@@ -12,6 +14,10 @@ var router      = express.Router();
 type Request    = express.Request;
 type Response   = express.Response;
 type RequestH   = express.RequestHandler;
+
+
+const QUESTIONS_FILE = path.join(__dirname, "data/questions.json")
+
 
 ////////////////////////////////////////////////////////////////////////
 // Messages ////////////////////////////////////////////////////////////
@@ -77,7 +83,7 @@ export var getLogin:RequestH = (req, res, next) => {
     res.render('login', { user : req.user });
 }
 
-export var postLogin = 
+export var postLogin =
     passport.authenticate('local', { successRedirect: '/home'
                                    , failureRedirect: '/login' });
 
@@ -108,9 +114,19 @@ export var redirectHome: RequestH = (req, res) => {
 // INVARIANT: AUTH
 export function home(url:string): RequestH {
     return (req, res) => {
-        (req.user.username === 'instructor') ?
-            res.render('post-question', { user: req.user, serverURL : url}):          
-            res.render('render-question', { user: req.user, serverURL : url});     
+        if (req.user.username === 'instructor') {
+            fs.readFile(QUESTIONS_FILE, 'utf8', function (err, data) {
+                console.log('reading file');
+                if (err) throw err;
+                let obj = JSON.stringify(JSON.parse(data));                
+                console.log(obj)
+                res.render('post-question', { user: req.user, serverURL : url, questionPool: obj})
+            });
+
+        }
+        else {
+            res.render('render-question', { user: req.user, serverURL : url});
+        }
     }
 }
 
@@ -146,19 +162,47 @@ var defaults = { courseId : "CSE 130"
 
 // INVARIANT: AUTH
 
-export var history: RequestH = (req, res) => {
+export let history: RequestH = (req, res) => {
     res.render('history');
 }
 
-export var historyData: RequestH = (req, res) => {
-    var myId = requestUserId(req);
-    // console.log('Looking for history from ' + myId);
+export let historyData: RequestH = (req, res) => {
+    let myId = requestUserId(req);
     Click.find({ userId: myId }).exec((err: any, clicks: any) => {
         if (err) {
             res.render('history', { error: err.toString() })
         } else {
-            // console.log(clicks);
             res.json(clicks);
         }
     });
 }
+
+////////////////////////////////////////////////////////////////////////
+// Send existing questions /////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+/*
+{
+    "courseId"   : "CSE130",
+    "description": "C99 standard guarantees uniqueness of ____ characters for internal names.",
+    "options"    : [{ "index": "A", "text" : "31" }
+                    { "index": "B", "text" : "63" }
+                    { "index": "C", "text" : "12" }
+                    { "index": "D", "text" : "14" }],
+    "correct"    : "B",
+    "author"     : "rjhala"
+}
+*/
+
+// const QUESTIONS_FILE = path.join(__dirname, "data/questions.json")
+
+// export let quizContent: RequestH = (req, res) => {
+//     fs.readFile(QUESTIONS_FILE, 'utf8', function (err, data) {
+//         console.log('reading file');
+//         if (err) throw err;
+//         let obj = JSON.parse(data);
+//         console.log(obj);
+//         console.log(data);
+//         res.json(obj);
+//     });
+// }

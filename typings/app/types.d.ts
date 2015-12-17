@@ -8,7 +8,7 @@ declare type MessageDscr = string;
 // TODO: fix ?
 declare const enum Message {
     QuizCreate,
-    QuizBCast,    
+    QuizBCast,
     QuizStop,
     QuizAck,
     UserExists,
@@ -31,22 +31,32 @@ interface SocketEvent {
 declare type Option  = { index: string, text: string };
 declare type Options = Option[];
 
+// Corresponds to the QuizS schema
 interface QuizContent {
-    courseId  : string;
-    descr     : string;         // Text descrription
-    options   : Options;        // Available options
-    correct   : string;         // The correct answer
-    author    : string;    
+    courseId   : string;
+    description: string;         // Text description
+    options    : Options;        // Available options
+    correct    : string;         // The correct answer
+    author     : string;
+    startTime  : Date;
+    // TODO: 
+    // explanation: string;
+}
+
+interface Course {
+    name       : string;
+    description: string;
+    instructor : string;
 }
 
 interface Quiz {
-    id        : string;    
-    data      : QuizContent;
+    id         : string;         // Object Id for QuizContent
+    data       : QuizContent;
 }
 
 interface Click {
-    userId    : string;
-    quizId    : string;
-    choice    : string;		   // ['A'..]
-    submitTime: Date;
+    username   : string;
+    quizId     : string;        // The quiz ObjecId
+    choice     : string;	    // ['A'..]
+    submitTime : Date;
 }

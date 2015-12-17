@@ -1,8 +1,21 @@
 
-<div ng-controller="instructorClickCtrl">
+<script type="text/javascript">
+    questionPool = {{{ questionPool }}};        
+</script>    
+
+<div ng-controller="instructorClickCtrl">    
+    
+    <p><label for="question">Select an existing question</label></p>
+	<p>
+        <select class="btn btn-default" ng-model="selectedQuestion" ng-change="updateQuestion()" ng-disabled="quizInProgress">
+            <option class="btn btn-default" ng-repeat='option in {{{ questionPool }}}' value="\{{ option }}">\{{ option.description.substring(0,40) }} ...</option>                
+        </select>
+    </p>
+    
 	<p><label for="question">Post a Question</label></p>
-	<p><textarea class="form-control" ng-model="text" ng-disabled="quizInProgress" btf-markdown rows="3"></textarea></p>
-	
+	<p><textarea class="form-control" ng-model="textarea" ng-disabled="quizInProgress" btf-markdown rows="3"></textarea></p>
+    
+    <!-- Single button -->    
 	<div class="form-group" data-ng-repeat="choice in choices">
 		<form class="form-horizontal" >
 			<div class="form-group">
@@ -13,7 +26,7 @@
                            ng-disabled="quizInProgress" 
                            ng-model="choice.text" 
                            name="" 
-                           placeholder="Enter choice">
+                           placeholder="Enter choice">                           
 			    </div>
 			</div>	
 		</form>
@@ -36,5 +49,9 @@
 	<button class="btn btn-danger"  ng-click="stopQuiz()">
 		<span class="glyphicon glyphicon-stop"/>
 	</button>
-	<p style="float:right"> Elapsed Time \{{ counter }} seconds</p>	
+	
+    <span style="float:right">
+        <font ng-hide="!quizInProgress" color="green" style="padding-right:5em">Quiz In Progress</font> 
+        Elapsed Time \{{ counter }} seconds
+    </span>	
 </div>

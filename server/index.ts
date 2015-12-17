@@ -22,7 +22,6 @@ var app               = express();
 var http              = require('http').Server(app);
 var io                = socketIO(http);
 
-
 // local imports
 import tips           = require("./tips");
 import routes         = require('./routes');
@@ -92,6 +91,8 @@ app.get( '/logout'      ,              routes.logout);
 app.get( '/history'     , routes.auth, routes.history);
 app.get( '/history-data', routes.auth, routes.historyData);
 
+// app.get( '/quiz-content', routes.auth, routes.quizContent);                 // Must be instructor to get this
+
 app.post('/login'       ,              routes.postLogin);
 
 // app.post('/click'    , routes.auth, routes.postClick);                   // TODO: auth-student
@@ -133,7 +134,7 @@ io.on('connection', (socket) => {
     socket.on(t.QUIZ_START, (quizData: QuizContent) => {
         new models.Quiz({
             courseId : "TODO-courseId",
-            descr    : quizData.descr,
+            descr    : quizData.description,
             options  : quizData.options,
             correct  : quizData.correct,
             author   : quizData.author,
@@ -152,7 +153,6 @@ io.on('connection', (socket) => {
                 io.emit(t.QUIZ_START, newQuiz);
             }
         })
-
     });
 
     // Instructor stopped a quiz - broadcast it!
@@ -168,8 +168,7 @@ io.on('connection', (socket) => {
         //         + click.answer;
         // console.log(msg);
 
-        let ci = click // routes.requestClick(click);
-        new models.Click(ci).save((err, click) => {
+        new models.Click(click).save((err, _) => {
             if (err) console.log(err);
         });
     });
