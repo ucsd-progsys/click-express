@@ -1,7 +1,7 @@
 <div ng-controller="instructorClickCtrl">    
 
 <div style="width: 100%;">
-   <div style="float:left; width: 67%"> 
+   <div style="float:left; width: 57%"> 
         
         <p><label for="question">Select an existing question</label></p>
         <p>
@@ -11,7 +11,7 @@
         </p>
         
         <p><label for="question">Post a Question</label></p>
-        <p><textarea class="form-control" ng-model="textarea" ng-disabled="quizInProgress" btf-markdown rows="3"></textarea></p>
+        <p><textarea class="form-control" ng-model="textarea" ng-disabled="quizInProgress" btf-markdown rows="6"></textarea></p>
         
         <!-- Single button -->    
         <div class="form-group" data-ng-repeat="choice in choices">
@@ -37,7 +37,7 @@
         </button>
    </div>
    
-   <div style="float:right; width: 30%">
+   <div style="float:right; width: 40%">
        <!--Play/Stop buttons-->
        <p>
         <button class="btn btn-success" ng-disabled="quizInProgress" ng-click="startQuiz()" tooltip-class="btn" tooltip-placement="top" uib-tooltip="Start the Quiz!">

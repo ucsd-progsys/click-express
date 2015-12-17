@@ -70,17 +70,17 @@ let wrapInBlockQuote = (s: string) => wrapIn(s, 'blockquote');
 let wrapInBold		 = (s: string) => wrapIn(s, 'b');
 let formatQuiz 		 = (msg: string) => wrapInBlockQuote(wrapInP(msg));
 
-let converter = new showdown.Converter();
+// let converter = new showdown.Converter();
 
 function fullQuestionToHtml(question: string, opts: Options) {
     let withUndef = o => (o) ? o : "";
     let optStrs   = opts.map(o => wrapInBold(o.index) + '. ' + withUndef(o.text));
     let fullStr   = [question].concat(optStrs).join('\n\n');
-    return converter.makeHtml(fullStr);
+    return marked(fullStr);
 }
 
 function questionToHtml(q: QuizContent) {    
-    return converter.makeHtml(q.description);
+    return marked(q.description);
 }
 ////////////////////////////////////////////////////////////////////////
 // App Declaration /////////////////////////////////////////////////////

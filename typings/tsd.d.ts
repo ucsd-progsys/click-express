@@ -15,3 +15,4 @@
 /// <reference path="mime/mime.d.ts" />
 /// <reference path="serve-static/serve-static.d.ts" />
 /// <reference path="underscore/underscore.d.ts" />
+/// <reference path="marked/marked.d.ts" />

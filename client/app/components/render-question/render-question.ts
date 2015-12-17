@@ -1,3 +1,4 @@
+/// <reference path='../../../typings/tsd.d.ts' />
 
 var debug = false;
 var socket = io(); // initSocket();
@@ -17,8 +18,6 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout) {
     // INIT
     $scope.label = "(none)";
     setStatus($scope, Status.Off);
-    let converter = new showdown.Converter();
-
     
     $scope.options = [
         { id: 0, text: 'A', class: "btn-primary" },
