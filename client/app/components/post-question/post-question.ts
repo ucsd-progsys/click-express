@@ -6,7 +6,7 @@ var socket = io();
 // Auxiliary ///////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-function makeQuiz(scope): QuizContent {
+function makeQuiz(scope): IQuizContent {
     let text: string = scope.textarea;
     let options: Options = scope.choices;
     if (emptyInputQuiz(scope)) {
@@ -14,12 +14,12 @@ function makeQuiz(scope): QuizContent {
         return undefined;
     }
     return {
-        courseId: "TODO-courseId",
-        description: text,
-        options: options,
-        correct: "TODO-correct",
-        author: "TODO-author",
-        startTime: new Date()
+        courseId    : 'CSE130',
+        description : text,
+        options     : options,
+        correct     : 'TODO-correct',
+        author      : 'TODO-author',
+        startTime   : new Date()
     };
 }
 
@@ -113,7 +113,7 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
     // Load existing question
     function loadQuestion() {
         acceptStates(['quizReady', 'quizStale', 'quizEmpty']);
-        let newQuestion: QuizContent = JSON.parse($scope.selectedQuestion);
+        let newQuestion: IQuizContent = JSON.parse($scope.selectedQuestion);
         $scope.textarea = newQuestion.description;
         $scope.textarea = newQuestion.options;
         // // OLD: Add the new ones
@@ -175,9 +175,9 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
     // Running the Quiz ////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
 
-    var currentQuiz: Quiz = undefined;        // The quiz to be delivered
+    var currentQuiz: IQuiz = undefined;        // The quiz to be delivered
 
-    function setCurrentQuiz(q: Quiz) {
+    function setCurrentQuiz(q: IQuiz) {
         currentQuiz = q;
     }
     function unsetCurrentQuiz() {
@@ -235,9 +235,9 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
         $timeout(() => { $scope.savePopupVisible = false; }, 6000 /* 6 seconds */);        
     }
 
-    function saveSuccessful(quiz: Tagged<Quiz>) {
+    function saveSuccessful(quiz: Tagged<IQuiz>) {
         acceptStates(['quizStale']);
-        console.log('in save successful');
+        console.log('Successfully saved: ', quiz.data._id);
         showSaveNotification();
         setCurrentQuiz(quiz.data);
         setQuizReady();

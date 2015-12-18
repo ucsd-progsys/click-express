@@ -25,7 +25,7 @@ declare type Option  = { index: string, text: string };
 declare type Options = Option[];
 
 // Corresponds to the QuizS schema
-interface QuizContent {
+interface IQuizContent {
     courseId   : string;
     description: string;         // Text description
     options    : Options;        // Available options
@@ -36,18 +36,17 @@ interface QuizContent {
     // explanation: string;
 }
 
-interface Course {
+interface ICourse {
     name       : string;
     description: string;
     instructor : string;
 }
 
-interface Quiz {
-    id         : string;         // Object Id for QuizContent
-    data       : QuizContent;
+interface IQuiz extends IQuizContent {
+    _id         : string;         // Object Id for QuizContent
 }
 
-interface Click {
+interface IClick {
     username   : string;
     quizId     : string;        // The quiz ObjecId
     choice     : string;	    // ['A'..]

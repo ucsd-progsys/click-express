@@ -2,22 +2,10 @@
 var debug = false;
 var socket = io(); // initSocket();
 
-////////////////////////////////////////////////////////////////////////
-
-function setStatus($scope, s: Status) {
-    $scope.status    = s;
-    $scope.isWaiting = (s === Status.Clicked);
-    $scope.isOff     = (s === Status.Off);
-}
-
 ///////////////////////////////////////////////////////////////////////
 
 function studentClickCtrl($scope, $uibModal, $location, $timeout) {
 
-    // INIT
-    $scope.label = "(none)";
-    setStatus($scope, Status.Off);
-    
     $scope.options = [
         { id: 0, text: 'A', class: "btn-primary" },
         { id: 1, text: 'B', class: "btn-success" },
@@ -36,7 +24,7 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout) {
    
     $scope.response = { rsp: ERROR_RESPONCE };        
 
-    socket.on(QUIZ_START, (quiz: Quiz) => {
+    socket.on(QUIZ_START, (quiz: IQuiz) => {
         
         console.log(quiz.data.description);
         console.log(questionToHtml(quiz.data));

@@ -17,7 +17,7 @@ var AccountS = new Schema({ username: { type: String
 AccountS.plugin(plm);
 
 var QuizS    = new Schema({ courseId   : String         // coursename
-                          , descr      : String
+                          , description: String
                           , options    : [{ id: String, name: String }]
                           , correct    : String
                           , author     : String         // username

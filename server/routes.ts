@@ -10,6 +10,7 @@ import fs       = require('fs');
 
 var Account:any = models.Account;
 var Click       = models.Click;
+var Quiz        = models.Quiz;
 var router      = express.Router();
 type Request    = express.Request;
 type Response   = express.Response;
@@ -112,16 +113,43 @@ export var redirectHome: RequestH = (req, res) => {
 }
 
 // INVARIANT: AUTH
+// export function home(url:string): RequestH {
+//     return (req, res) => {
+//         if (req.user.username === 'instructor') {
+//             fs.readFile(QUESTIONS_FILE, 'utf8', function (err, data) {
+//                 // console.log('reading file');
+//                 if (err) throw err;
+//                 let obj = JSON.stringify(JSON.parse(data));                
+//                 // console.log(obj)
+//                 res.render('post-question', { user: req.user, serverURL : url, questionPool: obj})
+//             });
+
+//         }
+//         else {
+//             res.render('render-question', { user: req.user, serverURL : url});
+//         }
+//     }
+// }
 export function home(url:string): RequestH {
     return (req, res) => {
         if (req.user.username === 'instructor') {
-            fs.readFile(QUESTIONS_FILE, 'utf8', function (err, data) {
-                // console.log('reading file');
-                if (err) throw err;
-                let obj = JSON.stringify(JSON.parse(data));                
-                // console.log(obj)
-                res.render('post-question', { user: req.user, serverURL : url, questionPool: obj})
-            });
+            Quiz.find({ 'courseId': 'CSE130' }, (err: any, quizzes: any[]) => {
+                console.log('Found');
+                quizzes.forEach(q => {
+                    console.log(q);
+                })
+            })
+            res.render('post-question', { user: req.user, serverURL : url, questionPool: JSON.stringify([]));
+            
+            
+            
+            // fs.readFile(QUESTIONS_FILE, 'utf8', function (err, data) {
+            //     // console.log('reading file');
+            //     if (err) throw err;
+            //     let obj = JSON.stringify(JSON.parse(data));                
+            //     // console.log(obj)
+            //     res.render('post-question', { user: req.user, serverURL : url, questionPool: obj})
+            // });
 
         }
         else {
@@ -129,6 +157,9 @@ export function home(url:string): RequestH {
         }
     }
 }
+
+
+
 
 export var logout : RequestH = (req,res) => {
     req.logout();
