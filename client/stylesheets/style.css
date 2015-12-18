@@ -11,3 +11,105 @@ a {
     padding-top: 5px;
     padding-bottom: 5px;
 }
+/*
+.btn-choice:hover {
+    background-color: #A1D490;
+}
+
+.btn-choice:active.focus {
+    background-color: #A1D490;
+}*/
+
+.btn-choice:focus,
+.btn-choice.focus {
+  background-color:  #A1D490;
+  border-color: #1d5020;
+}
+.btn-choice:hover {
+  background-color: #A1D490;
+  border-color: #2f8034;
+}
+.btn-choice:active,
+.btn-choice.active,
+.open > .dropdown-toggle.btn-choice {
+  background-color:  #A1D490;
+  border-color: #2f8034;
+}
+
+.btn-choice:active,
+.btn-choice.active,
+.open > .dropdown-toggle.btn-choice {
+  background-image: none;
+}
+.btn-choice.disabled:hover,
+.btn-choice[disabled]:hover,
+fieldset[disabled] .btn-choice:hover,
+.btn-choice.disabled:focus,
+.btn-choice[disabled]:focus,
+fieldset[disabled] .btn-choice:focus,
+.btn-choice.disabled.focus,
+.btn-choice[disabled].focus,
+fieldset[disabled] .btn-choice.focus {
+  background-color: #A1D490;
+  border-color: #3fad46;
+}
+
+/**/
+
+/*.btn-choice {
+  color: #ffffff;
+  background-color: #3fad46;
+  border-color: #3fad46;
+}*/
+.btn-choice:focus,
+.btn-choice.focus {
+  color: #ffffff;
+  background-color: #A1D490;
+  border-color: #1d5020;
+}
+.btn-choice:hover {
+  color: #ffffff;
+  background-color: #A1D490;
+  border-color: #2f8034;
+}
+.btn-choice:active,
+.btn-choice.active,
+.open > .dropdown-toggle.btn-choice {
+  color: #ffffff;
+  background-color: #A1D490;
+  border-color: #2f8034;
+}
+.btn-choice:active:hover,
+.btn-choice.active:hover,
+.open > .dropdown-toggle.btn-choice:hover,
+.btn-choice:active:focus,
+.btn-choice.active:focus,
+.open > .dropdown-toggle.btn-choice:focus,
+.btn-choice:active.focus,
+.btn-choice.active.focus,
+.open > .dropdown-toggle.btn-choice.focus {
+  color: #ffffff;
+  background-color: #A1D490;
+  border-color: #1d5020;
+}
+.btn-choice:active,
+.btn-choice.active,
+.open > .dropdown-toggle.btn-choice {
+  background-image: none;
+}
+.btn-choice.disabled:hover,
+.btn-choice[disabled]:hover,
+fieldset[disabled] .btn-choice:hover,
+.btn-choice.disabled:focus,
+.btn-choice[disabled]:focus,
+fieldset[disabled] .btn-choice:focus,
+.btn-choice.disabled.focus,
+.btn-choice[disabled].focus,
+fieldset[disabled] .btn-choice.focus {
+  background-color: #3fad46;
+  border-color: #3fad46;
+}
+.btn-choice .badge {
+  color: #3fad46;
+  background-color: #ffffff;
+}

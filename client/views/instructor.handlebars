@@ -25,20 +25,20 @@
             </textarea></p>
 
             <!--Choices-->
-            <div class="form-group" data-ng-repeat="choice in choices">
-                <form class="form-horizontal" >
-                    <div class="form-group">
-                        <label for="choice" class="col-xs-1 control-label">\{{ charFromInt($index) }}</label>
-                        <div class="col-xs-11">
-                            <input type="text"
-                                class="form-control"
-                                ng-disabled="quizStarted"
-                                ng-model="choice.text"
-                                ng-change="onChoiceChange()"                                
-                                placeholder="Enter a choice">
-                        </div>
-                    </div>
-                </form>
+            <div class="form-group" data-ng-repeat="choice in choices">            
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default btn-choice" type="radio" ng-model="correctChoice" ng-click="correctChoiceSelected()" uib-btn-radio="'Right'">\{{ charFromInt($index) }}</button>
+                            </span>
+                            <input type="text" 
+                                   class="form-control"
+                                   ng-model="choice.text" 
+                                   placeholder="Enter a choice">
+                        </div><!-- /input-group -->
+                    </div><!-- /.col-lg-6 -->
+                </div>
             </div>
         <!--/Input area-->
 

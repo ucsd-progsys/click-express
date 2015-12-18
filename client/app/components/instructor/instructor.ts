@@ -36,11 +36,7 @@ function emptyInputQuiz(scope: any) {
 
 function instructorClickCtrl($scope, $http, $location, $timeout) {
 
-
-
     $scope.charFromInt = charFromInt;
-
-
 
     ////////////////////////////////////////////////////////////////////
     // State Flags /////////////////////////////////////////////////////
@@ -119,14 +115,12 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
     // Load existing question
     function loadQuestion() {
         acceptStates(['quizReady', 'quizStale', 'quizEmpty']);
-        console.log($scope.selectedQuestion);
-        let newQuestion: IQuiz = JSON.parse($scope.selectedQuestion);
+        let newQuestion: IQuiz = JSON.parse($scope.selectedQuestion);        
         $scope.textarea = newQuestion.description;
-        $scope.textarea = newQuestion.options;
+        $scope.choices  = newQuestion.options.map((o, i) => { return { id: i, text: o }; });
         setQuizReady();
     }
     $scope.loadQuestion = loadQuestion;
-
 
     // The default values are for when the button is used
     $scope.addNewChoice = () => {
@@ -146,6 +140,10 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
     // Input changed (any of the choices)
     $scope.onChoiceChange = () => {
         onEdit();
+    }
+            
+    $scope.correctChoiceSelected = () => {
+        console.log('correct selected');
     }
 
     // On ANY edit
