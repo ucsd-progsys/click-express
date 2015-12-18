@@ -8,7 +8,7 @@ declare var angular;
 var userName: string = userName || "UNKNOWN_USER";
 
 declare var serverURL: string;
-declare var io: any;
+declare var io: SocketIOStatic;
 declare let showdown;
 
 ///////////////////////////////////////////////////////////////////////
@@ -39,8 +39,6 @@ function isHomeURL() {
     return (window.location.pathname === '/home');
 }
 
-function initSocket() { return (isHomeURL()) ? io() : null; }
-
 ////////////////////////////////////////////////////////////////////////
 // Globally Useful Type Definitions ////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
@@ -48,6 +46,9 @@ function initSocket() { return (isHomeURL()) ? io() : null; }
 const QUIZ_START     = "QUIZ_START";
 const QUIZ_STOP      = "QUIZ_STOP";
 const QUIZ_ANS       = "QUIZ_ANS";
+const QUIZ_SAVE      = "QUIZ_SAVE";
+const QUIZ_SAVED     = "QUIZ_SAVED";
+
 const ERROR_RESPONCE = "ERROR";
 
 ////////////////////////////////////////////////////////////////////////

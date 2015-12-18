@@ -116,10 +116,10 @@ export function home(url:string): RequestH {
     return (req, res) => {
         if (req.user.username === 'instructor') {
             fs.readFile(QUESTIONS_FILE, 'utf8', function (err, data) {
-                console.log('reading file');
+                // console.log('reading file');
                 if (err) throw err;
                 let obj = JSON.stringify(JSON.parse(data));                
-                console.log(obj)
+                // console.log(obj)
                 res.render('post-question', { user: req.user, serverURL : url, questionPool: obj})
             });
 

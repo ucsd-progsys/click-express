@@ -16,13 +16,6 @@ declare const enum Message {
     ClickOk
 }
 
-// TODO: fix ?
-declare const enum Status {
-    Off,
-    Quiz,
-    Clicked
-}
-
 interface SocketEvent {
     kind: MessageDscr,
     info: any
@@ -59,4 +52,9 @@ interface Click {
     quizId     : string;        // The quiz ObjecId
     choice     : string;	    // ['A'..]
     submitTime : Date;
+}
+
+interface Tagged<A> {
+    tag: number;
+    data: A;
 }

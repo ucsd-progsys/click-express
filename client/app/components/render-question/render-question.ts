@@ -1,4 +1,3 @@
-/// <reference path='../../../typings/tsd.d.ts' />
 
 var debug = false;
 var socket = io(); // initSocket();
