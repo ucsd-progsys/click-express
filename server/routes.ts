@@ -136,30 +136,18 @@ export function home(url:string): RequestH {
             Quiz.find({ 'courseId': 'CSE130' }, (err: any, quizzes: IQuiz[]) => {
                 console.log('####### FOUND IDS');
                 console.log(JSON.stringify(quizzes, null, '  '));
-                res.render('post-question', {
+                res.render('instructor', {
                     user: req.user,
                     serverURL : url,
                     questionPool: JSON.stringify(quizzes)
                 });
             });
-
-            // fs.readFile(QUESTIONS_FILE, 'utf8', function (err, data) {
-            //     // console.log('reading file');
-            //     if (err) throw err;
-            //     let obj = JSON.stringify(JSON.parse(data));
-            //     // console.log(obj)
-            //     res.render('post-question', { user: req.user, serverURL : url, questionPool: obj})
-            // });
-
         }
         else {
-            res.render('render-question', { user: req.user, serverURL : url});
+            res.render('student', { user: req.user, serverURL : url});
         }
     }
 }
-
-
-
 
 export var logout : RequestH = (req,res) => {
     req.logout();
