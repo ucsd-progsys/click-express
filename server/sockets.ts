@@ -38,6 +38,7 @@ export let onConnection = (io: SocketIO.Server) => (socket: SocketIO.Socket) => 
     socket.on(t.QUIZ_SAVE, (taggedQuizContent: Tagged<IQuizContent>) => {
         let tag         = taggedQuizContent.tag;
         let quizContent = taggedQuizContent.data;
+        
         new models.Quiz(quizContent).save((err: any, quiz: IQuiz) => {
             if (err) {
                 console.log(err);

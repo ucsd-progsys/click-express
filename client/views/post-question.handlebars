@@ -28,14 +28,13 @@
             <div class="form-group" data-ng-repeat="choice in choices">
                 <form class="form-horizontal" >
                     <div class="form-group">
-                        <label for="choice" class="col-xs-1 control-label">\{{choice.index}}</label>
+                        <label for="choice" class="col-xs-1 control-label">\{{ charFromInt($index) }}</label>
                         <div class="col-xs-11">
                             <input type="text"
                                 class="form-control"
                                 ng-disabled="quizStarted"
                                 ng-model="choice.text"
-                                ng-change="onChoiceChange()"
-                                name=""
+                                ng-change="onChoiceChange()"                                
                                 placeholder="Enter a choice">
                         </div>
                     </div>

@@ -26,16 +26,16 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout) {
 
     socket.on(QUIZ_START, (quiz: IQuiz) => {
         
-        console.log(quiz.data.description);
-        console.log(questionToHtml(quiz.data));
+        console.log(quiz.description);
+        console.log(questionToHtml(quiz));
         
         let modalInstance = $uibModal.open({
             animation: true,
             templateUrl: 'myModalContent.html',
             controller: 'ModalInstanceCtrl',
             resolve: {
-                question: () => questionToHtml(quiz.data),
-                options : () => quiz.data.options, // $scope.options,
+                question: () => questionToHtml(quiz),
+                options : () => quiz.options, // $scope.options,
                 // counter : () => $scope.counter,
                 response: () => $scope.response                
             },
@@ -49,7 +49,7 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout) {
             (answer: string) => {
                 // return the selection through the socket
                 socket.emit(QUIZ_ANS, {
-                    quizId: quiz.id,
+                    quizId: quiz._id,
                     userId: userName,
                     answer: answer,
                     time: new Date()

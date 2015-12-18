@@ -21,14 +21,14 @@ interface SocketEvent {
     info: any
 }
 
-declare type Option  = { index: string, text: string };
-declare type Options = Option[];
+// declare type Option  = { index: string, text: string };
+declare type Options = string[];    // Option[]
 
 // Corresponds to the QuizS schema
 interface IQuizContent {
     courseId   : string;
     description: string;         // Text description
-    options    : Options;        // Available options
+    options    : string[];       // was Options;        // Available options
     correct    : string;         // The correct answer
     author     : string;
     startTime  : Date;

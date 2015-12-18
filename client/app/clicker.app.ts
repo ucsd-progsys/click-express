@@ -73,14 +73,18 @@ let formatQuiz 		 = (msg: string) => wrapInBlockQuote(wrapInP(msg));
 
 // let converter = new showdown.Converter();
 
+function charFromInt(n: number) {
+    return String.fromCharCode(65 + n);
+}
+
 function fullQuestionToHtml(question: string, opts: Options) {
     let withUndef = o => (o) ? o : "";
-    let optStrs   = opts.map(o => wrapInBold(o.index) + '. ' + withUndef(o.text));
+    let optStrs   = opts.map((o, i) => wrapInBold(charFromInt(i) + '. ' + withUndef(o)));
     let fullStr   = [question].concat(optStrs).join('\n\n');
     return marked(fullStr);
 }
 
-function questionToHtml(q: QuizContent) {    
+function questionToHtml(q: IQuizContent) {    
     return marked(q.description);
 }
 ////////////////////////////////////////////////////////////////////////

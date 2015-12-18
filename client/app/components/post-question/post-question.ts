@@ -8,7 +8,7 @@ var socket = io();
 
 function makeQuiz(scope): IQuizContent {
     let text: string = scope.textarea;
-    let options: Options = scope.choices;
+    let options: Options = scope.choices.map(c => c.text);
     if (emptyInputQuiz(scope)) {
         // TODO: handle error case
         return undefined;
@@ -25,9 +25,9 @@ function makeQuiz(scope): IQuizContent {
 
 function emptyInputQuiz(scope: any) {
     let text = scope.textarea;
-    let options = scope.choices;
+    let choices = scope.choices;
     return (typeof text === 'undefined') || (text === '') ||
-        (typeof options === 'undefined') || (options.length < 2);
+           (typeof choices === 'undefined') || (choices.length < 2);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -35,6 +35,11 @@ function emptyInputQuiz(scope: any) {
 ////////////////////////////////////////////////////////////////////
 
 function instructorClickCtrl($scope, $http, $location, $timeout) {
+
+
+
+    $scope.charFromInt = charFromInt;
+
 
 
     ////////////////////////////////////////////////////////////////////
@@ -104,24 +109,20 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
     $scope.questionPool = [];
     $scope.selectedQuestion = undefined;
     $scope.textarea = "";
+    
+    // .choices: { id: number; text: string; }
     $scope.choices = [];
 
     // Create Quiz
     // http://mrngoitall.net/blog/2013/10/02/adding-form-fields-dynamically-in-angularjs/
-    let charFromInt = (n) => String.fromCharCode(65 + n);
-
+    
     // Load existing question
     function loadQuestion() {
         acceptStates(['quizReady', 'quizStale', 'quizEmpty']);
-        let newQuestion: IQuizContent = JSON.parse($scope.selectedQuestion);
+        console.log($scope.selectedQuestion);
+        let newQuestion: IQuiz = JSON.parse($scope.selectedQuestion);
         $scope.textarea = newQuestion.description;
         $scope.textarea = newQuestion.options;
-        // // OLD: Add the new ones
-        // $scope.choices = [];
-        // newQuestion.options.forEach(v => {
-        //     $scope.addNewChoice(v.index, v.text);
-        // });
-        // Update state
         setQuizReady();
     }
     $scope.loadQuestion = loadQuestion;
@@ -129,10 +130,7 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
 
     // The default values are for when the button is used
     $scope.addNewChoice = () => {
-        $scope.choices.push({
-            index: charFromInt($scope.choices.length),
-            text: ""
-        });
+        $scope.choices.push({ id: $scope.choices.length, text: ""});
         onEdit();
     };
     $scope.removeLastChoice = () => {
@@ -161,7 +159,7 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
     $scope.clearForms = () => {
         acceptStates(['quizReady', 'quizStale', 'quizEmpty']);
         $scope.textarea = "";
-        $scope.choices = []; // .forEach(c => { c.text = ""; });
+        $scope.choices = [];
         setQuizEmpty();
     }
 
@@ -169,7 +167,7 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
     // Preview /////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
 
-    $scope.preview = () => fullQuestionToHtml($scope.textarea, $scope.choices);
+    $scope.preview = () => fullQuestionToHtml($scope.textarea, $scope.choices.map(c => c.text));
 
     ////////////////////////////////////////////////////////////////////
     // Running the Quiz ////////////////////////////////////////////////

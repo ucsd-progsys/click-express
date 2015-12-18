@@ -13,9 +13,9 @@ Web-based clicker site (written in express)
 
 ## TODO
 
-+ FIX: history shows student signed off
++ Disable save button when it had just been pressed
 
-+ Move socket service to separate module
++ FIX: history shows student signed off
 
 + Show if answer was correct or not in history
 

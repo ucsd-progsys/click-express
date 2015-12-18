@@ -119,7 +119,7 @@ export var redirectHome: RequestH = (req, res) => {
 //             fs.readFile(QUESTIONS_FILE, 'utf8', function (err, data) {
 //                 // console.log('reading file');
 //                 if (err) throw err;
-//                 let obj = JSON.stringify(JSON.parse(data));                
+//                 let obj = JSON.stringify(JSON.parse(data));
 //                 // console.log(obj)
 //                 res.render('post-question', { user: req.user, serverURL : url, questionPool: obj})
 //             });
@@ -133,20 +133,20 @@ export var redirectHome: RequestH = (req, res) => {
 export function home(url:string): RequestH {
     return (req, res) => {
         if (req.user.username === 'instructor') {
-            Quiz.find({ 'courseId': 'CSE130' }, (err: any, quizzes: any[]) => {
-                console.log('Found');
-                quizzes.forEach(q => {
-                    console.log(q);
-                })
-            })
-            res.render('post-question', { user: req.user, serverURL : url, questionPool: JSON.stringify([]));
-            
-            
-            
+            Quiz.find({ 'courseId': 'CSE130' }, (err: any, quizzes: IQuiz[]) => {
+                console.log('####### FOUND IDS');
+                console.log(JSON.stringify(quizzes, null, '  '));
+                res.render('post-question', {
+                    user: req.user,
+                    serverURL : url,
+                    questionPool: JSON.stringify(quizzes)
+                });
+            });
+
             // fs.readFile(QUESTIONS_FILE, 'utf8', function (err, data) {
             //     // console.log('reading file');
             //     if (err) throw err;
-            //     let obj = JSON.stringify(JSON.parse(data));                
+            //     let obj = JSON.stringify(JSON.parse(data));
             //     // console.log(obj)
             //     res.render('post-question', { user: req.user, serverURL : url, questionPool: obj})
             // });

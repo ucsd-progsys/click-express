@@ -16,9 +16,14 @@ var AccountS = new Schema({ username: { type: String
 
 AccountS.plugin(plm);
 
+
+// var OptionS  = new Schema({ id         : String 
+//                           , name       : String 
+//                           });
+
 var QuizS    = new Schema({ courseId   : String         // coursename
                           , description: String
-                          , options    : [{ id: String, name: String }]
+                          , options    : [String]       // was: [OptionS]
                           , correct    : String
                           , author     : String         // username
                           , startTime  : Date
@@ -45,6 +50,7 @@ var EnrollS  = new Schema({ userId     : String
 ////////////////////////////////////////////////////////////////////////
 
 export var Account   = mongoose.model('Account', AccountS);
+// export var Option    = mongoose.model('Option' , OptionS);
 export var Quiz      = mongoose.model('Quiz'   , QuizS);
 export var Course    = mongoose.model('Course' , CourseS );
 export var Click     = mongoose.model('Click'  , ClickS);
