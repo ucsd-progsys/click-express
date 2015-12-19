@@ -3,13 +3,20 @@
 <div style="width: 100%;">
    <div style="float:left; width: 57%">
 
-        <p><label for="question">Select an existing question</label></p>
-        <p>
-            <select class="btn btn-default" ng-model="selectedQuestion" ng-change="loadQuestion()" ng-disabled="quizStarted">
-                <option class="btn btn-default" ng-repeat='option in {{{ questionPool }}}' value="\{{ option }}">\{{ option.description.substring(0,40) }} ...</option>
-            </select>
-        </p>
+        <!--Select course-->    
+        <!--<p><label>Select a course</label></p>
+        <select class="btn btn-default" ng-model="selectedCourse" ng-change="loadCourse()" ng-disabled="quizStarted" name="aaa">
+            <option class="btn btn-default" ng-repeat='course in courseList' value="\{{ course }}">\{{ course }}</option>
+        </select>                -->
 
+        <!--Select question-->
+        <p><label>Select an existing question</label></p>                
+        <p>
+        <select class="btn btn-default" ng-model="selectedQuestion" ng-change="loadQuestion()" ng-disabled="quizStarted">
+            <option class="btn btn-default" ng-repeat='option in {{{ questionPool }}}' value="\{{ option }}">\{{ option.description.substring(0,40) }} ...</option>
+        </select>
+        </p>            
+    
         <p><label for="question">Post a Question</label></p>
 
         <!--Input area-->
@@ -25,19 +32,6 @@
             </textarea></p>
 
             <!--Choices-->
-            
-            <!--<div class="btn-group">  
-                <div class="row">
-                        <div class="input-group">              
-                            <label class="btn btn-success" ng-model="radioModel" btn-radio="'Left'" uncheckable>Left</label>
-                            <input type="text" class="form-control" ng-model="choice.text" placeholder="Enter a choice">
-                        </div>                    
-                </div>                    
-                <label class="btn btn-success" ng-model="radioModel" btn-radio="'Middle'" uncheckable>Middle</label>
-                <label class="btn btn-success" ng-model="radioModel" btn-radio="'Right'" uncheckable>Right</label>
-            </div>            -->
-            
-            
             <div class="form-group" data-ng-repeat="choice in choices">
                 <div class="row">
                     <div class="col-lg-12">
@@ -75,10 +69,10 @@
    <div style="float:right; width: 40%">
        <!-- Play/Stop buttons -->
        <p>
-        <button class="btn btn-success" ng-disabled="!quizReady" ng-click="startQuiz()" tooltip-class="btn" tooltip-placement="top" uib-tooltip="Start the Quiz!">
+        <button class="btn btn-default" ng-disabled="!quizReady" ng-click="startQuiz()" tooltip-class="btn" tooltip-placement="top" uib-tooltip="Start the Quiz!">
             <span class="glyphicon glyphicon-play"/>
         </button>
-        <button class="btn btn-danger" ng-disabled="!quizStarted" ng-click="stopQuiz()" tooltip-class="btn" tooltip-placement="top" uib-tooltip="Stop the Quiz!">
+        <button class="btn btn-default" ng-disabled="!quizStarted" ng-click="stopQuiz()" tooltip-class="btn" tooltip-placement="top" uib-tooltip="Stop the Quiz!">
             <span class="glyphicon glyphicon-stop"/>
         </button>
 
