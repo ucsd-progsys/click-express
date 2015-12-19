@@ -6,6 +6,11 @@ var socket = io(); // initSocket();
 
 function studentClickCtrl($scope, $uibModal, $location, $timeout) {
 
+    // Auxiliary functions
+    $scope.charFromInt = charFromInt;
+    $scope.tof = <A>(x: A) => typeof x; 
+
+
     $scope.options = [
         { id: 0, text: 'A', class: "btn-primary" },
         { id: 1, text: 'B', class: "btn-success" },
@@ -74,7 +79,7 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout) {
 
 function modalInstanceCtrl($scope, $uibModalInstance, question, options, /*counter, */ response) {
     $scope.quiz     = { val: question };
-    $scope.options  = { val: options };
+    $scope.options  = { val: options.map((o, i) => { return { ii: charFromInt(i), text: o } }) };
     // $scope.counter  = { val: counter };
     $scope.response = { val: ERROR_RESPONCE };
     $scope.ok       = () => { $uibModalInstance.close($scope.response.rsp); };

@@ -36,6 +36,7 @@ function emptyInputQuiz(scope: any) {
 
 function instructorClickCtrl($scope, $http, $location, $timeout) {
 
+    // Auxiliary functions
     $scope.charFromInt = charFromInt;
 
     ////////////////////////////////////////////////////////////////////
@@ -96,6 +97,7 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
     // Class selection /////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
     $scope.classSelectorText = 'Select a class';
+    $scope.courseName = 'CSE130';
     $scope.courseList = [ 'CSE130', 'CSE230' ];
 
 
@@ -118,16 +120,22 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
     // Create Quiz
     // http://mrngoitall.net/blog/2013/10/02/adding-form-fields-dynamically-in-angularjs/
     
+    function updateForms(q: IQuizContent) {
+        $scope.textarea = q.description;
+        $scope.choices  = q.options.map((o, i) => { return { id: i, text: o }; });
+        $scope.correctChoice.index = q.correct;
+        setCorrectChoiceStyle();        
+    }
+    
     // Load existing question
     function loadQuestion() {
         acceptStates(['quizReady', 'quizStale', 'quizEmpty']);
-        let newQuestion: IQuiz = JSON.parse($scope.selectedQuestion);        
-        $scope.textarea = newQuestion.description;
-        $scope.choices  = newQuestion.options.map((o, i) => { return { id: i, text: o }; });
-        $scope.correctChoice.index = newQuestion.correct;
-        setCorrectChoiceStyle();       
+        let loadedQuiz: IQuiz = JSON.parse($scope.selectedQuestion);        
+        updateForms(loadedQuiz);
+        setCurrentQuiz(loadedQuiz);               
         setQuizReady();
     }
+    
     $scope.loadQuestion = loadQuestion;
 
     // The default values are for when the button is used
@@ -185,6 +193,23 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
         $scope.correctChoice.index = -1;
         setQuizEmpty();
     }
+    
+    ////////////////////////////////////////////////////////////////////
+    // Current quiz ////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////    
+    
+    var currentQuiz: IQuiz = undefined;        // The quiz to be delivered
+
+    function setCurrentQuiz(q: IQuiz) {
+        currentQuiz = q;
+    }
+    function unsetCurrentQuiz() {
+        currentQuiz = undefined;
+    }
+    function getCurrentQuiz() { 
+        return currentQuiz; 
+    }
+
 
     ////////////////////////////////////////////////////////////////////
     // Preview /////////////////////////////////////////////////////////
@@ -195,16 +220,6 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
     ////////////////////////////////////////////////////////////////////
     // Running the Quiz ////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
-
-    var currentQuiz: IQuiz = undefined;        // The quiz to be delivered
-
-    function setCurrentQuiz(q: IQuiz) {
-        currentQuiz = q;
-    }
-    function unsetCurrentQuiz() {
-        currentQuiz = undefined;
-    }
-    function getCurrentQuiz() { return currentQuiz; }
 
     // Timer
     $scope.counter = 0;

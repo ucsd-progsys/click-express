@@ -98,3 +98,32 @@ var click = angular.module('click', [
 	'ngSanitize',  		// Markdown html sanitization
 	'ng.bs.dropdown'
 	]);
+
+
+click.controller('navCtrl', 
+    ['$scope', '$location', function($scope, $location) {
+        
+        $scope.courseName = 'CSE130';
+        console.log('navCtrol')
+        $scope.onSelectCourse= (course: string) => {
+            $scope.courseName = course;
+        } 
+        
+        // $scope.navClass = function(page) {
+        //     var currentRoute = $location.path().substring(1) || 'home';
+        //     return page === currentRoute ? 'active' : '';
+        // };
+
+        // $scope.loadHome = function() {
+        //     $location.url('/home');
+        // };
+
+        // $scope.loadAbout = function() {
+        //     $location.url('/about');
+        // };
+
+        // $scope.loadContact = function() {
+        //     $location.url('/contact');
+        // };
+
+    }]);
