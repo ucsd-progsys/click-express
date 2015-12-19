@@ -29,7 +29,7 @@ interface IQuizContent {
     courseId   : string;
     description: string;         // Text description
     options    : string[];       // was Options;        // Available options
-    correct    : string;         // The correct answer
+    correct    : number;         // The correct answer
     author     : string;
     startTime  : Date;
     // TODO: 

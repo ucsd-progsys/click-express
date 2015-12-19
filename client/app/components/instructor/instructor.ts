@@ -6,28 +6,28 @@ var socket = io();
 // Auxiliary ///////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-function makeQuiz(scope): IQuizContent {
-    let text: string = scope.textarea;
-    let options: Options = scope.choices.map(c => c.text);
+function makeQuiz(scope): IQuizContent {    
     if (emptyInputQuiz(scope)) {
         // TODO: handle error case
         return undefined;
     }
     return {
-        courseId    : 'CSE130',
-        description : text,
-        options     : options,
-        correct     : 'TODO-correct',
-        author      : 'TODO-author',
-        startTime   : new Date()
+        courseId   : 'CSE130', 
+        description: scope.textarea,
+        options    : scope.choices.map(c => c.text),
+        correct    : scope.correctChoice.index,
+        author     : 'rjhala',
+        startTime  : new Date()
     };
 }
 
 function emptyInputQuiz(scope: any) {
-    let text = scope.textarea;
-    let choices = scope.choices;
-    return (typeof text === 'undefined') || (text === '') ||
-           (typeof choices === 'undefined') || (choices.length < 2);
+    let text         : string   = scope.textarea;
+    let choices      : string[] = scope.choices;
+    let correctChoice: number   = scope.correctChoice.index;
+    return (typeof text    === 'undefined') || (text === '')        ||
+           (typeof choices === 'undefined') || (choices.length < 2) || 
+           (correctChoice < 0) || (correctChoice >= choices.length);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -118,13 +118,17 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
         let newQuestion: IQuiz = JSON.parse($scope.selectedQuestion);        
         $scope.textarea = newQuestion.description;
         $scope.choices  = newQuestion.options.map((o, i) => { return { id: i, text: o }; });
+        $scope.correctChoice.index = newQuestion.correct;
+        setCorrectChoiceStyle();       
         setQuizReady();
     }
     $scope.loadQuestion = loadQuestion;
 
     // The default values are for when the button is used
     $scope.addNewChoice = () => {
-        $scope.choices.push({ id: $scope.choices.length, text: ""});
+        let len = $scope.choices.length;
+        $scope.choices.push({ id: len, text: ""});
+        $scope.choiceStyle.push({});   
         onEdit();
     };
     $scope.removeLastChoice = () => {
@@ -142,10 +146,24 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
         onEdit();
     }
             
-    $scope.correctChoiceSelected = () => {
-        console.log('correct selected');
+    // Correct choice index            
+    $scope.correctChoice = { index: -1 };
+    $scope.choiceStyle = [];
+    
+    function setCorrectChoiceStyle() {        
+        $scope.choices.forEach((_,i) => { $scope.choiceStyle[i] = {} });        
+        $scope.choiceStyle[$scope.correctChoice.index] = { 'background-color':'#cdf1c0' };      
     }
-
+            
+    function correctChoiceSelected(index: number) {
+        $scope.correctChoice.index = index;   
+        setCorrectChoiceStyle();       
+        onEdit();
+    }
+    
+    $scope.correctChoiceSelected = correctChoiceSelected;
+    
+    
     // On ANY edit
     function onEdit() {
         acceptStates(['quizReady', 'quizStale', 'quizEmpty']);
@@ -158,6 +176,7 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
         acceptStates(['quizReady', 'quizStale', 'quizEmpty']);
         $scope.textarea = "";
         $scope.choices = [];
+        $scope.correctChoice.index = -1;
         setQuizEmpty();
     }
 

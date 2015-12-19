@@ -24,7 +24,7 @@ AccountS.plugin(plm);
 var QuizS    = new Schema({ courseId   : String         // coursename
                           , description: String
                           , options    : [String]       // was: [OptionS]
-                          , correct    : String
+                          , correct    : Number
                           , author     : String         // username
                           , startTime  : Date
                           });
