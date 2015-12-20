@@ -134,8 +134,8 @@ export function home(url:string): RequestH {
     return (req, res) => {
         if (req.user.username === 'instructor') {
             Quiz.find({ 'courseId': 'CSE130' }, (err: any, quizzes: IQuiz[]) => {
-                console.log('####### FOUND IDS');
-                console.log(JSON.stringify(quizzes, null, '  '));
+                // console.log('####### FOUND IDS');
+                // console.log(JSON.stringify(quizzes, null, '  '));
                 res.render('instructor', {
                     user: req.user,
                     serverURL : url,
