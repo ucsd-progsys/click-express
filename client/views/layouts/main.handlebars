@@ -85,18 +85,16 @@
             <li class="active"><a href="#">Home</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#contact">Contact</a></li>
-            <li class="dropdown" >
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">\{{ courseName }}<span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="#" ng-model="courseName" ng-click="onSelectCourse('Action')">Action</a></li>
-                <li><a href="#" ng-model="courseName">Another action</a></li>
-                <li><a href="#" ng-model="courseName">Something else here</a></li>
-                <li role="separator" class="divider"></li>
-                <li class="dropdown-header">Nav header</li>
-                <li><a href="#" ng-model="courseName">Separated link</a></li>
-                <li><a href="#" ng-model="courseName">One more separated link</a></li>
-              </ul>
-            </li>
+            {{#if courseList}}
+                <li class="dropdown" >
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Select a course<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" ng-repeat='course in {{{ courseList }}}' ng-click="onSelectCourse(course)">\{{ course }}</a></li>
+                    </ul>
+                </li>
+                
+            {{/if}}
+            <li ng-show="CommonData.courseName"><a><b>\{{ CommonData.courseName }}</b></a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <!--<li><a href="../navbar/">Default</a></li>
@@ -104,7 +102,7 @@
             <!--<li class="active"><a href="./">Logout <span class="sr-only">(current)</span></a></li>-->
             {{#if user}}
                 <!--<li><a href="../navbar-static-top/">Static top</a></li>-->
-                <li><a><b>{{ user.username }}</b></a></li>
+                <li><a ng-model="CommonData.userName"><b>{{ user.username }}</b></a></li>
                 <li class="active"><a href="./logout">Logout <span class="sr-only">(current)</span></a></li>
             {{else}}
                 <p class="navbar-text">
@@ -152,6 +150,7 @@
   </script>
   
   <script src="/app/clicker.app.js"></script>
+  <script src="/app/components/navigation/navigation.js"></script>
   <script src="/app/components/instructor/instructor.js"></script>
   <script src="/app/components/student/student.js"></script>
   <script src="/app/components/history/history.js"></script>

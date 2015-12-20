@@ -2,14 +2,8 @@
 /// <reference path='../../typings/tsd.d.ts' />
 
 declare var angular;
-
-// locals
-// ugly -- imported through JavaScript: main.handlebars
-var userName: string = userName || "UNKNOWN_USER";
-
 declare var serverURL: string;
 declare var io: SocketIOStatic;
-declare let showdown;
 
 ///////////////////////////////////////////////////////////////////////
 // URL API ////////////////////////////////////////////////////////////
@@ -71,11 +65,7 @@ let wrapInBlockQuote = (s: string) => wrapIn(s, 'blockquote');
 let wrapInBold		 = (s: string) => wrapIn(s, 'b');
 let formatQuiz 		 = (msg: string) => wrapInBlockQuote(wrapInP(msg));
 
-// let converter = new showdown.Converter();
-
-function charFromInt(n: number) {
-    return String.fromCharCode(65 + n);
-}
+let charFromInt      = (n: number) => String.fromCharCode(65 + n);
 
 function fullQuestionToHtml(question: string, opts: Options) {
     let withUndef = o => (o) ? o : "";
@@ -100,30 +90,9 @@ var click = angular.module('click', [
 	]);
 
 
-click.controller('navCtrl', 
-    ['$scope', '$location', function($scope, $location) {
-        
-        $scope.courseName = 'CSE130';
-        console.log('navCtrol')
-        $scope.onSelectCourse= (course: string) => {
-            $scope.courseName = course;
-        } 
-        
-        // $scope.navClass = function(page) {
-        //     var currentRoute = $location.path().substring(1) || 'home';
-        //     return page === currentRoute ? 'active' : '';
-        // };
-
-        // $scope.loadHome = function() {
-        //     $location.url('/home');
-        // };
-
-        // $scope.loadAbout = function() {
-        //     $location.url('/about');
-        // };
-
-        // $scope.loadContact = function() {
-        //     $location.url('/contact');
-        // };
-
-    }]);
+click.factory('Data', function () {
+    return { 
+        courseName: '',
+        userName  : '' 
+    };
+});

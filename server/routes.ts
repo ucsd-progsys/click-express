@@ -139,12 +139,17 @@ export function home(url:string): RequestH {
                 res.render('instructor', {
                     user: req.user,
                     serverURL : url,
+                    courseList: JSON.stringify([ 'CSE130', 'CSE230' ]),     // TODO: get them from the db
                     questionPool: JSON.stringify(quizzes)
                 });
             });
         }
         else {
-            res.render('student', { user: req.user, serverURL : url});
+            res.render('student', {
+                user: req.user,
+                serverURL : url,
+                courseList: JSON.stringify([ 'CSE130', 'CSE230' ])          // TODO: get them from the db
+            });
         }
     }
 }
@@ -182,14 +187,20 @@ var defaults = { courseId : "CSE 130"
 // INVARIANT: AUTH
 
 export let history: RequestH = (req, res) => {
-    res.render('history');
+    res.render('history', {
+        courseList: JSON.stringify([ 'CSE130', 'CSE230' ])      // TODO: get them from the db
+                                                // TODO: define this globally
+    });
 }
 
 export let historyData: RequestH = (req, res) => {
     let myId = requestUserId(req);
     Click.find({ userId: myId }).exec((err: any, clicks: any) => {
         if (err) {
-            res.render('history', { error: err.toString() })
+            res.render('history', {
+                error: err.toString(),
+                courseList: JSON.stringify([ 'CSE130', 'CSE230' ])      // TODO: get them from the db
+            })
         } else {
             res.json(clicks);
         }

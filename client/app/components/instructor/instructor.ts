@@ -12,7 +12,7 @@ function makeQuiz(scope): IQuizContent {
         return undefined;
     }
     return {
-        courseId   : 'CSE130', 
+        courseId   : scope.CommonData.coursName,
         description: scope.textarea,
         options    : scope.choices.map(c => c.text),
         correct    : scope.correctChoice.index,
@@ -34,7 +34,9 @@ function emptyInputQuiz(scope: any) {
 // Instructor Controller ///////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-function instructorClickCtrl($scope, $http, $location, $timeout) {
+function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
+    
+    $scope.CommonData = Data;    
 
     // Auxiliary functions
     $scope.charFromInt = charFromInt;
@@ -90,16 +92,7 @@ function instructorClickCtrl($scope, $http, $location, $timeout) {
     function toTagged<A>(x: A): Tagged<A> {
         return { tag: newSaveTag(), data: x };
     }
-    $scope.savePopupVisible = false;
-
-
-    ////////////////////////////////////////////////////////////////////
-    // Class selection /////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////
-    $scope.classSelectorText = 'Select a class';
-    $scope.courseName = 'CSE130';
-    $scope.courseList = [ 'CSE130', 'CSE230' ];
-
+    $scope.savePopupVisible = false;    
 
     ////////////////////////////////////////////////////////////////////
     // Input question //////////////////////////////////////////////////

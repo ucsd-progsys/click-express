@@ -55,7 +55,7 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout) {
                 // return the selection through the socket
                 socket.emit(QUIZ_ANS, {
                     quizId: quiz._id,
-                    userId: userName,
+                    userId: $scope.CommonData.userName,
                     answer: answer,
                     time: new Date()
                 });

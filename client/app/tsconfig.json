@@ -16,7 +16,8 @@
         "watch": true
     },
     "files": [
-        "./clicker.app.ts",
+        "./clicker.app.ts",        
+        "./components/navigation/navigation.ts",
         "./components/instructor/instructor.ts",
         "./components/student/student.ts",
         "./components/history/history.ts"
