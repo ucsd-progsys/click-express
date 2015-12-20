@@ -32,7 +32,7 @@ interface IQuizContent {
     correct    : number;         // The correct answer
     author     : string;
     startTime  : Date;
-    // TODO: 
+    // TODO:
     // explanation: string;
 }
 
@@ -49,7 +49,7 @@ interface IQuiz extends IQuizContent {
 interface IClick {
     username   : string;
     quizId     : string;        // The quiz ObjecId
-    choice     : string;	    // ['A'..]
+    choice     : number;
     submitTime : Date;
 }
 

@@ -4,6 +4,15 @@ var socket = io({ query: 'userName=' + userName });
 
 ///////////////////////////////////////////////////////////////////////
 
+function makeClick(scope: any, quiz: IQuiz, answer: number): IClick {
+    return {
+        username   : scope.CommonData.userName,
+        quizId     : quiz._id,
+        choice     : answer,
+        submitTime : new Date()
+    }
+}
+
 function studentClickCtrl($scope, $uibModal, $location, $timeout, Data) {
 
     // Populate CommonData
@@ -47,14 +56,11 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout, Data) {
         $scope.currentModal = modalInstance;
 
         modalInstance.result.then(
-            (answer: string) => {
+            (answer: number) => {
+                let click = makeClick($scope, quiz, answer);
+                console.log(click);
                 // return the selection through the socket
-                socket.emit(QUIZ_ANS, {
-                    quizId: quiz._id,
-                    userId: $scope.CommonData.userName,
-                    answer: answer,
-                    time: new Date()
-                });
+                socket.emit(QUIZ_ANS, click);
             },
             () => { console.log('Question dismissed at: ' + new Date()) }
         );
