@@ -7,17 +7,17 @@ var socket = io({ query: 'userName=' + userName });
 // Auxiliary ///////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-function makeQuiz(scope): IQuizContent {    
+function makeQuiz(scope): IQuizContent {
     if (emptyInputQuiz(scope)) {
         // TODO: handle error case
         return undefined;
     }
     return {
-        courseId   : scope.CommonData.coursName,
+        courseId   : scope.CommonData.courseName,
         description: scope.textarea,
         options    : scope.choices.map(c => c.text),
         correct    : scope.correctChoice.index,
-        author     : 'rjhala',
+        author     : scope.CommonData.userName,
         startTime  : new Date()
     };
 }
@@ -27,7 +27,7 @@ function emptyInputQuiz(scope: any) {
     let choices      : string[] = scope.choices;
     let correctChoice: number   = scope.correctChoice.index;
     return (typeof text    === 'undefined') || (text === '')        ||
-           (typeof choices === 'undefined') || (choices.length < 2) || 
+           (typeof choices === 'undefined') || (choices.length < 2) ||
            (correctChoice < 0) || (correctChoice >= choices.length);
 }
 
@@ -36,10 +36,11 @@ function emptyInputQuiz(scope: any) {
 ////////////////////////////////////////////////////////////////////
 
 function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
-    
-    // Populate CommonData    
+
+    // Populate CommonData
     $scope.CommonData = Data;
-    $scope.CommonData.socket = socket;    
+    $scope.CommonData.socket = socket;
+    $scope.CommonData.userName = userName;
 
     // Auxiliary functions
     $scope.charFromInt = charFromInt;
@@ -95,7 +96,7 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
     function toTagged<A>(x: A): Tagged<A> {
         return { tag: newSaveTag(), data: x };
     }
-    $scope.savePopupVisible = false;    
+    $scope.savePopupVisible = false;
 
     ////////////////////////////////////////////////////////////////////
     // Input question //////////////////////////////////////////////////
@@ -109,36 +110,36 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
     $scope.questionPool = [];
     $scope.selectedQuestion = undefined;
     $scope.textarea = "";
-    
+
     // .choices: { id: number; text: string; }
     $scope.choices = [];
 
     // Create Quiz
     // http://mrngoitall.net/blog/2013/10/02/adding-form-fields-dynamically-in-angularjs/
-    
+
     function updateForms(q: IQuizContent) {
         $scope.textarea = q.description;
         $scope.choices  = q.options.map((o, i) => { return { id: i, text: o }; });
         $scope.correctChoice.index = q.correct;
-        setCorrectChoiceStyle();        
+        setCorrectChoiceStyle();
     }
-    
+
     // Load existing question
     function loadQuestion() {
         acceptStates(['quizReady', 'quizStale', 'quizEmpty']);
-        let loadedQuiz: IQuiz = JSON.parse($scope.selectedQuestion);        
+        let loadedQuiz: IQuiz = JSON.parse($scope.selectedQuestion);
         updateForms(loadedQuiz);
-        setCurrentQuiz(loadedQuiz);               
+        setCurrentQuiz(loadedQuiz);
         setQuizReady();
     }
-    
+
     $scope.loadQuestion = loadQuestion;
 
     // The default values are for when the button is used
     $scope.addNewChoice = () => {
         let len = $scope.choices.length;
         $scope.choices.push({ id: len, text: ""});
-        $scope.choiceStyle.push({});   
+        $scope.choiceStyle.push({});
         onEdit();
     };
     $scope.removeLastChoice = () => {
@@ -155,25 +156,25 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
     $scope.onChoiceChange = () => {
         onEdit();
     }
-            
-    // Correct choice index            
+
+    // Correct choice index
     $scope.correctChoice = { index: -1 };
     $scope.choiceStyle = [];
-    
-    function setCorrectChoiceStyle() {        
-        $scope.choices.forEach((_,i) => { $scope.choiceStyle[i] = {} });        
-        $scope.choiceStyle[$scope.correctChoice.index] = { 'background-color':'#cdf1c0' };      
+
+    function setCorrectChoiceStyle() {
+        $scope.choices.forEach((_,i) => { $scope.choiceStyle[i] = {} });
+        $scope.choiceStyle[$scope.correctChoice.index] = { 'background-color':'#cdf1c0' };
     }
-            
+
     function correctChoiceSelected(index: number) {
-        $scope.correctChoice.index = index;   
-        setCorrectChoiceStyle();       
+        $scope.correctChoice.index = index;
+        setCorrectChoiceStyle();
         onEdit();
     }
-    
+
     $scope.correctChoiceSelected = correctChoiceSelected;
-    
-    
+
+
     // On ANY edit
     function onEdit() {
         acceptStates(['quizReady', 'quizStale', 'quizEmpty']);
@@ -189,11 +190,11 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
         $scope.correctChoice.index = -1;
         setQuizEmpty();
     }
-    
+
     ////////////////////////////////////////////////////////////////////
     // Current quiz ////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////    
-    
+    ////////////////////////////////////////////////////////////////////
+
     var currentQuiz: IQuiz = undefined;        // The quiz to be delivered
 
     function setCurrentQuiz(q: IQuiz) {
@@ -202,8 +203,8 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
     function unsetCurrentQuiz() {
         currentQuiz = undefined;
     }
-    function getCurrentQuiz() { 
-        return currentQuiz; 
+    function getCurrentQuiz() {
+        return currentQuiz;
     }
 
 
@@ -247,7 +248,7 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
         }
         console.log('Cannot run unsaved test!');
     }
-    
+
     function stopQuiz() {
         acceptStates(['quizStarted']);
         socket.emit(QUIZ_STOP, {});
@@ -264,7 +265,7 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
 
     function showSaveNotification() {
         $scope.savePopupVisible = true;
-        $timeout(() => { $scope.savePopupVisible = false; }, 6000 /* 6 seconds */);        
+        $timeout(() => { $scope.savePopupVisible = false; }, 6000 /* 6 seconds */);
     }
 
     function saveSuccessful(quiz: Tagged<IQuiz>) {

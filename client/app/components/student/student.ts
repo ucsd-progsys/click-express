@@ -9,7 +9,7 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout, Data) {
     // Populate CommonData
     $scope.CommonData = Data;
     $scope.CommonData.socket = socket;
-
+    $scope.CommonData.userName = userName;
 
     // Auxiliary functions
     $scope.charFromInt = charFromInt;
