@@ -13,6 +13,8 @@ Web-based clicker site (written in express)
 
 ## TODO
 
++ Do not allow to change room if test is under way or unsaved draft.
+
 + Disable save button when it had just been pressed
 
 + FIX: history shows student signed off

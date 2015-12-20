@@ -1,23 +1,19 @@
-
+declare var userName: string;
 var debug = false;
-var socket = io(); // initSocket();
+var socket = io({ query: 'userName=' + userName });
 
 ///////////////////////////////////////////////////////////////////////
 
-function studentClickCtrl($scope, $uibModal, $location, $timeout) {
+function studentClickCtrl($scope, $uibModal, $location, $timeout, Data) {
+
+    // Populate CommonData
+    $scope.CommonData = Data;
+    $scope.CommonData.socket = socket;
+
 
     // Auxiliary functions
     $scope.charFromInt = charFromInt;
-    $scope.tof = <A>(x: A) => typeof x; 
-
-
-    $scope.options = [
-        { id: 0, text: 'A', class: "btn-primary" },
-        { id: 1, text: 'B', class: "btn-success" },
-        { id: 2, text: 'C', class: "btn-info"    },
-        { id: 3, text: 'D', class: "btn-warning" },
-        { id: 4, text: 'E', class: "btn-danger"  }
-    ];
+    $scope.tof = <A>(x: A) => typeof x;
 
     // $scope.counter = { cnt: 0 };
     // $scope.countdown = function() {
@@ -26,28 +22,28 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout) {
     //         $scope.countdown();
     //     }, 1000 /* miliseconds */);
     // };
-   
-    $scope.response = { rsp: ERROR_RESPONCE };        
+
+    $scope.response = { rsp: ERROR_RESPONCE };
 
     socket.on(QUIZ_START, (quiz: IQuiz) => {
-        
+
         console.log(quiz.description);
         console.log(questionToHtml(quiz));
-        
+
         let modalInstance = $uibModal.open({
             animation: true,
             templateUrl: 'myModalContent.html',
             controller: 'ModalInstanceCtrl',
             resolve: {
                 question: () => questionToHtml(quiz),
-                options : () => quiz.options, // $scope.options,
+                options : () => quiz.options,
                 // counter : () => $scope.counter,
-                response: () => $scope.response                
+                response: () => $scope.response
             },
             backdrop: 'static',
             keyboard: false
         });
-        
+
         $scope.currentModal = modalInstance;
 
         modalInstance.result.then(
@@ -62,19 +58,19 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout) {
             },
             () => { console.log('Question dismissed at: ' + new Date()) }
         );
-        
+
         // $scope.counter.cnt = quiz.time;
-        // $scope.countdown();       
+        // $scope.countdown();
 
     });
-    
+
     // If instructor calls stop -> dismiss the modal instance
     socket.on(QUIZ_STOP, (data: any) => {
         console.log("dismiss modal");
-        if ($scope.currentModal) 
+        if ($scope.currentModal)
             $scope.currentModal.dismiss('cancel');
     });
-    
+
 }
 
 function modalInstanceCtrl($scope, $uibModalInstance, question, options, /*counter, */ response) {

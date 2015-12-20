@@ -93,6 +93,7 @@ var click = angular.module('click', [
 click.factory('Data', function () {
     return { 
         courseName: '',
-        userName  : '' 
+        userName  : '',
+        socket    : undefined
     };
 });

@@ -1,6 +1,7 @@
-
+declare var userName: string;
 var debug = false;
-var socket = io();
+
+var socket = io({ query: 'userName=' + userName });
 
 ////////////////////////////////////////////////////////////////////
 // Auxiliary ///////////////////////////////////////////////////////
@@ -36,7 +37,9 @@ function emptyInputQuiz(scope: any) {
 
 function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
     
-    $scope.CommonData = Data;    
+    // Populate CommonData    
+    $scope.CommonData = Data;
+    $scope.CommonData.socket = socket;    
 
     // Auxiliary functions
     $scope.charFromInt = charFromInt;
