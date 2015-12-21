@@ -5,30 +5,6 @@ var debug = false;
 // Auxiliary ///////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-function makeQuiz(scope): IQuizContent {
-    if (emptyInputQuiz(scope)) {
-        // TODO: handle error case
-        return undefined;
-    }
-    return {
-        courseId   : scope.CommonData.courseName,
-        description: scope.textarea,
-        options    : scope.choices.map(c => c.text),
-        correct    : scope.correctChoice.index,
-        author     : scope.CommonData.userName,
-        startTime  : new Date()
-    };
-}
-
-function emptyInputQuiz(scope: any) {
-    let text         : string   = scope.textarea;
-    let choices      : string[] = scope.choices;
-    let correctChoice: number   = scope.correctChoice.index;
-    return (typeof text    === 'undefined') || (text === '')        ||
-           (typeof choices === 'undefined') || (choices.length < 2) ||
-           (correctChoice < 0) || (correctChoice >= choices.length);
-}
-
 let __saveTag = 0;
 let __pendingTags = [];
 function newSaveTag() {
@@ -42,7 +18,7 @@ function toTagged<A>(x: A): Tagged<A> {
 }
 
 ////////////////////////////////////////////////////////////////////
-// Instructor Controller ///////////////////////////////////////////
+// Create Quiz Controller //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
 function createQuizCtrl($scope, $http, $location, $timeout, Data) {
@@ -54,6 +30,19 @@ function createQuizCtrl($scope, $http, $location, $timeout, Data) {
 
     // Auxiliary functions
     $scope.charFromInt = charFromInt;
+
+    function getUserName(): string {
+        return $scope.CommonData.userName;
+    }
+    function getCourseName(): string {
+        return $scope.CommonData.courseName;
+    }
+
+    // States
+    $scope.saving = false;
+    function setSaving() { $scope.saving = true; }
+    function unsetSaving() { $scope.saving = false; }
+
 
     // Choices
     $scope.choices = [];
@@ -96,23 +85,80 @@ function createQuizCtrl($scope, $http, $location, $timeout, Data) {
         $scope.correctChoice.index = -1;
     }
 
-    // Save the quiz
+
+    ////////////////////////////////////////////////////////////////////
+    // Create Quiz Controller //////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
+
+    function showNotification(n: string) {
+        $scope[n] = true;
+        $timeout(() => { $scope[n] = false; }, 6000 /* 6 seconds */);
+    }
+    function dismissNotification(n: string) {
+        $scope[n] = false;
+        $timeout(() => { $scope.saveSuccessfulVisible = false; }, 6000 /* 6 seconds */);
+    }
+
+    function showSaveNotification()         { dismissAllNotifications(); showNotification('saveSuccessfulVisible'); }
+    function showEmptyQuizNotification()    { dismissAllNotifications(); showNotification('saveEmptyQuizVisible'); }
+    function showNoUserNameNotification()   { dismissAllNotifications(); showNotification('saveNoCourseNameVisible'); }
+    function showNoCourseNameNotification() { dismissAllNotifications(); showNotification('saveNoCourseNameVisible'); }
+
+    function dismissSaveNotification()         { dismissNotification('saveSuccessfulVisible'); }
+    function dismissEmptyQuizNotification()    { dismissNotification('saveEmptyQuizVisible'); }
+    function dismissNoUserNameNotification()   { dismissNotification('saveNoCourseNameVisible'); }
+    function dismissNoCourseNameNotification() { dismissNotification('saveNoCourseNameVisible'); }
+
+    function dismissAllNotifications() {
+        dismissSaveNotification();
+        dismissEmptyQuizNotification();
+        dismissNoUserNameNotification();
+        dismissNoCourseNameNotification();
+    }
+
+    function emptyInputQuiz() {
+        let text: string = $scope.textarea;
+        let choices: string[] = $scope.choices;
+        let correctChoice: number = $scope.correctChoice.index;
+        return (typeof text === 'undefined') || (text === '') ||
+            (typeof choices === 'undefined') || (choices.length < 2) ||
+            (correctChoice < 0) || (correctChoice >= choices.length);
+    }
+
+    function makeQuiz(): IQuizContent {
+        return {
+            courseId   : getCourseName(),
+            description: $scope.textarea,
+            options    : $scope.choices.map(c => c.text),
+            correct    : $scope.correctChoice.index,
+            author     : getUserName(),
+            startTime  : new Date()
+        };
+    }
+
     function saveQuiz() {
-                
-        // acceptStates(['quizStale']);
-        let quiz = makeQuiz($scope);
-        // socket.emit(QUIZ_SAVE, toTagged(quiz));
-        
-
-
-         $http
-            .post(getSaveQuizURL(), quiz)
-            .success((data, status) => {
-                console.log(data);
-            })
-            .error((data, status) => {
-                serverError($scope, data, status, "click");
-            });
+        if (emptyInputQuiz()) {
+            showEmptyQuizNotification();
+            return;
+        }
+        if (!getUserName()) {
+            showNoUserNameNotification();
+            return;
+        }
+        if (!getCourseName()) {
+            showNoCourseNameNotification();
+            return;
+        }
+        setSaving();
+        $http.post(getSaveQuizURL(), makeQuiz())
+             .success((data, status) => {
+                 showSaveNotification();
+                 unsetSaving();
+             })
+             .error((data, status) => {
+                 serverError($scope, data, status, "click");
+                 unsetSaving();
+             });
     }
 
     $scope.saveQuiz  = saveQuiz;

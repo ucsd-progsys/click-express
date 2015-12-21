@@ -58,6 +58,12 @@ function sendHttp(res:express.Response, e:SocketEvent) {
 }
 
 ////////////////////////////////////////////////////////////////////////
+// Constants ///////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+const CLASSES = CLASSES;
+
+////////////////////////////////////////////////////////////////////////
 // Register ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
@@ -124,7 +130,7 @@ export function home(url:string): RequestH {
                 res.render('instructor', {
                     user: req.user,
                     serverURL : url,
-                    courseList: JSON.stringify([ 'CSE130', 'CSE230' ]),     // TODO: get them from the db
+                    courseList: CLASSES,     // TODO: get them from the db
                     questionPool: JSON.stringify(quizzes)
                 });
             });
@@ -133,7 +139,7 @@ export function home(url:string): RequestH {
             res.render('student', {
                 user: req.user,
                 serverURL : url,
-                courseList: JSON.stringify([ 'CSE130', 'CSE230' ])          // TODO: get them from the db
+                courseList: CLASSES          // TODO: get them from the db
             });
         }
     }
@@ -173,8 +179,7 @@ var defaults = { courseId : "CSE 130"
 
 export let history: RequestH = (req, res) => {
     res.render('history', {
-        courseList: JSON.stringify([ 'CSE130', 'CSE230' ])      // TODO: get them from the db
-                                                // TODO: define this globally
+        courseList: CLASSES      // TODO: get them from the db
     });
 }
 
@@ -184,7 +189,7 @@ export let historyData: RequestH = (req, res) => {
         if (err) {
             res.render('history', {
                 error: err.toString(),
-                courseList: JSON.stringify([ 'CSE130', 'CSE230' ])      // TODO: get them from the db
+                courseList: CLASSES      // TODO: get them from the db
             })
         } else {
             res.json(clicks);
@@ -197,17 +202,16 @@ export let historyData: RequestH = (req, res) => {
 ////////////////////////////////////////////////////////////////////////
 
 export let createQuiz: RequestH = (req, res) => {
-    let username = req.user.username;
-    console.log('user ', req.user, ' asked to create a quiz');
     res.render('create', {
-        user: username
+        user: req.user,
+        courseList: CLASSES     // TODO: get them from the db                    
     });
 }
 
 export let saveQuiz: RequestH = (req, res) => {
     let username    = req.user.username;
     let quiz: IQuiz = req.body;
-    console.log('user ', req.user, ' created quiz: ');
+    console.log('user ', req.user.username, ' created quiz: ');
     console.log(quiz);
     res.json({ satus: 'OK' });
 }

@@ -88,11 +88,11 @@ function questionToHtml(q: IQuizContent) {
 ////////////////////////////////////////////////////////////////////////
 
 var click = angular.module('click', [
-	'ngAnimate', 		// Modal element (optional)
-	'ui.bootstrap', 	// Modal element
-	'ngSanitize',  		// Markdown html sanitization
-	'ng.bs.dropdown'
-	]);
+	'ngAnimate',           // Modal element (optional)
+	'ui.bootstrap',        // Modal element
+	'ngSanitize',          // Markdown html sanitization
+	'ng.bs.dropdown'       // dropdown
+    ]);
 
 
 click.factory('Data', function () {

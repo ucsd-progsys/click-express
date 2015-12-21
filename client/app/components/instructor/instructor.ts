@@ -4,34 +4,6 @@ var debug = false;
 var socket = io({ query: 'userName=' + userName });
 
 ////////////////////////////////////////////////////////////////////
-// Auxiliary ///////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////
-
-// function makeQuiz(scope): IQuizContent {
-//     if (emptyInputQuiz(scope)) {
-//         // TODO: handle error case
-//         return undefined;
-//     }
-//     return {
-//         courseId   : scope.CommonData.courseName,
-//         description: scope.textarea,
-//         options    : scope.choices.map(c => c.text),
-//         correct    : scope.correctChoice.index,
-//         author     : scope.CommonData.userName,
-//         startTime  : new Date()
-//     };
-// }
-
-// function emptyInputQuiz(scope: any) {
-//     let text         : string   = scope.textarea;
-//     let choices      : string[] = scope.choices;
-//     let correctChoice: number   = scope.correctChoice.index;
-//     return (typeof text    === 'undefined') || (text === '')        ||
-//            (typeof choices === 'undefined') || (choices.length < 2) ||
-//            (correctChoice < 0) || (correctChoice >= choices.length);
-// }
-
-////////////////////////////////////////////////////////////////////
 // Instructor Controller ///////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
@@ -243,22 +215,7 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
         socket.emit(QUIZ_STOP, {});
         resetCounter();
         setQuizReady();
-    }
-
-    function showSaveNotification() {
-        $scope.savePopupVisible = true;
-        $timeout(() => { $scope.savePopupVisible = false; }, 6000 /* 6 seconds */);
-    }
-
-    function saveSuccessful(quiz: Tagged<IQuiz>) {
-        acceptStates(['quizStale']);
-        console.log('Successfully saved: ', quiz.data._id);
-        showSaveNotification();
-        setCurrentQuiz(quiz.data);
-        setQuizReady();
-    }
-
-    socket.on(QUIZ_SAVED, saveSuccessful);
+    }       
 
     $scope.startQuiz = startQuiz;
     $scope.stopQuiz  = stopQuiz;
