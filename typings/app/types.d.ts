@@ -31,9 +31,7 @@ interface IQuizContent {
     options    : string[];       // was Options;        // Available options
     correct    : number;         // The correct answer
     author     : string;
-    startTime  : Date;
-    // TODO:
-    // explanation: string;
+    timeCreated: Date;
 }
 
 interface ICourse {

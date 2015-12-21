@@ -82,7 +82,8 @@ function createQuizCtrl($scope, $http, $location, $timeout, Data) {
         // acceptStates(['quizReady', 'quizStale', 'quizEmpty']);
         $scope.textarea = "";
         $scope.choices = [];
-        $scope.correctChoice.index = -1;
+        $scope.correctChoice.index = -1
+        $scope.choiceStyle = [];
     }
 
 
@@ -132,7 +133,7 @@ function createQuizCtrl($scope, $http, $location, $timeout, Data) {
             options    : $scope.choices.map(c => c.text),
             correct    : $scope.correctChoice.index,
             author     : getUserName(),
-            startTime  : new Date()
+            timeCreated: new Date()
         };
     }
 

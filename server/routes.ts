@@ -61,7 +61,7 @@ function sendHttp(res:express.Response, e:SocketEvent) {
 // Constants ///////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-const CLASSES = CLASSES;
+const CLASSES = JSON.stringify([ 'CSE130', 'CSE230' ]);
 
 ////////////////////////////////////////////////////////////////////////
 // Register ////////////////////////////////////////////////////////////
@@ -211,38 +211,15 @@ export let createQuiz: RequestH = (req, res) => {
 export let saveQuiz: RequestH = (req, res) => {
     let username    = req.user.username;
     let quiz: IQuiz = req.body;
-    console.log('user ', req.user.username, ' created quiz: ');
-    console.log(quiz);
-    res.json({ satus: 'OK' });
+    // console.log('user ', req.user.username, ' created quiz: ');
+    // console.log(quiz);
+    new Quiz(quiz).save((err, _) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            console.log('quiz from ', quiz.author, ' saved.');            
+            res.json({ satus: 'OK' });
+        }
+    });
 }
-
-
-////////////////////////////////////////////////////////////////////////
-// Send existing questions /////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////
-
-/*
-{
-    "courseId"   : "CSE130",
-    "description": "C99 standard guarantees uniqueness of ____ characters for internal names.",
-    "options"    : [{ "index": "A", "text" : "31" }
-                    { "index": "B", "text" : "63" }
-                    { "index": "C", "text" : "12" }
-                    { "index": "D", "text" : "14" }],
-    "correct"    : "B",
-    "author"     : "rjhala"
-}
-*/
-
-// const QUESTIONS_FILE = path.join(__dirname, "data/questions.json")
-
-// export let quizContent: RequestH = (req, res) => {
-//     fs.readFile(QUESTIONS_FILE, 'utf8', function (err, data) {
-//         console.log('reading file');
-//         if (err) throw err;
-//         let obj = JSON.parse(data);
-//         console.log(obj);
-//         console.log(data);
-//         res.json(obj);
-//     });
-// }

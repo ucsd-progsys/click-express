@@ -26,7 +26,7 @@ var QuizS    = new Schema({ courseId   : String         // coursename
                           , options    : [String]       // was: [OptionS]
                           , correct    : Number
                           , author     : String         // username
-                          , startTime  : Date
+                          , timeCreated: Date
                           });
 
 var CourseS  = new Schema({ name       : { type: String

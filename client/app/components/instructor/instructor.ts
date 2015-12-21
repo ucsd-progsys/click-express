@@ -30,7 +30,7 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
     function setQuizStale()   { setFlag('quizStale')   }
     function setQuizReady()   { setFlag('quizReady')   }
     function setQuizStarted() { setFlag('quizStarted') }
-    //IMPORTANT initial state
+    // IMPORTANT initial state
     setQuizEmpty();
 
     // DEBUG
@@ -50,14 +50,6 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
             console.log('BUG: state(s) ', xs.join(' or '), ' expected, but ', s, ' found.');
         }
     }
-
-    ////////////////////////////////////////////////////////////////////
-    // Pending quesion /////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////
-
-    
-    
-    $scope.savePopupVisible = false;
 
     ////////////////////////////////////////////////////////////////////
     // Input question //////////////////////////////////////////////////
