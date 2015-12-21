@@ -13,7 +13,7 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
     $scope.CommonData = Data;
     $scope.CommonData.socket = socket;
     $scope.CommonData.userName = userName;
-
+    
     // Auxiliary functions
     $scope.charFromInt = charFromInt;
 
@@ -50,7 +50,15 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
             console.log('BUG: state(s) ', xs.join(' or '), ' expected, but ', s, ' found.');
         }
     }
-
+    
+    ////////////////////////////////////////////////////////////////////
+    // Init ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
+    
+    $scope.instructorInit = function() {
+        console.log('Instructor init ', $scope.CommonData.courseName);
+    }
+    
     ////////////////////////////////////////////////////////////////////
     // Input question //////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
@@ -59,8 +67,18 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
     // $scope.times = [15, 30, 60];
     // $scope.selectedTime = $scope.times[2];  // default
 
-    // Select from sample questions
+
     $scope.questionPool = [];
+    
+    function updateQuestionPool(questions: any) {
+        $scope.questionPool = questions;                
+    }
+    $scope.updateQuestionPool = updateQuestionPool; 
+    
+    // Add a binding to the shared data for the navbar to access
+    $scope.CommonData.updateQuestionPool = updateQuestionPool;
+
+    // Select from sample questions
     $scope.selectedQuestion = undefined;
     $scope.textarea = "";
 
@@ -88,61 +106,11 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
 
     $scope.loadQuestion = loadQuestion;
 
-    // // The default values are for when the button is used
-    // $scope.addNewChoice = () => {
-    //     let len = $scope.choices.length;
-    //     $scope.choices.push({ id: len, text: ""});
-    //     $scope.choiceStyle.push({});
-    //     onEdit();
-    // };
-    // $scope.removeLastChoice = () => {
-    //     $scope.choices.pop();
-    //     onEdit();
-    // };
-
-    // // Input changed (textarea)
-    // $scope.onDescriptionChange = () => {
-    //     onEdit();
-    // }
-
-    // // Input changed (any of the choices)
-    // $scope.onChoiceChange = () => {
-    //     onEdit();
-    // }
-
-    // // Correct choice index
-    // $scope.correctChoice = { index: -1 };
-    // $scope.choiceStyle = [];
-
     function setCorrectChoiceStyle() {
         $scope.choices.forEach((_,i) => { $scope.choiceStyle[i] = {} });
         $scope.choiceStyle[$scope.correctChoice.index] = { 'background-color':'#cdf1c0' };
     }
 
-    // function correctChoiceSelected(index: number) {
-    //     $scope.correctChoice.index = index;
-    //     setCorrectChoiceStyle();
-    //     onEdit();
-    // }
-
-    // $scope.correctChoiceSelected = correctChoiceSelected;
-
-
-    // // On ANY edit
-    // function onEdit() {
-    //     acceptStates(['quizReady', 'quizStale', 'quizEmpty']);
-    //     if (emptyInputQuiz($scope)) setQuizEmpty();
-    //     else                        setQuizStale();
-    // }
-
-    // Clear forms
-    $scope.clearForms = () => {
-        acceptStates(['quizReady', 'quizStale', 'quizEmpty']);
-        $scope.textarea = "";
-        $scope.choices = [];
-        $scope.correctChoice.index = -1;
-        setQuizEmpty();
-    }
 
     ////////////////////////////////////////////////////////////////////
     // Current quiz ////////////////////////////////////////////////////

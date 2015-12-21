@@ -1,5 +1,5 @@
 
-function navCtrl($scope, $location, Data) {
+function navCtrl($scope, $http, $location, Data) {
     $scope.CommonData = Data;
     
     $scope.onSelectCourse = (course: string) => {
@@ -9,7 +9,20 @@ function navCtrl($scope, $location, Data) {
         }
         else {
             console.log('Socket not set');
-        }        
+        }
+        
+        $http.post(getQuestionsURL(), { courseName: course })
+             .success((data, status) => {
+                 if ($scope.CommonData.updateQuestionPool) {
+                     $scope.CommonData.updateQuestionPool(JSON.parse(data.questionPool));
+                 } 
+                 else {
+                     console.log('updateQuestionPool not set!!!');
+                 }
+             })
+             .error((data, status) => {
+                 serverError($scope, data, status, "click");
+             });        
     }
 }
 

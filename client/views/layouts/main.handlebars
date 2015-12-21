@@ -41,33 +41,29 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <!--<li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>-->
+            <li class="active"><a href="/home">Home</a></li>
+            {{#if isInstructor }}
+            <li class="active"><a href="/create">Create a Quiz</a></li>        
+            {{/if}}          
             {{#if courseList}}
                 <li class="dropdown" >
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Select a course<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#" ng-repeat='course in {{{ courseList }}}' ng-click="onSelectCourse(course)">\{{ course }}</a></li>
                     </ul>
-                </li>
-                
+                </li>                
             {{/if}}
             <li ng-show="CommonData.courseName"><a><b>\{{ CommonData.courseName }}</b></a></li>
+            
           </ul>
+            
           <ul class="nav navbar-nav navbar-right">
-            <!--<li><a href="../navbar/">Default</a></li>
-            <li><a href="../navbar-static-top/">Static top</a></li>-->
-            <!--<li class="active"><a href="./">Logout <span class="sr-only">(current)</span></a></li>-->
             {{#if user}}
-                <!--<li><a href="../navbar-static-top/">Static top</a></li>-->
                 <li><a ng-model="CommonData.userName"><b>{{ user.username }}</b></a></li>
-                <li class="active"><a href="./logout">Logout <span class="sr-only">(current)</span></a></li>
+                <li class="active"><a href="/logout">Logout <span class="sr-only">(current)</span></a></li>
             {{else}}
                 <p class="navbar-text">
-                    <!--<a href="/login" class="navbar-link">Login</a>&nbsp;
-                    <a href="/register" class="navbar-link">Register</a>&nbsp;-->
-                    <li><a href="../register">Register</a></li>                
+                    <li><a href="/register">Register</a></li>                
                     <li class="active"><a href="./login">Login <span class="sr-only">(current)</span></a></li>      
                 </p>  
             {{/if}}  

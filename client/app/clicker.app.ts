@@ -13,17 +13,17 @@ function getServerURL() {
     return window.location.protocol + "//" + window.location.host;
 }
 
-function getClickURL() {
-    return getServerURL() + '/click';
-}
+// function getClickURL() {
+//     return getServerURL() + '/click';
+// }
 
-function getQuizStartURL() {
-    return getServerURL() + '/quizstart';
-}
+// function getQuizStartURL() {
+//     return getServerURL() + '/quizstart';
+// }
 
-function getQuizStopURL() {
-    return getServerURL() + '/quizstop';
-}
+// function getQuizStopURL() {
+//     return getServerURL() + '/quizstop';
+// }
 
 function getHistoryURL() {
     return getServerURL() + '/history';
@@ -35,6 +35,10 @@ function getSaveQuizURL() {
 
 function isHomeURL() {
     return (window.location.pathname === '/home');
+}
+
+function getQuestionsURL() {
+    return getServerURL() + '/questions';
 }
 
 ////////////////////////////////////////////////////////////////////////

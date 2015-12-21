@@ -1,9 +1,9 @@
-<div ng-controller="instructorClickCtrl">
+<div ng-controller="instructorClickCtrl" data-ng-init="instructorInit()">
 
     <!-- Question selection -->
     <p><label>Select an existing question</label></p>
     <p><select class="btn btn-default" ng-model="selectedQuestion" ng-change="loadQuestion()" ng-disabled="quizStarted">
-        <option class="btn btn-default" ng-repeat='option in {{{ questionPool }}}' value="\{{ option }}">\{{ option.description.substring(0,40) }} ...</option>
+        <option class="btn btn-default" ng-repeat='option in questionPool track by $index' value="\{{ option }}">\{{ option.description.substring(0,40) }} ...</option>
     </select></p>
    
    <!-- Play/Stop buttons -->

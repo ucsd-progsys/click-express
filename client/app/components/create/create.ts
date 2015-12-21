@@ -151,7 +151,7 @@ function createQuizCtrl($scope, $http, $location, $timeout, Data) {
             return;
         }
         setSaving();
-        $http.post(getSaveQuizURL(), makeQuiz())
+        $http.get(getSaveQuizURL(), makeQuiz())
              .success((data, status) => {
                  showSaveNotification();
                  unsetSaving();

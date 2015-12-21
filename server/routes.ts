@@ -73,9 +73,9 @@ export var registerWith = (z: Object) => {
 }
 
 export function register(req: Request, res: Response) {
-    let acc = new Account({ 
-        username: req.body.username, 
-        email: req.body.email 
+    let acc = new Account({
+        username: req.body.username,
+        email: req.body.email
     });
     console.log('USER: ' + req.body.username);
     console.log('PASS: ' + req.body.password);
@@ -90,7 +90,9 @@ export function register(req: Request, res: Response) {
 ////////////////////////////////////////////////////////////////////////
 
 export var getLogin:RequestH = (req, res, next) => {
-    res.render('login', { user : req.user });
+    res.render('login', {
+        user : req.user
+    });
 }
 
 export var postLogin =
@@ -121,14 +123,19 @@ export var redirectHome: RequestH = (req, res) => {
     res.redirect('/home');
 }
 
+function isInstructorReq(req: express.Request) {
+    return req.user.username === 'instructor';
+}
+
 export function home(url:string): RequestH {
     return (req, res) => {
-        if (req.user.username === 'instructor') {
+        if (isInstructorReq(req)) {
             Quiz.find({ 'courseId': 'CSE130' }, (err: any, quizzes: IQuiz[]) => {
                 // console.log('####### FOUND IDS');
                 // console.log(JSON.stringify(quizzes, null, '  '));
                 res.render('instructor', {
                     user: req.user,
+                    isInstructor: true,
                     serverURL : url,
                     courseList: CLASSES,     // TODO: get them from the db
                     questionPool: JSON.stringify(quizzes)
@@ -138,6 +145,7 @@ export function home(url:string): RequestH {
         else {
             res.render('student', {
                 user: req.user,
+                isInstructor: false,
                 serverURL : url,
                 courseList: CLASSES          // TODO: get them from the db
             });
@@ -148,6 +156,15 @@ export function home(url:string): RequestH {
 export var logout : RequestH = (req,res) => {
     req.logout();
     res.redirect('/');
+}
+
+export var getQuestions: RequestH = (req, res) => {
+    Quiz.find({ 'courseId': req.body.courseName }, (err: any, quizzes: IQuiz[]) => {
+        if (err) {
+            console.log('ERROR: Could not find questions for class ', req.body.courseName);
+        }
+        res.json({ questionPool: JSON.stringify(quizzes) });
+    });
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -179,7 +196,8 @@ var defaults = { courseId : "CSE 130"
 
 export let history: RequestH = (req, res) => {
     res.render('history', {
-        courseList: CLASSES      // TODO: get them from the db
+        courseList: CLASSES,      // TODO: get them from the db
+        isInstructor: isInstructorReq(req),
     });
 }
 
@@ -204,7 +222,8 @@ export let historyData: RequestH = (req, res) => {
 export let createQuiz: RequestH = (req, res) => {
     res.render('create', {
         user: req.user,
-        courseList: CLASSES     // TODO: get them from the db                    
+        isInstructor: isInstructorReq(req),
+        courseList: CLASSES     // TODO: get them from the db
     });
 }
 
@@ -218,7 +237,7 @@ export let saveQuiz: RequestH = (req, res) => {
             console.log(err);
         }
         else {
-            console.log('quiz from ', quiz.author, ' saved.');            
+            console.log('quiz from ', quiz.author, ' saved.');
             res.json({ satus: 'OK' });
         }
     });
