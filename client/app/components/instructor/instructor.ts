@@ -55,9 +55,9 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
     // Init ////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
     
-    $scope.instructorInit = function() {
-        console.log('Instructor init ', $scope.CommonData.courseName);
-    }
+    // $scope.instructorInit = function() {
+    //     console.log('Instructor init ', $scope.CommonData.courseName);
+    // }
     
     ////////////////////////////////////////////////////////////////////
     // Question Pool ///////////////////////////////////////////////////
@@ -147,7 +147,6 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
             socket.emit(QUIZ_START, q);
             startCounter();
             setQuizStarted();
-            console.log('started quiz: ' + currentState());
             return;
         }
         console.log('Cannot run unsaved test!');

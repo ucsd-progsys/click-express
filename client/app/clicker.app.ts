@@ -79,14 +79,11 @@ function quizToHtml(q: IQuiz, showCorrect?: boolean) {
 
 function questionToHtml(msg: string, opts: string[], correct?: number) {    
     let withUndef = o => (o) ? o : "";
-    let optStrs   = opts.map((o, i) => (i === correct) ?
-        inBold(charFromInt(i) + '. ' + withUndef(o)) :
-        inBold(charFromInt(i) + '. ') + withUndef(o));    
-    let sep       = "<hr>"
-    let fullStr   = [msg, sep].concat(optStrs).join('\n\n');
-    console.log(fullStr);
-    console.log(marked(fullStr));
-    return marked(fullStr);
+    let optStrs = opts.map((o, i) => 
+        (i === correct) ? inBold(charFromInt(i) + '. ' + withUndef(o)) :
+                          inBold(charFromInt(i) + '. ') + withUndef(o));    
+    let sep = "<hr>"
+    return marked([msg, sep].concat(optStrs).join('\n\n'));
 }
 
 ////////////////////////////////////////////////////////////////////////

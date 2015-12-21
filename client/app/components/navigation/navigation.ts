@@ -11,18 +11,16 @@ function navCtrl($scope, $http, $location, Data) {
             console.log('Socket not set');
         }
         
-        $http.post(getQuestionsURL(), { courseName: course })
-             .success((data, status) => {
-                 if ($scope.CommonData.updateQuestionPool) {
-                     $scope.CommonData.updateQuestionPool(JSON.parse(data.questionPool));
-                 } 
-                 else {
-                     console.log('updateQuestionPool not set!!!');
-                 }
-             })
-             .error((data, status) => {
-                 serverError($scope, data, status, "click");
-             });        
+        // If the instructor controller defines an `updateQuestionPool` 
+        // method then get the pool of questions for this class from the 
+        // server
+        if ($scope.CommonData.updateQuestionPool) {        
+            $http.post(getQuestionsURL(), { courseName: course }).success((data, status) => {
+                $scope.CommonData.updateQuestionPool(JSON.parse(data.questionPool));                  
+            }).error((data, status) => {
+                serverError($scope, data, status, "click");
+            });        
+        }
     }
 }
 
