@@ -175,19 +175,6 @@ function requestUserId(req: Request): models.UserId {
     return req.user.username;
 }
 
-var defaults = { courseId : "CSE 130"
-               , quizId   : "1"
-               };
-
-// export function requestClick(a: t.StudentClick): models.ClickI {
-//   return { userId     : a.userId
-//          , choice     : a.choice
-//          , submitTime : a.submissionTime
-//          , courseId   : defaults.courseId
-//          , quizId     : defaults.quizId
-//          }
-// }
-
 ////////////////////////////////////////////////////////////////////////
 // View Click History //////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////

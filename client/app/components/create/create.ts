@@ -168,7 +168,7 @@ function createQuizCtrl($scope, $http, $location, $timeout, Data) {
     // Preview /////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
 
-    $scope.preview = () => fullQuestionToHtml($scope.textarea, $scope.choices.map(c => c.text));
+    $scope.preview = () => questionToHtml($scope.textarea, $scope.choices.map(c => c.text));
 
 }
 

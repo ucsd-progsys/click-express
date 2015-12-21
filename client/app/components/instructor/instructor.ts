@@ -60,14 +60,9 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
     }
     
     ////////////////////////////////////////////////////////////////////
-    // Input question //////////////////////////////////////////////////
+    // Question Pool ///////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
-
-    // // Select time
-    // $scope.times = [15, 30, 60];
-    // $scope.selectedTime = $scope.times[2];  // default
-
-
+    
     $scope.questionPool = [];
     
     function updateQuestionPool(questions: any) {
@@ -78,29 +73,21 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
     // Add a binding to the shared data for the navbar to access
     $scope.CommonData.updateQuestionPool = updateQuestionPool;
 
-    // Select from sample questions
+    ////////////////////////////////////////////////////////////////////
+    // Current Question ////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
+
+    // selectedQuestion: IQuiz
     $scope.selectedQuestion = undefined;
-    $scope.textarea = "";
-
-    // .choices: { id: number; text: string; }
-    $scope.choices = [];
-
-    // Create Quiz
-    // http://mrngoitall.net/blog/2013/10/02/adding-form-fields-dynamically-in-angularjs/
-
-    function updateForms(q: IQuizContent) {
-        $scope.textarea = q.description;
-        $scope.choices  = q.options.map((o, i) => { return { id: i, text: o }; });
-        $scope.correctChoice.index = q.correct;
-        setCorrectChoiceStyle();
-    }
-
+    
+    // show correct answer
+    $scope.showCorrectAnswer = false;
+    function showAnswer() { return $scope.showCorrectAnswer; }
+    
     // Load existing question
     function loadQuestion() {
         acceptStates(['quizReady', 'quizStale', 'quizEmpty']);
-        let loadedQuiz: IQuiz = JSON.parse($scope.selectedQuestion);
-        updateForms(loadedQuiz);
-        setCurrentQuiz(loadedQuiz);
+        setCurrentQuiz(JSON.parse($scope.selectedQuestion));
         setQuizReady();
     }
 
@@ -111,29 +98,25 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
         $scope.choiceStyle[$scope.correctChoice.index] = { 'background-color':'#cdf1c0' };
     }
 
-
     ////////////////////////////////////////////////////////////////////
     // Current quiz ////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
 
-    var currentQuiz: IQuiz = undefined;        // The quiz to be delivered
-
     function setCurrentQuiz(q: IQuiz) {
-        currentQuiz = q;
+        $scope.selectedQuestion = q;
     }
     function unsetCurrentQuiz() {
-        currentQuiz = undefined;
+        $scope.selectedQuestion = undefined;
     }
     function getCurrentQuiz() {
-        return currentQuiz;
+        return $scope.selectedQuestion;
     }
-
 
     ////////////////////////////////////////////////////////////////////
     // Preview /////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
 
-    $scope.preview = () => fullQuestionToHtml($scope.textarea, $scope.choices.map(c => c.text));
+    $scope.preview = () => quizToHtml(getCurrentQuiz(), showAnswer());
 
     ////////////////////////////////////////////////////////////////////
     // Running the Quiz ////////////////////////////////////////////////

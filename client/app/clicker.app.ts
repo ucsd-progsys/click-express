@@ -65,26 +65,28 @@ let serverError = ($scope, data, status, e) => {
 }
 
 // HTML generation
-let wrapIn 			 = (msg: string, symbol: string) => '<'  + symbol + '>' + msg + 
-                                                        '</' + symbol + '>';
-let wrapInDiv 		 = (s: string) => wrapIn(s, 'div');
-let wrapInP 		 = (s: string) => wrapIn(s, 'p');
-let wrapInBlockQuote = (s: string) => wrapIn(s, 'blockquote');
-let wrapInBold		 = (s: string) => wrapIn(s, 'b');
-let formatQuiz 		 = (msg: string) => wrapInBlockQuote(wrapInP(msg));
+let wrapIn = (msg: string, symbol: string) => ['<' , symbol, '>', msg, 
+                                                '</', symbol, '>'].join('');
+let inDiv  = (s: string) => wrapIn(s, 'div');
+let inP    = (s: string) => wrapIn(s, 'p');
+let inBold = (s: string) => wrapIn(s, 'b');
 
-let charFromInt      = (n: number) => String.fromCharCode(65 + n);
+let charFromInt = (n: number) => String.fromCharCode(65 + n);
 
-function fullQuestionToHtml(question: string, opts: Options) {
-    let withUndef = o => (o) ? o : "";
-    let optStrs   = opts.map((o, i) => wrapInBold(charFromInt(i) + '. ') + withUndef(o));
-    let sep       = "<hr>"
-    let fullStr   = [question, sep].concat(optStrs).join('\n\n');
-    return marked(fullStr);
+function quizToHtml(q: IQuiz, showCorrect?: boolean) {
+    return (q) ? questionToHtml(q.description, q.options, showCorrect ? q.correct : undefined) : "";
 }
 
-function questionToHtml(q: IQuizContent) {    
-    return marked(q.description);
+function questionToHtml(msg: string, opts: string[], correct?: number) {    
+    let withUndef = o => (o) ? o : "";
+    let optStrs   = opts.map((o, i) => (i === correct) ?
+        inBold(charFromInt(i) + '. ' + withUndef(o)) :
+        inBold(charFromInt(i) + '. ') + withUndef(o));    
+    let sep       = "<hr>"
+    let fullStr   = [msg, sep].concat(optStrs).join('\n\n');
+    console.log(fullStr);
+    console.log(marked(fullStr));
+    return marked(fullStr);
 }
 
 ////////////////////////////////////////////////////////////////////////

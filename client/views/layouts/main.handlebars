@@ -53,10 +53,8 @@
                     </ul>
                 </li>                
             {{/if}}
-            <li ng-show="CommonData.courseName"><a><b>\{{ CommonData.courseName }}</b></a></li>
-            
-          </ul>
-            
+            <li ng-show="CommonData.courseName"><a><b>\{{ CommonData.courseName }}</b></a></li>            
+          </ul>            
           <ul class="nav navbar-nav navbar-right">
             {{#if user}}
                 <li><a ng-model="CommonData.userName"><b>{{ user.username }}</b></a></li>
