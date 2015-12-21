@@ -3,9 +3,7 @@
 // Globally Useful Constant Definitions ////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-export const QUIZ_START = "QUIZ_START";
-export const QUIZ_STOP  = "QUIZ_STOP";
-export const QUIZ_ANS   = "QUIZ_ANS";
-export const QUIZ_SAVE  = "QUIZ_SAVE";
-export const QUIZ_SAVED = "QUIZ_SAVED";
-
+export const QUIZ_START     = "QUIZ_START";
+export const QUIZ_STOP      = "QUIZ_STOP";
+export const QUIZ_ANSWER    = "QUIZ_ANS";
+export const JOIN_CLASSROOM = "JOIN_CLASSROOM";

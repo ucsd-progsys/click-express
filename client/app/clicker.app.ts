@@ -47,9 +47,8 @@ function getQuestionsURL() {
 
 const QUIZ_START     = "QUIZ_START";
 const QUIZ_STOP      = "QUIZ_STOP";
-const QUIZ_ANS       = "QUIZ_ANS";
-const QUIZ_SAVE      = "QUIZ_SAVE";
-const QUIZ_SAVED     = "QUIZ_SAVED";
+const QUIZ_ANSWER    = "QUIZ_ANSWER";
+const JOIN_CLASSROOM = "JOIN_CLASSROOM";
 
 const ERROR_RESPONCE = "ERROR";
 
@@ -75,6 +74,10 @@ let charFromInt = (n: number) => String.fromCharCode(65 + n);
 
 function quizToHtml(q: IQuiz, showCorrect?: boolean) {
     return (q) ? questionToHtml(q.description, q.options, showCorrect ? q.correct : undefined) : "";
+}
+
+function quizDescriptionToHtml(q: IQuiz) {
+    return marked(q.description);
 }
 
 function questionToHtml(msg: string, opts: string[], correct?: number) {    

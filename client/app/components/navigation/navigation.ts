@@ -3,9 +3,12 @@ function navCtrl($scope, $http, $location, Data) {
     $scope.CommonData = Data;
     
     $scope.onSelectCourse = (course: string) => {
-        $scope.CommonData.courseName = course;              
-        if ($scope.CommonData.socket) {  
-            $scope.CommonData.socket.emit('join class', course);
+        
+        // Join the classroom        
+        $scope.CommonData.courseName = course;    
+        if ($scope.CommonData.socket) {
+            console.log('Joining class room');  
+            $scope.CommonData.socket.emit(JOIN_CLASSROOM, course);
         }
         else {
             console.log('Socket not set');

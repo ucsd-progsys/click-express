@@ -41,7 +41,11 @@ interface ICourse {
 }
 
 interface IQuiz extends IQuizContent {
-    _id         : string;         // Object Id for QuizContent
+    _id         : string;       // Object Id for QuizContent
+}
+
+interface IMaskedQuiz extends IQuiz {
+    correct     : number;       // { v = -1 }    
 }
 
 interface IClick {

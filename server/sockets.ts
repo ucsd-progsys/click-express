@@ -19,12 +19,18 @@ let openQuestions: { [x: string]: IQuiz } = { };
 // Setup Instructor ////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
+function maskCorrectAnswer(q: IQuiz): IMaskedQuiz {
+    let clone: IQuiz = JSON.parse(JSON.stringify(q));   //fast cloning
+    clone.correct = -1; 
+    return clone;
+}
+
 function setupInstructor(io: SocketIO.Server, socket: SocketIO.Socket, classRoom: string) {
 
     socket.on(t.QUIZ_START, (quiz: IQuiz) => {
-        console.log('### broadcasting to room ', classRoom, ' a quiz with id: ', quiz._id);
+        console.log('[room:', classRoom, '] Quiz start (id: ', quiz._id, ')');
         openQuestions[classRoom] = quiz;
-        io.to(classRoom).emit(t.QUIZ_START, quiz);
+        io.to(classRoom).emit(t.QUIZ_START, maskCorrectAnswer(quiz));
     });
 
     socket.on(t.QUIZ_STOP, (data: any) => {
@@ -32,20 +38,20 @@ function setupInstructor(io: SocketIO.Server, socket: SocketIO.Socket, classRoom
         openQuestions[classRoom] = undefined;        
     });
 
-    socket.on(t.QUIZ_SAVE, (taggedQuizContent: Tagged<IQuizContent>) => {
-        let tag = taggedQuizContent.tag;
-        let quizContent = taggedQuizContent.data;
+    // socket.on(t.QUIZ_SAVE, (taggedQuizContent: Tagged<IQuizContent>) => {
+    //     let tag = taggedQuizContent.tag;
+    //     let quizContent = taggedQuizContent.data;
 
-        new models.Quiz(quizContent).save((err: any, quiz: IQuiz) => {
-            if (err) {
-                console.log(err);
-            }
-            else {
-                // Reply to instructor with a *tagged* version of the quiz
-                socket.emit(t.QUIZ_SAVED, toTagged(tag, quiz));
-            }
-        });
-    });
+    //     new models.Quiz(quizContent).save((err: any, quiz: IQuiz) => {
+    //         if (err) {
+    //             console.log(err);
+    //         }
+    //         else {
+    //             // Reply to instructor with a *tagged* version of the quiz
+    //             socket.emit(t.QUIZ_SAVED, toTagged(tag, quiz));
+    //         }
+    //     });
+    // });
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -54,7 +60,7 @@ function setupInstructor(io: SocketIO.Server, socket: SocketIO.Socket, classRoom
 
 function setupStudent(io: SocketIO.Server, socket: SocketIO.Socket, classRoom: string) {
 
-    socket.on(t.QUIZ_ANS, (click: IClick) => {
+    socket.on(t.QUIZ_ANSWER, (click: IClick) => {
         if (openQuestions[classRoom]._id === click.quizId) {
             new models.Click(click).save((err, _) => {
                 if (err) { 
@@ -82,11 +88,9 @@ export function setup(io: SocketIO.Server) {
             console.log('bye-bye user: ' + socket.id)
         });
 
-        socket.on('join class', (className: string) => {
-
+        socket.on(t.JOIN_CLASSROOM, (className: string) => {
             // Leave previous room
-            socket.leaveAll();           // NOT async
-
+            socket.leaveAll();           // sync
             // Join classroom
             socket.join(className, (err) => {
                 if (err) {
@@ -94,7 +98,9 @@ export function setup(io: SocketIO.Server) {
                     console.log(err);
                     return;
                 }
-                console.log('### ', userName, ' just joined ', className);
+                
+                console.log('[room:', className, '] ', userName, 'just joined');
+                
                 if (userName === 'instructor') {
                     setupInstructor(io, socket, className);
                 }

@@ -34,17 +34,14 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout, Data) {
 
     $scope.response = { rsp: ERROR_RESPONCE };
 
-    socket.on(QUIZ_START, (quiz: IQuiz) => {
-
-        console.log(quiz.description);
-        console.log(questionToHtml(quiz));
-
+    socket.on(QUIZ_START, (quiz: IMaskedQuiz) => {
+        // console.log(quiz);
         let modalInstance = $uibModal.open({
             animation: true,
             templateUrl: 'myModalContent.html',
             controller: 'ModalInstanceCtrl',
             resolve: {
-                question: () => questionToHtml(quiz),
+                question: () => quizDescriptionToHtml(quiz),
                 options : () => quiz.options,
                 // counter : () => $scope.counter,
                 response: () => $scope.response
@@ -60,9 +57,11 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout, Data) {
                 let click = makeClick($scope, quiz, answer);
                 console.log(click);
                 // return the selection through the socket
-                socket.emit(QUIZ_ANS, click);
+                socket.emit(QUIZ_ANSWER, click);
             },
-            () => { console.log('Question dismissed at: ' + new Date()) }
+            () => { 
+                console.log('Question dismissed at: ' + new Date()) 
+            }
         );
 
         // $scope.counter.cnt = quiz.time;
@@ -72,7 +71,6 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout, Data) {
 
     // If instructor calls stop -> dismiss the modal instance
     socket.on(QUIZ_STOP, (data: any) => {
-        console.log("dismiss modal");
         if ($scope.currentModal)
             $scope.currentModal.dismiss('cancel');
     });
