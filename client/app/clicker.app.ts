@@ -29,6 +29,10 @@ function getHistoryURL() {
     return getServerURL() + '/history';
 }
 
+function getSaveQuizURL() {
+    return getServerURL() + '/savequiz';
+}
+
 function isHomeURL() {
     return (window.location.pathname === '/home');
 }
@@ -70,7 +74,8 @@ let charFromInt      = (n: number) => String.fromCharCode(65 + n);
 function fullQuestionToHtml(question: string, opts: Options) {
     let withUndef = o => (o) ? o : "";
     let optStrs   = opts.map((o, i) => wrapInBold(charFromInt(i) + '. ' + withUndef(o)));
-    let fullStr   = [question].concat(optStrs).join('\n\n');
+    let sep       = "<hr>"
+    let fullStr   = [question, sep].concat(optStrs).join('\n\n');
     return marked(fullStr);
 }
 

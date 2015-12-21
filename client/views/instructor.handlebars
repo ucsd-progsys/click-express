@@ -19,45 +19,6 @@
         </select>
         </p>
 
-        <p><label for="question">Post a Question</label></p>
-
-        <!--Input area-->
-            <!--Text description-->
-            <p>
-            <textarea class="form-control"
-                      ng-model="textarea"
-                      ng-disabled="quizStarted"
-                      ng-change="onDescriptionChange()"
-                      btf-markdown
-                      rows="6"
-                      placeholder="Enter a question">
-            </textarea></p>
-
-            <!--Choices-->
-            <div class="form-group" data-ng-repeat="choice in choices">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="input-group">
-                            <span class="input-group-btn" data-toggle="buttons">
-                                <button class="btn btn-default"
-                                        type="radio"
-                                        ng-model="correctChoice.index"
-                                        ng-disabled="quizStarted"
-                                        ng-click="correctChoiceSelected($index)"
-                                        uib-btn-radio="charFromInt($index)">\{{ charFromInt($index) }}</button>
-                            </span>
-                            <input type="text"
-                                   class="form-control"
-                                   ng-style="choiceStyle[$index]"
-                                   ng-model="choice.text"
-                                   ng-disabled="quizStarted"
-                                   placeholder="Enter a choice">
-                        </div><!-- /input-group -->
-                    </div><!-- /.col-lg-6 -->
-                </div>
-            </div>
-        <!--/Input area-->
-
         <!--Form options-->
         <span style="float:left">
         <button class="btn btn-default" ng-disabled="quizStarted" ng-click="addNewChoice()" tooltip-class="btn" tooltip-placement="bottom" uib-tooltip="Add choice">
@@ -83,16 +44,7 @@
         <button class="btn btn-default" ng-disabled="!quizStarted" ng-click="stopQuiz()" tooltip-class="btn" tooltip-placement="top" uib-tooltip="Stop the Quiz!">
             <span class="glyphicon glyphicon-stop"/>
         </button>
-
-        <!-- Save button -->
-        <span style="float:right">
-            <font ng-show="savePopupVisible" color="green" style="padding-right:5em">Save successful</font>
-            <button class="btn btn-default" style="float:right" ng-disabled="!quizStale" ng-click="saveQuiz()" tooltip-class="btn" tooltip-placement="top" uib-tooltip="Save this question">
-                <span class="glyphicon glyphicon-floppy-disk"/>
-            </button>
-        </span>
-        </p>
-
+        
        <!-- Preview box -->
         <div class="panel panel-default">
             <div class="panel-body">

@@ -3,7 +3,6 @@
 import t = require('./types');
 import models = require('./models');
 
-
 ////////////////////////////////////////////////////////////////////
 // Auxiliary ///////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
@@ -11,6 +10,10 @@ import models = require('./models');
 function toTagged<A>(tag: number, x: A): Tagged<A> {
     return { tag: tag, data: x }
 }
+
+// Maps classrooms to active questions
+// Clicks after time has run out should be disregarded.
+let openQuestions: { [x: string]: IQuiz } = { };
 
 ////////////////////////////////////////////////////////////////////
 // Setup Instructor ////////////////////////////////////////////////
@@ -20,11 +23,13 @@ function setupInstructor(io: SocketIO.Server, socket: SocketIO.Socket, classRoom
 
     socket.on(t.QUIZ_START, (quiz: IQuiz) => {
         console.log('### broadcasting to room ', classRoom, ' a quiz with id: ', quiz._id);
+        openQuestions[classRoom] = quiz;
         io.to(classRoom).emit(t.QUIZ_START, quiz);
     });
 
     socket.on(t.QUIZ_STOP, (data: any) => {
         io.to(classRoom).emit(t.QUIZ_STOP, data);
+        openQuestions[classRoom] = undefined;        
     });
 
     socket.on(t.QUIZ_SAVE, (taggedQuizContent: Tagged<IQuizContent>) => {
@@ -50,9 +55,19 @@ function setupInstructor(io: SocketIO.Server, socket: SocketIO.Socket, classRoom
 function setupStudent(io: SocketIO.Server, socket: SocketIO.Socket, classRoom: string) {
 
     socket.on(t.QUIZ_ANS, (click: IClick) => {
-        new models.Click(click).save((err, _) => {
-            if (err) console.log(err);
-        });
+        if (openQuestions[classRoom]._id === click.quizId) {
+            new models.Click(click).save((err, _) => {
+                if (err) { 
+                    console.log(err);
+                }
+                else {
+                    console.log('click from ', click.username, ' saved.');
+                }
+            });
+        }
+        else {
+            console.log('click from ', click.username, ' is invalid.');
+        }
     });
 
 }

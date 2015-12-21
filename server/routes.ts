@@ -67,7 +67,10 @@ export var registerWith = (z: Object) => {
 }
 
 export function register(req: Request, res: Response) {
-    let acc = new Account({ username: req.body.username, email: req.body.email });
+    let acc = new Account({ 
+        username: req.body.username, 
+        email: req.body.email 
+    });
     console.log('USER: ' + req.body.username);
     console.log('PASS: ' + req.body.password);
     Account.register(acc, req.body.password, (err:any, account:any) => {
@@ -112,24 +115,6 @@ export var redirectHome: RequestH = (req, res) => {
     res.redirect('/home');
 }
 
-// INVARIANT: AUTH
-// export function home(url:string): RequestH {
-//     return (req, res) => {
-//         if (req.user.username === 'instructor') {
-//             fs.readFile(QUESTIONS_FILE, 'utf8', function (err, data) {
-//                 // console.log('reading file');
-//                 if (err) throw err;
-//                 let obj = JSON.stringify(JSON.parse(data));
-//                 // console.log(obj)
-//                 res.render('post-question', { user: req.user, serverURL : url, questionPool: obj})
-//             });
-
-//         }
-//         else {
-//             res.render('render-question', { user: req.user, serverURL : url});
-//         }
-//     }
-// }
 export function home(url:string): RequestH {
     return (req, res) => {
         if (req.user.username === 'instructor') {
@@ -206,6 +191,27 @@ export let historyData: RequestH = (req, res) => {
         }
     });
 }
+
+////////////////////////////////////////////////////////////////////////
+// Create Quiz /////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+export let createQuiz: RequestH = (req, res) => {
+    let username = req.user.username;
+    console.log('user ', req.user, ' asked to create a quiz');
+    res.render('create', {
+        user: username
+    });
+}
+
+export let saveQuiz: RequestH = (req, res) => {
+    let username    = req.user.username;
+    let quiz: IQuiz = req.body;
+    console.log('user ', req.user, ' created quiz: ');
+    console.log(quiz);
+    res.json({ satus: 'OK' });
+}
+
 
 ////////////////////////////////////////////////////////////////////////
 // Send existing questions /////////////////////////////////////////////

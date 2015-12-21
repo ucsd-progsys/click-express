@@ -91,6 +91,9 @@ app.get( '/logout'      ,              routes.logout);
 app.get( '/history'     , routes.auth, routes.history);
 app.get( '/history-data', routes.auth, routes.historyData);
 
+app.get( '/create'      , routes.auth, routes.createQuiz);
+app.post('/savequiz'    , routes.auth, routes.saveQuiz);
+
 // app.get( '/quiz-content', routes.auth, routes.quizContent);                 // Must be instructor to get this
 
 app.post('/login'       ,              routes.postLogin);

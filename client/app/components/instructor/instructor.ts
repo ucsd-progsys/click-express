@@ -7,29 +7,29 @@ var socket = io({ query: 'userName=' + userName });
 // Auxiliary ///////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-function makeQuiz(scope): IQuizContent {
-    if (emptyInputQuiz(scope)) {
-        // TODO: handle error case
-        return undefined;
-    }
-    return {
-        courseId   : scope.CommonData.courseName,
-        description: scope.textarea,
-        options    : scope.choices.map(c => c.text),
-        correct    : scope.correctChoice.index,
-        author     : scope.CommonData.userName,
-        startTime  : new Date()
-    };
-}
+// function makeQuiz(scope): IQuizContent {
+//     if (emptyInputQuiz(scope)) {
+//         // TODO: handle error case
+//         return undefined;
+//     }
+//     return {
+//         courseId   : scope.CommonData.courseName,
+//         description: scope.textarea,
+//         options    : scope.choices.map(c => c.text),
+//         correct    : scope.correctChoice.index,
+//         author     : scope.CommonData.userName,
+//         startTime  : new Date()
+//     };
+// }
 
-function emptyInputQuiz(scope: any) {
-    let text         : string   = scope.textarea;
-    let choices      : string[] = scope.choices;
-    let correctChoice: number   = scope.correctChoice.index;
-    return (typeof text    === 'undefined') || (text === '')        ||
-           (typeof choices === 'undefined') || (choices.length < 2) ||
-           (correctChoice < 0) || (correctChoice >= choices.length);
-}
+// function emptyInputQuiz(scope: any) {
+//     let text         : string   = scope.textarea;
+//     let choices      : string[] = scope.choices;
+//     let correctChoice: number   = scope.correctChoice.index;
+//     return (typeof text    === 'undefined') || (text === '')        ||
+//            (typeof choices === 'undefined') || (choices.length < 2) ||
+//            (correctChoice < 0) || (correctChoice >= choices.length);
+// }
 
 ////////////////////////////////////////////////////////////////////
 // Instructor Controller ///////////////////////////////////////////
@@ -83,19 +83,8 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
     // Pending quesion /////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
 
-    let __saveTag = 0;
-    let __pendingTags = [];
-    function newSaveTag() {
-        let x = __saveTag++;
-        __pendingTags.push(x);
-        return x;
-    }
-    function removeTag(x) {
-        __pendingTags = __pendingTags.filter(e => e !== x);
-    }
-    function toTagged<A>(x: A): Tagged<A> {
-        return { tag: newSaveTag(), data: x };
-    }
+    
+    
     $scope.savePopupVisible = false;
 
     ////////////////////////////////////////////////////////////////////
@@ -135,52 +124,52 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
 
     $scope.loadQuestion = loadQuestion;
 
-    // The default values are for when the button is used
-    $scope.addNewChoice = () => {
-        let len = $scope.choices.length;
-        $scope.choices.push({ id: len, text: ""});
-        $scope.choiceStyle.push({});
-        onEdit();
-    };
-    $scope.removeLastChoice = () => {
-        $scope.choices.pop();
-        onEdit();
-    };
+    // // The default values are for when the button is used
+    // $scope.addNewChoice = () => {
+    //     let len = $scope.choices.length;
+    //     $scope.choices.push({ id: len, text: ""});
+    //     $scope.choiceStyle.push({});
+    //     onEdit();
+    // };
+    // $scope.removeLastChoice = () => {
+    //     $scope.choices.pop();
+    //     onEdit();
+    // };
 
-    // Input changed (textarea)
-    $scope.onDescriptionChange = () => {
-        onEdit();
-    }
+    // // Input changed (textarea)
+    // $scope.onDescriptionChange = () => {
+    //     onEdit();
+    // }
 
-    // Input changed (any of the choices)
-    $scope.onChoiceChange = () => {
-        onEdit();
-    }
+    // // Input changed (any of the choices)
+    // $scope.onChoiceChange = () => {
+    //     onEdit();
+    // }
 
-    // Correct choice index
-    $scope.correctChoice = { index: -1 };
-    $scope.choiceStyle = [];
+    // // Correct choice index
+    // $scope.correctChoice = { index: -1 };
+    // $scope.choiceStyle = [];
 
     function setCorrectChoiceStyle() {
         $scope.choices.forEach((_,i) => { $scope.choiceStyle[i] = {} });
         $scope.choiceStyle[$scope.correctChoice.index] = { 'background-color':'#cdf1c0' };
     }
 
-    function correctChoiceSelected(index: number) {
-        $scope.correctChoice.index = index;
-        setCorrectChoiceStyle();
-        onEdit();
-    }
+    // function correctChoiceSelected(index: number) {
+    //     $scope.correctChoice.index = index;
+    //     setCorrectChoiceStyle();
+    //     onEdit();
+    // }
 
-    $scope.correctChoiceSelected = correctChoiceSelected;
+    // $scope.correctChoiceSelected = correctChoiceSelected;
 
 
-    // On ANY edit
-    function onEdit() {
-        acceptStates(['quizReady', 'quizStale', 'quizEmpty']);
-        if (emptyInputQuiz($scope)) setQuizEmpty();
-        else                        setQuizStale();
-    }
+    // // On ANY edit
+    // function onEdit() {
+    //     acceptStates(['quizReady', 'quizStale', 'quizEmpty']);
+    //     if (emptyInputQuiz($scope)) setQuizEmpty();
+    //     else                        setQuizStale();
+    // }
 
     // Clear forms
     $scope.clearForms = () => {
@@ -256,13 +245,6 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
         setQuizReady();
     }
 
-    // Save the quiz
-    function saveQuiz() {
-        acceptStates(['quizStale']);
-        let quiz = makeQuiz($scope);
-        socket.emit(QUIZ_SAVE, toTagged(quiz));
-    }
-
     function showSaveNotification() {
         $scope.savePopupVisible = true;
         $timeout(() => { $scope.savePopupVisible = false; }, 6000 /* 6 seconds */);
@@ -280,7 +262,6 @@ function instructorClickCtrl($scope, $http, $location, $timeout, Data) {
 
     $scope.startQuiz = startQuiz;
     $scope.stopQuiz  = stopQuiz;
-    $scope.saveQuiz  = saveQuiz;
 
 }
 
