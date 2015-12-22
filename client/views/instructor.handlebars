@@ -1,0 +1,47 @@
+<div ng-controller="instructorClickCtrl" data-ng-init="instructorInit()">
+
+    <!-- Question selection -->
+    <p><label>Select question</label></p>
+    <p><select class="btn btn-default" ng-model="selectedQuestion" ng-change="loadQuestion()" ng-disabled="quizStarted">
+        <option class="btn btn-default" ng-repeat='option in questionPool track by $index' value="\{{ option }}">\{{ option.description.substring(0,40) }} ...</option>
+    </select></p>
+   
+   <!-- Play/Stop buttons -->
+    <p>
+    <button class="btn btn-default" ng-disabled="!quizReady" ng-click="startQuiz()" tooltip-class="btn" tooltip-placement="top" uib-tooltip="Start the Quiz!">
+        <span class="glyphicon glyphicon-play"/>
+    </button>
+    <button class="btn btn-default" ng-disabled="!quizStarted" ng-click="stopQuiz()" tooltip-class="btn" tooltip-placement="top" uib-tooltip="Stop the Quiz!">
+        <span class="glyphicon glyphicon-stop"/>
+    </button>
+    <!-- Show correct answer button -->
+    <span style="float:right">        
+    <button type="button" class="btn btn-default" ng-model="showCorrectAnswer" uib-btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false">
+        Show correct answer
+    </button>
+    <button type="button" class="btn btn-default" ng-model="showResponses" uib-btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false">
+        View responses
+    </button>    
+    </span>
+    
+    <!-- Preview box -->
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <p><label>Preview</label></p>
+            <p><span ng-bind-html="preview()"></span></p>
+        </div>
+    </div>
+    <!-- Status -->
+    <div ng-show="quizStarted">
+        <font color="green" style="padding-right:5em">Quiz In Progress</font>
+        Elapsed Time \{{ counter }} seconds
+    </div>
+        
+
+    <!-- Graph -->
+    <div class="panel panel-default" ng-show="showResponses">
+        <div class="panel-body">
+        <div id="viz"></div>
+        </div>
+    </div>
+</div>

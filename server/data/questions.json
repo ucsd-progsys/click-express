@@ -1,0 +1,50 @@
+[
+    {
+        "courseId": "CSE130",
+        "description": "C99 standard guarantees uniqueness of ____ characters for internal names.",
+        "options": [
+            {
+                "index": "A",
+                "text": "31"
+            },
+            {
+                "index": "B",
+                "text": "63"
+            },
+            {
+                "index": "C",
+                "text": "12"
+            },
+            {
+                "index": "D",
+                "text": "14"
+            }
+        ],
+        "correct": "B",
+        "author": "rjhala"
+    },
+    {
+        "courseId": "CSE130",
+        "description": "Which of the following is not a valid variable name declaration?",
+        "options": [
+            {
+                "index": "A",
+                "text": "int __a3;"
+            },
+            {
+                "index": "B",
+                "text": "int __3a;"
+            },
+            {
+                "index": "C",
+                "text": "int __A3;"
+            },
+            {
+                "index": "D",
+                "text": "None of the mentioned"
+            }
+        ],
+        "correct": "B",
+        "author": "rjhala"
+    }
+]

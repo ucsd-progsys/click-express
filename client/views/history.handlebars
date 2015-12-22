@@ -1,0 +1,34 @@
+<h1>History</h1>
+
+{{#if error }}
+  <p>Oops, cannot find any clicks, because I hit an error!</>
+  <p> {{ error }} </p>
+{{else}}
+
+    <div ng-controller="historyCtrl">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th data-field="index"  data-sortable="true"><b>#</b></th>                    
+                    <th data-field="time"   data-sortable="true">Time</th>
+                    <th data-field="cid"    data-sortable="true" width="200">Course ID</th>
+                    <th data-field="qid"    data-sortable="true">Quiz ID</th>
+                    <th data-field="choice" data-sortable="true">Choice</th>
+                </tr>
+                </thead>
+                 <tbody>
+                    <tr ng-repeat="click in clicks">
+                        <td>\{{$index}}</td>     
+                        <td>\{{click.submitTime}}</td>
+                        <td>\{{click.courseId}}</td>
+                        <td>\{{click.quizId}}</td>                        
+                        <td>\{{click.choice}}</td>
+                    </tr>                                      
+                </tbody>
+        </table>
+    </div>
+
+{{/if}}
+
+
+

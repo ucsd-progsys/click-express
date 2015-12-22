@@ -1,0 +1,86 @@
+<div ng-controller="createQuizCtrl">
+
+<div style="width: 100%;">
+    <div style="float:left; width: 49%">
+        <p><label for="question">Post a Question</label></p>
+        <!--Input area-->
+        <!--Text description-->
+        <p>
+        <textarea class="form-control"
+                    ng-model="textarea"
+                    ng-disabled="saving"
+                    ng-change="onDescriptionChange()"
+                    btf-markdown
+                    rows="6"
+                    placeholder="Enter a question">
+        </textarea></p>
+
+        <!--Choices-->
+        <div class="form-group" data-ng-repeat="choice in choices">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="input-group">
+                        <span class="input-group-btn" data-toggle="buttons">
+                            <button class="btn btn-default"
+                                    type="radio"
+                                    ng-model="correctChoice.index"
+                                    ng-disabled="saving"
+                                    ng-click="correctChoiceSelected($index)"
+                                    uib-btn-radio="charFromInt($index)">\{{ charFromInt($index) }}</button>
+                        </span>
+                        <input type="text"
+                                class="form-control"
+                                ng-style="choiceStyle[$index]"
+                                ng-model="choice.text"
+                                ng-disabled="saving"
+                                placeholder="Enter a choice">
+                    </div><!-- /input-group -->
+                </div><!-- /.col-lg-6 -->
+            </div>
+        </div>
+        <!--/Input area-->
+
+        <!--Form options-->
+        <span style="float:left">
+            <button class="btn btn-default" ng-disabled="saving" ng-click="addNewChoice()" tooltip-class="btn" tooltip-placement="bottom" uib-tooltip="Add choice">
+                <span class="glyphicon glyphicon-plus"/>
+            </button>
+            <button class="btn btn-default" ng-disabled="saving" ng-click="removeLastChoice()" tooltip-class="btn" tooltip-placement="bottom" uib-tooltip="Remove choice">
+                <span class="glyphicon glyphicon-minus"/>
+            </button>
+        </span>
+        <span style="float:right">
+            <button class="btn btn-default" ng-disabled="saving" ng-click="clearForms()" tooltip-class="btn" tooltip-placement="bottom" uib-tooltip="Clear forms">
+                <span class="glyphicon glyphicon-trash"/>
+            </button>
+        </span>
+    </div>
+
+    <div style="float:right; width: 49%">
+        <!-- Preview box -->
+        <p><label>Preview</label></p>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p><span ng-bind-html="preview()"></span></p>
+            </div>
+        </div>
+
+        <!-- Save button -->
+        <div style="float:left">
+            <button class="btn btn-default"
+                    ng-disabled="false" ng-click="saveQuiz()"
+                    tooltip-class="btn" tooltip-placement="bottom" uib-tooltip="Save this question">
+                <span class="glyphicon glyphicon-floppy-disk"/>
+            </button>
+            <a ng-show="saveSuccessfulVisible"   style="color:green; padding-left: 10px"> Saved successfully </a>
+            <a ng-show="saveEmptyQuizVisible"    style="color:red;   padding-left: 10px"> Some necessary fields are empty </a>
+            <a ng-show="saveNoUserNameVisible"   style="color:red;   padding-left: 10px"> Need to login first </a>
+            <a ng-show="saveNoCourseNameVisible" style="color:red;   padding-left: 10px"> Need to select a class name first </a>
+        </div>
+        </p>
+
+    </div>
+
+</div>
+
+</div>

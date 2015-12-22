@@ -1,0 +1,26 @@
+
+<section ng-controller="studentClickCtrl">
+
+    <script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h2 class="modal-title">Question</h2>
+            <!-- b>Time remaining: </b><span ng-bind="counter.val.cnt"></span> seconds -->                             
+        </div>
+        
+        <div class="modal-body">
+                <p ng-bind-html="quiz.val"></p>
+                <p ng-repeat="option in options.val">                                    
+                    <button class="btn btn-block btn-default" type="button"
+                            style="white-space: normal; text-align: left;"  
+                            ng-click="$event.preventDefault(); response.rsp = $index; ok()"><b>\{{ option.ii }}.</b> \{{ option.text }}
+                    </button>                            
+                </p>            
+        </div>       
+                
+        <div class="modal-footer">
+                <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>            
+        </div>
+    </script>           
+
+</section>
+
