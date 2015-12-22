@@ -6,16 +6,44 @@ Web-based clicker site (written in express)
 + [mongodb/mongoose][3]
 + [sessions][4]
 
-## Installation instructions
+# Installation and Running
 
-    sudo apt-get install libkrb5-dev
-    sudo apt-get install mongodb
+## Installation
+
+### Some dependencies
+
+* [libkrb5-dev](http://packages.ubuntu.com/trusty/libkrb5-dev)
+* [MongoDB](https://www.mongodb.org/)
+* [Node.js](https://nodejs.org/)
+* [TypeScript compiler](http://www.typescriptlang.org/) (`version >= 1.7`)
+
+### Building the server and client
+
+    npm install
+    tsd install
+    tsc -p ./server
+    tsc -p ./client/app
+
+## Running the server
+
+Run index.js:
+
+    node server/index.js
+
+Or, if in development mode:
+
+    npm install nodemon
+    nodemon server/index.js
+    
+## Navigate to page
+
+    http://localhost:3000
+    
+
 
 ## TODO
 
 + Do not allow to change room if test is under way or unsaved draft.
-
-+ Disable save button when it had just been pressed
 
 + FIX: history shows student signed off
 
@@ -25,11 +53,31 @@ Web-based clicker site (written in express)
 
 + Enroll
 
+
+# Application Logistics
+
+## Roles
+
+* **Instructors**: at the moment, just a single instructor 
+user with the name 'instructor' is recognized. Only 
+this person can:
+    
+    + only teacher can start/stop quiz
+    + create new quiz
+    + view entire class click history
+
+    
+* **Students** 
+
+    + multiple classes
+
+
+
 ## Controls
 
 Pages/Routes
 
-+ register  
++ register
 
 + login
 
@@ -75,11 +123,7 @@ Pages/Routes
 
 + ROUTE: POST/quizstat(n), reply with JSON {a:..., b:...}
 
-## Roles
 
-+ multiple classes
-+ only teacher can start/stop
-+ refine the socket to add a ["room" for each class][5]
 
 ## Model
 
@@ -123,15 +167,19 @@ table T = Map UniqueId T
 ```
 ## States
 
-[off]  --- quizstart   ---> [quiz]
-[quiz] --- response(i) ---> [wait]
-[wait] --- ack         ---> [quiz]
-[quiz] --- quizend     ---> [off]
+    [off]  --- quizstart   ---> [quiz]
+    [quiz] --- response(i) ---> [wait]
+    [wait] --- ack         ---> [quiz]
+    [quiz] --- quizend     ---> [off]
 
 ## Links
 
-[1]:https://orchestrate.io/blog/2014/06/26/build-user-authentication-with-node-js-express-passport-and-orchestrate/
-[3]:http://passportjs.org
-[3]:http://adrianmejia.com/blog/2014/10/01/creating-a-restful-api-tutorial-with-nodejs-and-mongodb/
-[4]:https://stormpath.com/blog/everything-you-ever-wanted-to-know-about-node-dot-js-sessions/
-[5]:http://stackoverflow.com/questions/17476294/how-to-send-a-message-to-a-particular-client-with-socket-io/17535099#17535099
+(1):[https://orchestrate.io/blog/2014/06/26/build-user-authentication-with-node-js-express-passport-and-orchestrate/]
+
+(3):[http://passportjs.org]
+
+(3):[http://adrianmejia.com/blog/2014/10/01/creating-a-restful-api-tutorial-with-nodejs-and-mongodb/]
+
+(4):[https://stormpath.com/blog/everything-you-ever-wanted-to-know-about-node-dot-js-sessions/]
+
+(5):[http://stackoverflow.com/questions/17476294/how-to-send-a-message-to-a-particular-client-with-socket-io/17535099#17535099]
