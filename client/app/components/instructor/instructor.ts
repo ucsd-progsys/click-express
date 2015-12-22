@@ -3,55 +3,6 @@ var debug = false;
 var socket = io({ query: 'userName=' + userName });
 
 ////////////////////////////////////////////////////////////////////
-// Display Quiz Result /////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////
-
-function setupResultModal(scope: any, uibModal: any) {
-    socket.on(RES_QUIZ_RESULTS, (data: { clicks: IClick[] }) => {
-        
-        let clickMap: { [x: string]: number } = { }
-        
-        data.clicks.forEach(c => {
-            if (!clickMap[c.choice])
-                clickMap[c.choice] = 1;                 
-            clickMap[c.choice]++;                
-        })
-        // let clicks = data.clicks.map(c => _.pairs(c => c[1])); // .map(p => p[2]);
-        
-        // TODO: Get more quiz info 
-        
-        let pairs = _.pairs(clickMap).map(p => { return { text: charFromInt(parseInt(p[0])), answers: p[1] } });
-        
-        
-        // console.log(clicks);
-        let mi = uibModal.open({
-            animation: true,
-            templateUrl: 'resultsModal.html',
-            controller: 'ResultsModalCtrl',
-            resolve: {
-                options: () => pairs
-            },
-            backdrop: 'static',
-            keyboard: false
-        });
-        mi.result.then(
-            (result) => { console.log("XXX"); },
-            () => { console.log('Dismissed', new Date()); }
-        );
-    });
-}
-
-function resultsModalCtrl($scope, $uibModalInstance, options) {
-    $scope.options = { val: options };
-    $scope.cancel = () => {
-        $uibModalInstance.dismiss('cancel');
-    }
-}
-click.controller('ResultsModalCtrl', resultsModalCtrl);
-
-
-
-////////////////////////////////////////////////////////////////////
 // Instructor Controller ///////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
@@ -106,8 +57,7 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
     // $scope.instructorInit = function() {
     //     console.log('Instructor init ', $scope.CommonData.courseName);
     // }
-    setupResultModal($scope, $uibModal);
-
+    
     ////////////////////////////////////////////////////////////////////
     // Question Pool ///////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
@@ -222,6 +172,71 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
     }
 
     $scope.viewResponses = viewResponses;
+    
+    ////////////////////////////////////////////////////////////////////
+    // This is just a sample chart    
+
+    var margin = { top: 20, right: 20, bottom: 30, left: 40 },
+        width = 960 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
+
+    var x = d3.scale.ordinal()
+        .rangeRoundBands([0, width], .1);
+
+    var y = d3.scale.linear()
+        .range([height, 0]);
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left")
+        .ticks(10, "%");
+
+    var svg = d3.select("#viz").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    d3.tsv("/assets/data.tsv", type, function(error, data) {
+        if (error) throw error;
+
+        x.domain(data.map((d: any) => d.letter));
+        y.domain([0, d3.max(data, (d: any) => d.frequency)]);
+
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text("Frequency");
+
+        svg.selectAll(".bar")
+            .data(data)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", (d: any) => x(d.letter))
+            .attr("width", x.rangeBand())
+            .attr("y", (d: any) => y(d.frequency))
+            .attr("height", (d: any) => height - y(d.frequency));
+    });
+
+    function type(d) {
+        d.frequency = +d.frequency;
+        return d;
+    }
+    ////////////////////////////////////////////////////////////////////    
 
 
 }

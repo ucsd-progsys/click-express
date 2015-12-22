@@ -19,7 +19,7 @@
     <button type="button" class="btn btn-default" ng-model="showCorrectAnswer" uib-btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false">
         Show correct answer
     </button>
-    <button type="button" class="btn btn-default" ng-click="viewResponses()">
+    <button type="button" class="btn btn-default" ng-model="showResponses" uib-btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false">
         View responses
     </button>    
     </span>
@@ -36,24 +36,12 @@
         <font color="green" style="padding-right:5em">Quiz In Progress</font>
         Elapsed Time \{{ counter }} seconds
     </div>
-    
-    
-    
-    <script type="text/ng-template" id="resultsModal.html">
-        <div class="modal-header">
-            <h2 class="modal-title">Results</h2>
+        
+
+    <!-- Graph -->
+    <div class="panel panel-default" ng-show="showResponses">
+        <div class="panel-body">
+        <div id="viz"></div>
         </div>
-        <div class="modal-body">            
-            <table>
-                <tr ng-repeat="x in options.val">
-                    <td>\{{ x.text }}</td>
-                    <td>\{{ x.answers }}</td>
-                </tr>
-            </table>
-        </div>                
-        <div class="modal-footer">
-                <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>            
-        </div>
-    </script>       
-    
+    </div>
 </div>
