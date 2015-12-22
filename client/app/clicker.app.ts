@@ -45,10 +45,12 @@ function getQuestionsURL() {
 // Globally Useful Type Definitions ////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-const QUIZ_START     = "QUIZ_START";
-const QUIZ_STOP      = "QUIZ_STOP";
-const QUIZ_ANSWER    = "QUIZ_ANSWER";
-const JOIN_CLASSROOM = "JOIN_CLASSROOM";
+const QUIZ_START       = "QUIZ_START";
+const QUIZ_STOP        = "QUIZ_STOP";
+const QUIZ_ANSWER      = "QUIZ_ANSWER";
+const REQ_QUIZ_RESULTS = "REQ_QUIZ_RESULTS";
+const RES_QUIZ_RESULTS = "RES_QUIZ_RESULTS";
+const JOIN_CLASSROOM   = "JOIN_CLASSROOM";
 
 const ERROR_RESPONCE = "ERROR";
 

@@ -1,7 +1,11 @@
 /// <reference path='../typings/tsd.d.ts' />
 
-import t = require('./types');
-import models = require('./models');
+import mongoose   = require('mongoose');
+import t          = require('./types');
+import models     = require('./models');
+var Click         = models.Click;
+var Schema        = mongoose.Schema;
+var ObjectId: any = Schema.Types.ObjectId;
 
 ////////////////////////////////////////////////////////////////////
 // Auxiliary ///////////////////////////////////////////////////////
@@ -21,7 +25,7 @@ let openQuestions: { [x: string]: IQuiz } = { };
 
 function maskCorrectAnswer(q: IQuiz): IMaskedQuiz {
     let clone: IQuiz = JSON.parse(JSON.stringify(q));   //fast cloning
-    clone.correct = -1; 
+    clone.correct = -1;
     return clone;
 }
 
@@ -35,23 +39,19 @@ function setupInstructor(io: SocketIO.Server, socket: SocketIO.Socket, classRoom
 
     socket.on(t.QUIZ_STOP, (data: any) => {
         io.to(classRoom).emit(t.QUIZ_STOP, data);
-        openQuestions[classRoom] = undefined;        
+        openQuestions[classRoom] = undefined;
     });
 
-    // socket.on(t.QUIZ_SAVE, (taggedQuizContent: Tagged<IQuizContent>) => {
-    //     let tag = taggedQuizContent.tag;
-    //     let quizContent = taggedQuizContent.data;
+    socket.on(t.REQ_QUIZ_RESULTS, (data: { qid: string}) => {
+        let oqid = new mongoose.Types.ObjectId(data.qid);
+        Click.find({ "quizId": oqid }, (err: any, clicks: any) => {
+            // console.log('REQ_QUIZ_RESULTS');
+            // console.log(err)
+            // console.log(clicks);
+            socket.emit(t.RES_QUIZ_RESULTS, { quiz: data.qid, clicks: clicks });
+        });
 
-    //     new models.Quiz(quizContent).save((err: any, quiz: IQuiz) => {
-    //         if (err) {
-    //             console.log(err);
-    //         }
-    //         else {
-    //             // Reply to instructor with a *tagged* version of the quiz
-    //             socket.emit(t.QUIZ_SAVED, toTagged(tag, quiz));
-    //         }
-    //     });
-    // });
+    })
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -60,19 +60,18 @@ function setupInstructor(io: SocketIO.Server, socket: SocketIO.Socket, classRoom
 
 function setupStudent(io: SocketIO.Server, socket: SocketIO.Socket, classRoom: string) {
 
+    // console.log('Setting up:', classRoom, socket.handshake.query.userName);
+
     socket.on(t.QUIZ_ANSWER, (click: IClick) => {
+        // console.log('received');
+        // console.log(click);
         if (openQuestions[classRoom]._id === click.quizId) {
             new models.Click(click).save((err, _) => {
-                if (err) { 
-                    console.log(err);
-                }
-                else {
-                    console.log('click from ', click.username, ' saved.');
-                }
+                if (err) console.log(err);
             });
         }
         else {
-            console.log('click from ', click.username, ' is invalid.');
+            console.log('ERROR: click from ', click.username, ' is invalid.');
         }
     });
 
@@ -82,25 +81,20 @@ export function setup(io: SocketIO.Server) {
 
     io.on('connection', (socket: SocketIO.Socket) => {
         let userName = socket.handshake.query.userName;
-        console.log('>>> ', userName, ' just connected');
-
-        socket.on('disconnect', () => { 
+        socket.on('disconnect', () => {
             console.log('bye-bye user: ' + socket.id)
         });
-
         socket.on(t.JOIN_CLASSROOM, (className: string) => {
             // Leave previous room
             socket.leaveAll();           // sync
             // Join classroom
             socket.join(className, (err) => {
                 if (err) {
-                    console.log('Could not joing classroom.')
+                    console.log('ERROR: Could not joing classroom.')
                     console.log(err);
                     return;
                 }
-                
-                console.log('[room:', className, '] ', userName, 'just joined');
-                
+                // console.log('[room:', className, '] ', userName, 'just joined');
                 if (userName === 'instructor') {
                     setupInstructor(io, socket, className);
                 }
