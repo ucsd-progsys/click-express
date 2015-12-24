@@ -51,23 +51,19 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
     }
 
     ////////////////////////////////////////////////////////////////////
-    // Init ////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////
-
-    // $scope.instructorInit = function() {
-    //     console.log('Instructor init ', $scope.CommonData.courseName);
-    // }
-    
-    ////////////////////////////////////////////////////////////////////
     // Question Pool ///////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
 
     $scope.questionPool = [];
 
     function updateQuestionPool(questions: any) {
-        $scope.questionPool = questions;
+        $scope.questionPool = questions;        
     }
     $scope.updateQuestionPool = updateQuestionPool;
+    
+    function getQuestion(index: number) {
+        return $scope.questionPool[index];
+    }
 
     // Add a binding to the shared data for the navbar to access
     $scope.CommonData.updateQuestionPool = updateQuestionPool;
@@ -84,9 +80,10 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
     function showAnswer() { return $scope.showCorrectAnswer; }
 
     // Load existing question
-    function loadQuestion() {
+    function loadQuestion(index: number) {
         acceptStates(['quizReady', 'quizStale', 'quizEmpty']);
-        setCurrentQuiz(JSON.parse($scope.selectedQuestion));
+        let question = getQuestion(index);
+        setCurrentQuiz(question);
         setQuizReady();
     }
 
@@ -148,7 +145,7 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
             setQuizStarted();
             return;
         }
-        console.log('Cannot run unsaved test!');
+        console.log('ERROR: quiz not found!');
     }
 
     function stopQuiz() {

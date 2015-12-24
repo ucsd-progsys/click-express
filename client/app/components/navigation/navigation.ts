@@ -19,7 +19,8 @@ function navCtrl($scope, $http, $location, Data) {
         // server
         if ($scope.CommonData.updateQuestionPool) {        
             $http.post(getQuestionsURL(), { courseName: course }).success((data, status) => {
-                $scope.CommonData.updateQuestionPool(JSON.parse(data.questionPool));                  
+                let quizList: IQuiz[] = JSON.parse(data.questionPool);   
+                $scope.CommonData.updateQuestionPool(quizList);                  
             }).error((data, status) => {
                 serverError($scope, data, status, "click");
             });        

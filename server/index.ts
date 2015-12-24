@@ -90,15 +90,9 @@ app.get( '/login'       ,              routes.getLogin);
 app.get( '/logout'      ,              routes.logout);
 app.get( '/history'     , routes.auth, routes.history);
 app.get( '/history-data', routes.auth, routes.historyData);
-
 app.get( '/create'      , routes.auth, routes.createQuiz);             // Instructor
 app.post('/savequiz'    , routes.auth, routes.saveQuiz);               // Instructor
-
 app.post('/questions'   , routes.auth, routes.getQuestions);           // Instructor
-
-
-// app.get( '/quiz-content', routes.auth, routes.quizContent);                 // Must be instructor to get this
-
 app.post('/login'       ,              routes.postLogin);
 
 // app.post('/click'    , routes.auth, routes.postClick);                   // TODO: auth-student

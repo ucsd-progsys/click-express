@@ -8,18 +8,15 @@ var ObjectId    = Schema.Types.ObjectId;
 // Schemas//////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-var AccountS = new Schema({ username: { type: String
-                                      , index: true }
+var AccountS = new Schema({ username: { type  : String
+                                      , index : true 
+                                      , unique: true
+                                      }
                           , password: String
                           , email   : String
                           });
 
 AccountS.plugin(plm);
-
-
-// var OptionS  = new Schema({ id         : String 
-//                           , name       : String 
-//                           });
 
 var QuizS    = new Schema({ courseId   : String         // coursename
                           , description: String
@@ -29,8 +26,7 @@ var QuizS    = new Schema({ courseId   : String         // coursename
                           , timeCreated: Date
                           });
 
-var CourseS  = new Schema({ name       : { type: String
-                                         , index: true }
+var CourseS  = new Schema({ _id        : String
                           , description: String
                           , instructor : String         // username
                           });

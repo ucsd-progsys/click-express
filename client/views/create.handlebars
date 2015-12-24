@@ -11,7 +11,7 @@
                     ng-disabled="saving"
                     ng-change="onDescriptionChange()"
                     btf-markdown
-                    rows="6"
+                    rows="6"                    
                     placeholder="Enter a question">
         </textarea></p>
 
@@ -26,6 +26,7 @@
                                     ng-model="correctChoice.index"
                                     ng-disabled="saving"
                                     ng-click="correctChoiceSelected($index)"
+                                    ng-cloak
                                     uib-btn-radio="charFromInt($index)">\{{ charFromInt($index) }}</button>
                         </span>
                         <input type="text"
@@ -33,6 +34,7 @@
                                 ng-style="choiceStyle[$index]"
                                 ng-model="choice.text"
                                 ng-disabled="saving"
+                                ng-cloak
                                 placeholder="Enter a choice">
                     </div><!-- /input-group -->
                 </div><!-- /.col-lg-6 -->
@@ -72,10 +74,10 @@
                     tooltip-class="btn" tooltip-placement="bottom" uib-tooltip="Save this question">
                 <span class="glyphicon glyphicon-floppy-disk"/>
             </button>
-            <a ng-show="saveSuccessfulVisible"   style="color:green; padding-left: 10px"> Saved successfully </a>
-            <a ng-show="saveEmptyQuizVisible"    style="color:red;   padding-left: 10px"> Some necessary fields are empty </a>
-            <a ng-show="saveNoUserNameVisible"   style="color:red;   padding-left: 10px"> Need to login first </a>
-            <a ng-show="saveNoCourseNameVisible" style="color:red;   padding-left: 10px"> Need to select a class name first </a>
+            <a ng-show="saveSuccessfulVisible"   style="color:green; padding-left: 10px" ng-cloak> Saved successfully </a>
+            <a ng-show="saveEmptyQuizVisible"    style="color:red;   padding-left: 10px" ng-cloak> Some necessary fields are empty </a>
+            <a ng-show="saveNoUserNameVisible"   style="color:red;   padding-left: 10px" ng-cloak> Need to login first </a>
+            <a ng-show="saveNoCourseNameVisible" style="color:red;   padding-left: 10px" ng-cloak> Need to select a class name first </a>
         </div>
         </p>
 

@@ -66,8 +66,8 @@ let serverError = ($scope, data, status, e) => {
 }
 
 // HTML generation
-let wrapIn = (msg: string, symbol: string) => ['<' , symbol, '>', msg, 
-                                                '</', symbol, '>'].join('');
+let wrapIn = (msg: string, t: string) => ['<' , t, '>', msg, 
+                                          '</', t, '>'].join('');
 let inDiv  = (s: string) => wrapIn(s, 'div');
 let inP    = (s: string) => wrapIn(s, 'p');
 let inBold = (s: string) => wrapIn(s, 'b');

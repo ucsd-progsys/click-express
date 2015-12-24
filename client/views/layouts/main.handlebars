@@ -54,7 +54,7 @@
                     </ul>
                 </li>
             {{/if}}
-            <li ng-show="CommonData.courseName"><a><b>\{{ CommonData.courseName }}</b></a></li>
+            <li ng-show="CommonData.courseName" ng-cloak><a><b>\{{ CommonData.courseName }}</b></a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             {{#if user}}
