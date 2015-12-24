@@ -43,6 +43,10 @@ Or, if in development mode:
 
 ## TODO
 
++ Show instructors how many student have answered
+
++ Students select their answer and can change it until end of quiz
+
 + Do not allow to change room if test is under way or unsaved draft.
 
 + FIX: history shows student signed off
