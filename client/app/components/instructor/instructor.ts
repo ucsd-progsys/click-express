@@ -157,6 +157,18 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
 
     $scope.startQuiz = startQuiz;
     $scope.stopQuiz = stopQuiz;
+    
+    // Number of students that have answered
+    $scope.connectedStudentIds = [];
+    
+    socket.on(CONNECTED_STUDENTS, (data: { connectedStudentIds: string[] }) => {
+        $scope.totalStudentsInRoom = Object.keys(data.connectedStudentIds).length; 
+    })
+    
+    $scope.studentsAnsweredCount = -1;
+    $scope.totalStudentsInRoom   = -1;        
+    
+    
 
     ////////////////////////////////////////////////////////////////////
     // Viewing responses ///////////////////////////////////////////////

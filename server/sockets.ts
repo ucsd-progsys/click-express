@@ -3,6 +3,7 @@
 import mongoose   = require('mongoose');
 import t          = require('./types');
 import models     = require('./models');
+import _          = require('underscore');
 var Click         = models.Click;
 var Schema        = mongoose.Schema;
 var ObjectId: any = Schema.Types.ObjectId;
@@ -23,6 +24,8 @@ let openQuestions: { [x: string]: IQuiz } = { };
 // Setup Instructor ////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
+// var instructorSocket: SocketIO.Socket = undefined;
+
 function maskCorrectAnswer(q: IQuiz): IMaskedQuiz {
     let clone: IQuiz = JSON.parse(JSON.stringify(q));   //fast cloning
     clone.correct = -1;
@@ -30,11 +33,20 @@ function maskCorrectAnswer(q: IQuiz): IMaskedQuiz {
 }
 
 function setupInstructor(io: SocketIO.Server, socket: SocketIO.Socket, classRoom: string) {
+    
+    // instructorSocket = socket;
 
     socket.on(t.QUIZ_START, (quiz: IQuiz) => {
         console.log('[room:', classRoom, '] Quiz start (id: ', quiz._id, ')');
-        openQuestions[classRoom] = quiz;
+        let allIds = Object.keys(io.to(classRoom).connected);
+        let studentIds = _.reject(allIds, (i => i === socket.id));
+        
+        console.log(allIds);
+        console.log(studentIds);
+        
+        openQuestions[classRoom] = quiz;                
         io.to(classRoom).emit(t.QUIZ_START, maskCorrectAnswer(quiz));
+        socket.emit(t.CONNECTED_STUDENTS, { connectedStudentIds: studentIds })
     });
 
     socket.on(t.QUIZ_STOP, (data: any) => {
@@ -94,7 +106,9 @@ export function setup(io: SocketIO.Server) {
                     console.log(err);
                     return;
                 }
-                // console.log('[room:', className, '] ', userName, 'just joined');
+                
+                console.log('[room:', className, '] ', userName, 'just joined');
+                
                 if (userName === 'instructor') {
                     setupInstructor(io, socket, className);
                 }

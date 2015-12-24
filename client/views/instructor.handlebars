@@ -46,8 +46,10 @@
     <!-- Status -->
     <div ng-show="quizStarted" ng-cloak>
         <font color="green" style="padding-right:5em">Quiz In Progress</font>
-        Elapsed Time \{{ counter }} seconds
+        <font               style="padding-right:5em">Elapsed Time \{{ counter }} seconds</font>
+        <font               style="padding-right:5em">\{{ studentsAnsweredCount }} / \{{ totalStudentsInRoom }} students have answered</font>
     </div>
+    
         
 
     <!-- Graph -->
