@@ -57,10 +57,10 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
     $scope.questionPool = [];
 
     function updateQuestionPool(questions: any) {
-        $scope.questionPool = questions;        
+        $scope.questionPool = questions;
     }
     $scope.updateQuestionPool = updateQuestionPool;
-    
+
     function getQuestion(index: number) {
         return $scope.questionPool[index];
     }
@@ -118,21 +118,32 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
     // Running the Quiz ////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
 
-    // Timer
+    // Timer    
+    function prettyTime(secs: number) {
+        let res = "";
+        let div = Math.floor(secs / 60);
+        if (div > 0) {
+            res += (div + " min(s) ");
+        }
+        res += ((secs % 60) + " sec(s) ");
+        return res;
+    }            
+    
     $scope.counter = 0;
-    function resetCounter() {
+    function resetTimeCounter() {
         $scope.counter = 0;
     }
-    function resumeCounter() {
+    function resumeTimeCounter() {
         $timeout(() => {
             if (!$scope.quizStarted) return;
             $scope.counter++;
-            resumeCounter();
+            $scope.counterString = prettyTime($scope.counter);
+            resumeTimeCounter();
         }, 1000 /* 1 sec */);
     }
-    function startCounter() {
-        resetCounter();
-        resumeCounter();
+    function startTimeCounter() {
+        resetTimeCounter();
+        resumeTimeCounter();
     }
 
     // Quiz start/stop
@@ -141,7 +152,8 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
         let q = getCurrentQuiz()
         if (q) {
             socket.emit(QUIZ_START, q);
-            startCounter();
+            startTimeCounter();
+            resetAnswerCounters();
             setQuizStarted();
             return;
         }
@@ -151,24 +163,41 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
     function stopQuiz() {
         acceptStates(['quizStarted']);
         socket.emit(QUIZ_STOP, {});
-        resetCounter();
+        resetTimeCounter();
         setQuizReady();
     }
 
     $scope.startQuiz = startQuiz;
     $scope.stopQuiz = stopQuiz;
-    
+
     // Number of students that have answered
     $scope.connectedStudentIds = [];
-    
+
     socket.on(CONNECTED_STUDENTS, (data: { connectedStudentIds: string[] }) => {
-        $scope.totalStudentsInRoom = Object.keys(data.connectedStudentIds).length; 
-    })
-    
+        $scope.totalStudentsInRoom = Object.keys(data.connectedStudentIds).length;
+    });
+
     $scope.studentsAnsweredCount = -1;
-    $scope.totalStudentsInRoom   = -1;        
-    
-    
+    $scope.totalStudentsInRoom   = -1;
+
+    function resetAnswerCounters() {
+        $scope.studentsAnsweredCount        = 0;
+        $scope.totalStudentsInRoom          = 0;
+        $scope.studentsAnsweredCorrectCount = 0;
+        $scope.studentsAnsweredWrongCount   = 0;
+    }           
+
+    // Inform about a student answering a question
+    socket.on(ANSWER_RECEIVED, (data: { isCorrect: boolean }) => {
+        console.log('An answer:', data.isCorrect, 'was received');
+        $scope.studentsAnsweredCount++;
+        if (data.isCorrect) {
+            $scope.studentsAnsweredCorrectCount++;
+        }
+        else {
+            $scope.studentsAnsweredWrongCount++;
+        }
+    });
 
     ////////////////////////////////////////////////////////////////////
     // Viewing responses ///////////////////////////////////////////////
@@ -181,9 +210,9 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
     }
 
     $scope.viewResponses = viewResponses;
-    
+
     ////////////////////////////////////////////////////////////////////
-    // This is just a sample chart    
+    // This is just a sample chart
 
     var margin = { top: 20, right: 20, bottom: 30, left: 40 },
         width = 960 - margin.left - margin.right,
@@ -245,7 +274,7 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
         d.frequency = +d.frequency;
         return d;
     }
-    ////////////////////////////////////////////////////////////////////    
+    ////////////////////////////////////////////////////////////////////
 
 
 }

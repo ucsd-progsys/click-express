@@ -35,7 +35,7 @@ interface IQuizContent {
 }
 
 interface ICourse {
-    name       : string;
+    _id        : string;
     description: string;
     instructor : string;
 }
@@ -59,3 +59,5 @@ interface Tagged<A> {
     tag: number;
     data: A;
 }
+
+interface Map<A> { [x: string]: A }

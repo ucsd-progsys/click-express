@@ -1,4 +1,3 @@
-/// <reference path='../typings/tsd.d.ts' />
 
 // package imports
 import express        = require('express');
@@ -12,7 +11,7 @@ import mongoose       = require('mongoose');
 import path           = require('path');
 import passportLocal  = require('passport-local');
 import socketIO       = require('socket.io');
-import t              = require('./types');
+import t              = require('../helper/types');
 
 var LocalStrategy     = passportLocal.Strategy;
 var handlebars        = require('express-handlebars');
@@ -22,11 +21,14 @@ var app               = express();
 var http              = require('http').Server(app);
 var io                = socketIO(http);
 
-// local imports
-import tips           = require("./tips");
+// Models
+import tips           = require("../models/tips");
+import models         = require('../models/schemas');
+import classRoom      = require('../models/classroom');
+import sch            = require('../models/school');
+
 import routes         = require('./routes');
-import models         = require('./models');
-import socket         = require('./sockets');
+import socket         = require('../helper/sockets');
 
 ////////////////////////////////////////////////////////////////////
 // Express /////////////////////////////////////////////////////////
@@ -39,11 +41,11 @@ var serverPort = app.get('port');
 // Views ///////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-app.set('views', path.join(__dirname, '/../client/views'));
+app.set('views', path.join(__dirname, '/../../client/views'));
 app.engine('handlebars', handlebars({
     defaultLayout: 'main',
     extname: '.handlebars',
-    layoutsDir: path.join(__dirname, '../client/views/layouts')
+    layoutsDir: path.join(__dirname, '../../client/views/layouts')
 }));
 app.set('view engine', 'handlebars');
 
@@ -52,7 +54,7 @@ app.set('view engine', 'handlebars');
 ////////////////////////////////////////////////////////////////////
 
 // uncomment after placing your favicon in /public
-app.use(favicon(path.join(__dirname, '../client/assets/favicon.ico')));
+app.use(favicon(path.join(__dirname, '../../client/assets/favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -119,7 +121,14 @@ mongoose.connect('mongodb://localhost/click-express-mongoose');
 // Sockets /////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-socket.setup(io);
+var school = new sch.School();
+school.populate();
+
+////////////////////////////////////////////////////////////////////
+// Sockets /////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+
+socket.setup(school, io);
 
 ////////////////////////////////////////////////////////////////////
 // Start me up /////////////////////////////////////////////////////

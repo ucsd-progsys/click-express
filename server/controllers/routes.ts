@@ -1,10 +1,10 @@
-/// <reference path='../typings/tsd.d.ts' />
+/// <reference path='../../typings/tsd.d.ts' />
 
 import express  = require('express');
 import passport = require('passport');
-import models   = require('./models');
+import models   = require('../models/schemas');
 import socketIO = require('socket.io');
-import t        = require('./types');
+import t        = require('../helper/types');
 import path     = require('path');
 import fs       = require('fs');
 

@@ -105,3 +105,7 @@ a {
 }
 
 
+/* Sqeeze table into its container */
+.table-nonfluid {
+   width: auto !important;
+}

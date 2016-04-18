@@ -44,10 +44,30 @@
         </div>
     </div>
     <!-- Status -->
-    <div ng-show="quizStarted" ng-cloak>
-        <font color="green" style="padding-right:5em">Quiz In Progress</font>
-        <font               style="padding-right:5em">Elapsed Time \{{ counter }} seconds</font>
-        <font               style="padding-right:5em">\{{ studentsAnsweredCount }} / \{{ totalStudentsInRoom }} students have answered</font>
+    <div>    
+        <table class="table table-nonfluid table-bordered" ng-show="quizStarted" ng-cloak>
+            <caption>Quiz In Progress</caption>
+            <tr>
+                <td>Elapsed Time</td>
+                <td> \{{ counterString }} </td>
+            </tr>
+            <tr>
+                <td>Participants</td>
+                <td>\{{ totalStudentsInRoom }} </td>
+            </tr>
+            <tr>
+                <td>Answers received</td>
+                <td>\{{ studentsAnsweredCount }} </td>
+            </tr>
+            <tr>
+                <td>Correct answers</td>
+                <td>\{{ studentsAnsweredCorrectCount }}</td>            
+            </tr>
+            <tr>
+                <td>Wrong answers</td>
+                <td>\{{ studentsAnsweredWrongCount }}</td>            
+            </tr>                   
+        </table>
     </div>
     
         
