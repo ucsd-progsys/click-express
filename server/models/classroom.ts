@@ -1,35 +1,43 @@
 
-export class ClassRoom {
-    
-    public name            : string;
-    public description     : string;
-    public instructorSocket: SocketIO.Socket;
-    public studentSockets  : Map<SocketIO.Socket>;
-    public activeQuiz      : IQuiz;
-    
-    
-    public startQuiz(q: IQuiz) {
-        this.activeQuiz = q;        
-    }
-    
-    public studentEnters(studentId: string) {
-        
-        // If there is an active quiz, send it over
-        if (this.activeQuiz) {
-                     
-        }
-        
-        // create new socket        
-        
-    }
-    
-    public studentLeaves() {
-        
-    }
-    
-    constructor(_name: string, _description: string) {
-        this.name        = _name;
-        this.description = _description;        
-    }
-       
+/**
+ *  In memory classroom
+ */
+
+// State
+let quizInProgress: IQuiz | undefined;
+let classRooms: Map<CourseId, Set<StudentId>>;
+
+
+export function initialize(): void {
+    quizInProgress = undefined;
+    classRooms = {};
 }
+
+export function startQuiz(q: IQuiz): void {
+    quizInProgress = q;
+}
+
+export function stopQuiz(): void {
+    quizInProgress = undefined;
+}
+
+export function getQuizInProgress(): IQuiz | undefined {
+    return quizInProgress;
+}
+
+/**
+ * Requires:
+ *  - Initialized classroom
+ *  - Student is not present in another classroom
+ */
+export function addStudent(course: CourseId, student: StudentId) {
+    if (classRooms[course]) {
+        classRooms[course] = {};
+    }
+    classRooms[student] = true;
+}
+
+export function removeStudent(course: CourseId, student: StudentId) {
+    delete classRooms[student];
+}
+
