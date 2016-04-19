@@ -17,3 +17,5 @@
 /// <reference path="underscore/underscore.d.ts" />
 /// <reference path="marked/marked.d.ts" />
 /// <reference path="d3/d3.d.ts" />
+
+/// <reference path="passport-local-mongoose.d.ts" />

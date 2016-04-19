@@ -13,6 +13,7 @@
     },
     "filesGlob": [
         "../typings/tsd.d.ts",
+        "../typings/passport-local-mongoose.d.ts",
         "**/*.ts"
     ]
 }

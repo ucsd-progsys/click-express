@@ -2,16 +2,16 @@
 
 import express  = require('express');
 import passport = require('passport');
-import models   = require('../models/schemas');
 import socketIO = require('socket.io');
 import t        = require('../helper/types');
 import path     = require('path');
 import fs       = require('fs');
 
-var Account:any = models.Account;
-var Click       = models.Click;
-var Quiz        = models.Quiz;
+
+import { Account, Click, Quiz, UserId } from '../models/schemas'
+
 var router      = express.Router();
+
 type Request    = express.Request;
 type Response   = express.Response;
 type RequestH   = express.RequestHandler;
@@ -75,8 +75,10 @@ export function register(req: Request, res: Response) {
     });
     console.log('USER: ' + req.body.username);
     console.log('PASS: ' + req.body.password);
-    Account.register(acc, req.body.password, (err:any, account:any) => {
-        if (err) return registerWith(msgUserExists)(req, res, undefined);
+    Account.register(acc, req.body.password, (err: any) => {
+        if (err) { 
+            return registerWith(msgUserExists)(req, res, undefined);
+        }
         passport.authenticate('local')(req, res, () => res.redirect('/'));
     });
 }
@@ -167,7 +169,7 @@ export var getQuestions: RequestH = (req, res) => {
 // Post a new Click ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-function requestUserId(req: Request): models.UserId {
+function requestUserId(req: Request): UserId {
     return req.user.username;
 }
 
