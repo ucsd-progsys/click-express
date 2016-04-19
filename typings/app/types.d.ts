@@ -60,4 +60,10 @@ interface Tagged<A> {
     data: A;
 }
 
-interface Map<A> { [x: string]: A }
+interface Map<K,V> { [x: string]: V }
+interface Set<V>   {  }
+
+
+type StudentId = string;
+type CourseId  = string;
+

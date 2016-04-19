@@ -9,12 +9,9 @@ import fs       = require('fs');
 
 
 import { Account, Click, Quiz, UserId } from '../models/schemas'
+import { Request, RequestH, Response }  from '../helper/types'
 
 var router      = express.Router();
-
-type Request    = express.Request;
-type Response   = express.Response;
-type RequestH   = express.RequestHandler;
 
 ////////////////////////////////////////////////////////////////////////
 // Messages ////////////////////////////////////////////////////////////
@@ -63,9 +60,8 @@ const CLASSES = JSON.stringify([ 'CSE130', 'CSE230' ]);
 // Register ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-export var registerWith = (z: Object) => {
-    var h: RequestH = (req, res, next) => res.render('register', z);
-    return h;
+export function registerWith(z: Object): RequestH {
+    return (req, res, next) => res.render('register', z);
 }
 
 export function register(req: Request, res: Response) {
@@ -87,7 +83,7 @@ export function register(req: Request, res: Response) {
 // Login ///////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-export var getLogin:RequestH = (req, res, next) => {
+export var getLogin: RequestH = (req, res, next) => {
     res.render('login', {
         user : req.user
     });
@@ -156,14 +152,6 @@ export var logout : RequestH = (req,res) => {
     res.redirect('/');
 }
 
-export var getQuestions: RequestH = (req, res) => {
-    Quiz.find({ 'courseId': req.body.courseName }, (err: any, quizzes: IQuiz[]) => {
-        if (err) {
-            console.log('ERROR: Could not find questions for class ', req.body.courseName);
-        }
-        res.json({ questionPool: JSON.stringify(quizzes) });
-    });
-}
 
 ////////////////////////////////////////////////////////////////////////
 // Post a new Click ////////////////////////////////////////////////////

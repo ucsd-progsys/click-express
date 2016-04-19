@@ -9,6 +9,7 @@
         "noLib": false,
         "preserveConstEnums": false,
         "suppressImplicitAnyIndexErrors": false,
+        "strictNullChecks": true, 
         "watch": true       
     },
     "filesGlob": [
