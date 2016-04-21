@@ -18,10 +18,10 @@
         "../../typings/app/types.d.ts",
         "../../lib/misc.ts",
         "./clicker.app.ts",        
-        "./components/navigation/navigation.ts",
-        "./components/instructor/instructor.ts",
-        "./components/student/student.ts",
-        "./components/history/history.ts",
-        "./components/create/create.ts"
+        "./components/navigation.ts",
+        "./components/instructor.ts",
+        "./components/student.ts",
+        "./components/history.ts",
+        "./components/create.ts"
     ]
 }
