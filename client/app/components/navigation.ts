@@ -1,10 +1,12 @@
 
-/// <reference path='../../typings/tsd.d.ts' />
-/// <reference path='../../../../typings/app/types.d.ts' />
-/// <reference path='../../../../lib/misc.ts' />
-/// <reference path='../../../../lib/url.ts' />
+/// <reference path='../typings/tsd.d.ts' />
+/// <reference path='../../../typings/app/types.d.ts' />
+/// <reference path='../../../lib/misc.ts' />
+/// <reference path='../../../lib/url.ts' />
 
 import * as t from 'types';
+
+declare let click   : any;
 
 function navCtrl($scope, $http, $location, Data) {
     $scope.CommonData = Data;

@@ -1,12 +1,13 @@
-/// <reference path='../../typings/tsd.d.ts' />
-/// <reference path='../../../../typings/app/types.d.ts' />
-/// <reference path='../../../../lib/misc.ts' />
-/// <reference path='../../../../lib/url.ts' />
+/// <reference path='../typings/tsd.d.ts' />
+/// <reference path='../../../typings/app/types.d.ts' />
+/// <reference path='../../../lib/misc.ts' />
+/// <reference path='../../../lib/url.ts' />
 
 import * as t from 'types';
 
 declare let userName: string;
 declare let io      : any;
+declare let click   : any;
 
 let socket = io({ query: 'userName=' + userName });
 
@@ -102,5 +103,5 @@ function modalInstanceCtrl($scope, $uibModalInstance, question, options, /*count
     $scope.cancel   = () => { $uibModalInstance.dismiss('cancel'); }
 };
 
-App.click.controller('studentClickCtrl', studentClickCtrl);
-App.click.controller('ModalInstanceCtrl', modalInstanceCtrl);
+click.controller('studentClickCtrl', studentClickCtrl);
+click.controller('ModalInstanceCtrl', modalInstanceCtrl);

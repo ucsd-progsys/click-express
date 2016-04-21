@@ -1,10 +1,12 @@
 
+/// <reference path='../typings/tsd.d.ts' />
+/// <reference path='../../../typings/app/types.d.ts' />
+/// <reference path='../../../lib/misc.ts' />
+/// <reference path='../../../lib/url.ts' />
+
 import * as t from 'types';
 
-var m   = require('../../../../lib/misc');
-var App = require('../../clicker.app');
-
-
+declare let click   : any;
 declare let userName: string;
 declare let io      : any;
 
@@ -25,7 +27,7 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
     $scope.CommonData.userName = userName;
 
     // Auxiliary functions
-    $scope.charFromInt = m.charFromInt;
+    $scope.charFromInt = Misc.charFromInt;
 
     ////////////////////////////////////////////////////////////////////
     // State Flags /////////////////////////////////////////////////////
@@ -290,4 +292,4 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
 
 }
 
-App.click.controller('instructorClickCtrl', instructorClickCtrl);
+click.controller('instructorClickCtrl', instructorClickCtrl);

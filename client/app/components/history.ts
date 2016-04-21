@@ -1,5 +1,5 @@
 
-var App = require('../../clicker.app');
+var App = require('../clicker.app');
 
 function historyCtrl($scope, $http) {
 	

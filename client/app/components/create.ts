@@ -1,8 +1,7 @@
 
-/// <reference path='../../../../typings/app/types.d.ts' />
-/// <reference path='../../../../lib/misc.ts' />
-/// <reference path='../../../../lib/url.ts' />
-
+/// <reference path='../../../typings/app/types.d.ts' />
+/// <reference path='../../../lib/misc.ts' />
+/// <reference path='../../../lib/url.ts' />
 
 import * as t from 'types';
 
