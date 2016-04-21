@@ -22,6 +22,7 @@
         "./components/instructor.ts",
         "./components/student.ts",
         "./components/history.ts",
-        "./components/create.ts"
+        "./components/create.ts",
+        "./components/classSelection.ts"
     ]
 }

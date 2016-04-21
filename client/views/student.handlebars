@@ -1,5 +1,18 @@
 
+
 <section ng-controller="studentClickCtrl">
+
+    <div style="width: 50%;">
+        <p>Select class</p>
+        <p ng-repeat="class in ['CSE130', 'CSE230']">                                    
+            <button class="btn btn-block btn-default" type="button"
+                    style="white-space: normal; text-align: left;"
+                    ng-cloak
+                    ng-click="$event.preventDefault(); response.rsp = $index; ok()"><b>\{{ class }}</b>
+            </button>                            
+        </p>
+    </div>
+
 
     <script type="text/ng-template" id="myModalContent.html">
         <div class="modal-header">
@@ -16,7 +29,9 @@
                     </button>                            
                 </p>            
         </div>       
-                
+        
+        
+        
         <div class="modal-footer">
                 <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>            
         </div>

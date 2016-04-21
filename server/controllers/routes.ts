@@ -25,7 +25,7 @@ let msgUserExists = {
 // Constants ///////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-const CLASSES = JSON.stringify(['CSE130', 'CSE230']);
+const CLASSES = JSON.stringify(['CSE130', 'CSE230', 'CSE231', 'CSE105']);
 
 ////////////////////////////////////////////////////////////////////////
 // Register ////////////////////////////////////////////////////////////
@@ -116,13 +116,24 @@ function studentHome(serverURL: string, req: express.Request, res: express.Respo
 }
 
 export function home(url: string): express.RequestHandler {
+
+    function courseNotSelected() { return true; }
+
+
     return (req: express.Request, res: express.Response) => {
-        if (isInstructorReq(req)) {
-            instructorHome(url, req, res);
-        } else {
-            studentHome(url, req, res);
+        let user = req.user;
+        if (courseNotSelected()) {
+            res.render('select', { user });
         }
     };
+
+    // return (req: express.Request, res: express.Response) => {
+    //     if (isInstructorReq(req)) {
+    //         instructorHome(url, req, res);
+    //     } else {
+    //         studentHome(url, req, res);
+    //     }
+    // };
 }
 
 export function logout(req: express.Request, res: express.Response) {
@@ -164,6 +175,14 @@ export function historyData(req: express.Request, res: express.Response) {
             })
         });
 }
+
+
+// Request class list
+// TODO: get them from the db
+export function courseList(req: express.Request, res: express.Response) {
+    res.json(CLASSES);
+}
+
 
 ////////////////////////////////////////////////////////////////////////
 // Create Quiz /////////////////////////////////////////////////////////

@@ -1,12 +1,11 @@
+/// <reference path='../shared/misc.ts' />
+/// <reference path='../shared/url.ts' />
 
 /// <reference path='../../../typings/app/types.d.ts' />
-/// <reference path='../../../lib/misc.ts' />
-/// <reference path='../../../lib/url.ts' />
 
 import * as t from 'types';
 
 declare let userName: string;
-declare let click   : any; 
 declare let socket  : any;
 
 ////////////////////////////////////////////////////////////////////
@@ -159,7 +158,7 @@ function createQuizCtrl($scope, $http, $location, $timeout, Data) {
             return;
         }
         setSaving();
-        $http.post(Url.getSaveQuizURL(), makeQuiz())
+        $http.post(getSaveQuizURL(), makeQuiz())
              .success((data, status) => {
                  showSaveNotification();
                  unsetSaving();
@@ -184,7 +183,7 @@ click.controller('createQuizCtrl', createQuizCtrl);
 
 
 
-export function quizToHtml(q: t.IQuiz, showCorrect?: boolean) {
+function quizToHtml(q: t.IQuiz, showCorrect?: boolean) {
     return (q) ? questionToHtml(q.description, q.options, showCorrect ? q.correct : undefined) : "";
 }
 
@@ -192,7 +191,7 @@ function quizDescriptionToHtml(q: t.IQuiz) {
     return marked(q.description);
 }
 
-export function questionToHtml(msg: string, opts: string[], correct?: number) {    
+function questionToHtml(msg: string, opts: string[], correct?: number) {    
     let withUndef = o => (o) ? o : "";
     let optStrs = opts.map((o, i) => 
         (i === correct) ? Misc.inBold(Misc.charFromInt(i) + '. ' + withUndef(o)) :

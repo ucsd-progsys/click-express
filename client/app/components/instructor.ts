@@ -1,12 +1,11 @@
 
 /// <reference path='../typings/tsd.d.ts' />
 /// <reference path='../../../typings/app/types.d.ts' />
-/// <reference path='../../../lib/misc.ts' />
-/// <reference path='../../../lib/url.ts' />
+/// <reference path='../shared/misc.ts' />
+/// <reference path='../shared/url.ts' />
 
 import * as t from 'types';
 
-declare let click   : any;
 declare let userName: string;
 declare let io      : any;
 

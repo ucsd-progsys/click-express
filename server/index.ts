@@ -89,6 +89,7 @@ app.get( '/login'       ,              routes.getLogin);
 app.get( '/logout'      ,              routes.logout);
 app.get( '/history'     , routes.auth, routes.history);
 app.get( '/history-data', routes.auth, routes.historyData);
+app.get( '/courselist'  , routes.auth, routes.courseList);
 app.get( '/create'      , routes.auth, routes.createQuiz);             // Instructor
 app.post('/savequiz'    , routes.auth, routes.saveQuiz);               // Instructor
 // app.post('/questions'   , routes.auth, routes.getQuestions);           // Instructor

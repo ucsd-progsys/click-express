@@ -1,0 +1,17 @@
+
+
+<section ng-controller="classSelectionCtrl">
+
+    <div style="width: 50%;">
+        <p>Select class</p>
+        <p ng-repeat="class in courseList">                                    
+            <button class="btn btn-block btn-default" type="button"
+                    style="white-space: normal; text-align: left;"
+                    ng-cloak
+                    ng-click=""><b>\{{ class }}</b>
+            </button>                            
+        </p>
+    </div>
+
+</section>
+

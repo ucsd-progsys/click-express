@@ -7,7 +7,6 @@ import * as t from 'types';
 
 declare let userName: string;
 declare let io      : any;
-declare let click   : any;
 
 let socket = io({ query: 'userName=' + userName });
 

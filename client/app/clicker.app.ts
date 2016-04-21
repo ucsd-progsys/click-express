@@ -1,11 +1,6 @@
 
 /// <reference path='typings/tsd.d.ts' />
 
-declare var serverURL: string;
-
-////////////////////////////////////////////////////////////////////////
-// App Declaration /////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////
 
 let click = angular.module('click', [
     'ngAnimate',           // Modal element (optional)
@@ -14,11 +9,13 @@ let click = angular.module('click', [
     'ng.bs.dropdown'       // dropdown
     ]);
 
-
-click.factory('Data', function () {
+// Creating a custom 'Data' service, that can be accessed by 
+// controllers of the 'click' app.
+click.factory('Data', function clickFactory () {
     return { 
         courseName: '',
         userName  : '',
-        socket    : undefined
+        socket    : undefined,
+        courseList: []
     };
 });
