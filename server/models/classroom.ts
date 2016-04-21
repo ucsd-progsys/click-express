@@ -1,11 +1,10 @@
+import * as t   from 'types';
 
-/**
- *  In memory classroom
- */
 
-// State
-let quizInProgress: IQuiz | undefined;
-let classRooms: Map<CourseId, Set<StudentId>>;
+// In memory classroom
+
+let quizInProgress: t.IQuiz | undefined;
+let classRooms: { [x: string]: Set<t.StudentId> } = {};
 
 
 export function initialize(): void {
@@ -13,7 +12,7 @@ export function initialize(): void {
     classRooms = {};
 }
 
-export function startQuiz(q: IQuiz): void {
+export function startQuiz(q: t.IQuiz): void {
     quizInProgress = q;
 }
 
@@ -21,7 +20,7 @@ export function stopQuiz(): void {
     quizInProgress = undefined;
 }
 
-export function getQuizInProgress(): IQuiz | undefined {
+export function getQuizInProgress(): t.IQuiz | undefined {
     return quizInProgress;
 }
 
@@ -30,14 +29,13 @@ export function getQuizInProgress(): IQuiz | undefined {
  *  - Initialized classroom
  *  - Student is not present in another classroom
  */
-export function addStudent(course: CourseId, student: StudentId) {
+export function addStudent(course: t.CourseId, student: t.StudentId) {
     if (classRooms[course]) {
-        classRooms[course] = {};
+        classRooms[course] = new Set();
     }
-    classRooms[student] = true;
+    classRooms[course].add(student);
 }
 
-export function removeStudent(course: CourseId, student: StudentId) {
+export function removeStudent(course: t.CourseId, student: t.StudentId) {
     delete classRooms[student];
 }
-

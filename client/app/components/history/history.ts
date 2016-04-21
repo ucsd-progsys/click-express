@@ -1,4 +1,6 @@
 
+var App = require('../../clicker.app');
+
 function historyCtrl($scope, $http) {
 	
 	$http.get('/history-data').success((data) => {
@@ -7,4 +9,6 @@ function historyCtrl($scope, $http) {
 	
 }
 
-click.controller('historyCtrl', historyCtrl);
+App.click.controller('historyCtrl', historyCtrl);
+
+

@@ -2,20 +2,21 @@
     "version": "1.5.0-beta",
     "compilerOptions": {
         "target": "es5",
-        "module": "commonjs",
         "isolatedModules": false,
+        "module": "commonjs",
         "jsx": "react",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "declaration": false,
         "noImplicitAny": false,
         "removeComments": true,
-        "noLib": false,
         "preserveConstEnums": false,
         "suppressImplicitAnyIndexErrors": false,
-        "watch": false
+        "watch": true
     },
     "files": [
+        "../../typings/app/types.d.ts",
+        "../../lib/misc.ts",
         "./clicker.app.ts",        
         "./components/navigation/navigation.ts",
         "./components/instructor/instructor.ts",
@@ -23,5 +24,4 @@
         "./components/history/history.ts",
         "./components/create/create.ts"
     ]
-                
 }

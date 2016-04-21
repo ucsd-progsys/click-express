@@ -11,41 +11,36 @@ import mongoose       = require('mongoose');
 import path           = require('path');
 import passportLocal  = require('passport-local');
 import socketIO       = require('socket.io');
-import t              = require('../helper/types');
 
-var LocalStrategy     = passportLocal.Strategy;
-var handlebars        = require('express-handlebars');
-var favicon           = require('serve-favicon');
-// var flash          = require('connect-flash');
-var app               = express();
-var http              = require('http').Server(app);
-var io                = socketIO(http);
+let LocalStrategy     = passportLocal.Strategy;
+let handlebars        = require('express-handlebars');
+let favicon           = require('serve-favicon');
+// let flash          = require('connect-flash');
+let app               = express();
+let http              = require('http').Server(app);
+let io                = socketIO(http);
 
-// Models
-import tips           = require("../models/tips");
-import models         = require('../models/schemas');
-import classRoom      = require('../models/classroom');
-import sch            = require('../models/school');
 
-import routes         = require('./routes');
-import socket         = require('../helper/sockets');
+import models         = require('./models/schemas');
+import routes         = require('./controllers/routes');
+import sockets        = require('./controllers/sockets');
 
 ////////////////////////////////////////////////////////////////////
 // Express /////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
 app.set('port', process.env.PORT || 3000);
-var serverPort = app.get('port');
+let serverPort = app.get('port');
 
 ////////////////////////////////////////////////////////////////////
 // Views ///////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-app.set('views', path.join(__dirname, '/../../client/views'));
+app.set('views', path.join(__dirname, '/../client/views'));
 app.engine('handlebars', handlebars({
     defaultLayout: 'main',
     extname: '.handlebars',
-    layoutsDir: path.join(__dirname, '../../client/views/layouts')
+    layoutsDir: path.join(__dirname, '/../client/views/layouts')
 }));
 app.set('view engine', 'handlebars');
 
@@ -54,14 +49,16 @@ app.set('view engine', 'handlebars');
 ////////////////////////////////////////////////////////////////////
 
 // uncomment after placing your favicon in /public
-app.use(favicon(path.join(__dirname, '../../client/assets/favicon.ico')));
+app.use(favicon(path.join(__dirname, '../client/assets/favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(session({ secret: 'keyboard cat'
-                , resave: false
-                , saveUninitialized: false }));
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: false
+}));
 
 // app.use(flash());
 
@@ -77,8 +74,11 @@ app.use(passport.session());
 // Static Content //////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-app.use(express.static('client'));
-app.use(express.static('node_modules'));
+// app.use(express.static('client'));
+// app.use(express.static('node_modules'));
+app.use(express.static(path.join(__dirname, '../client')));
+app.use(express.static(path.join(__dirname, '../node_modules')));
+console.log('SERVING: ', path.join(__dirname, '../client'));
 
 ////////////////////////////////////////////////////////////////////
 // Routes //////////////////////////////////////////////////////////
@@ -94,7 +94,7 @@ app.get( '/history'     , routes.auth, routes.history);
 app.get( '/history-data', routes.auth, routes.historyData);
 app.get( '/create'      , routes.auth, routes.createQuiz);             // Instructor
 app.post('/savequiz'    , routes.auth, routes.saveQuiz);               // Instructor
-app.post('/questions'   , routes.auth, routes.getQuestions);           // Instructor
+// app.post('/questions'   , routes.auth, routes.getQuestions);           // Instructor
 app.post('/login'       ,              routes.postLogin);
 
 // app.post('/click'    , routes.auth, routes.postClick);                   // TODO: auth-student
@@ -105,7 +105,7 @@ app.post('/login'       ,              routes.postLogin);
 // Passport config /////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-var Account: any = models.Account;
+let Account: any = models.Account;
 // require('./models/account');
 passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
@@ -121,25 +121,21 @@ mongoose.connect('mongodb://localhost/click-express-mongoose');
 // Sockets /////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-var school = new sch.School();
-school.populate();
+// socket.setup(io);
 
-////////////////////////////////////////////////////////////////////
-// Sockets /////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////
+io.on('connection', sockets.onConnect);
 
-socket.setup(school, io);
 
 ////////////////////////////////////////////////////////////////////
 // Start me up /////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-var handle404: express.ErrorRequestHandler = (err, req, res, next) => {
+function handle404(err: any, req: express.Request, res: express.Response, next: Function) {
     res.status(404);
     res.render('404');
 }
 
-var handle500: express.ErrorRequestHandler = (err, req, res, next) => {
+function handle500(err: any, req: express.Request, res: express.Response, next: Function) {
     console.error(err.stack);
     res.status(500);
     res.render('500');
@@ -153,8 +149,8 @@ app.use(handle500);
 
 // Go!
 http.listen(app.get('port'), () => {
-    let msg = "Express START: http://localhost:"
-            + serverPort // app.get('port')
-            + " press Ctrl-C to kill.";
-    console.log(msg);
+    console.log(
+        'Express START: http://localhost:',
+        serverPort, // app.get('port')
+        'press Ctrl-C to kill.');
 });

@@ -1,5 +1,14 @@
-declare var userName: string;
-var debug = false;
+
+/// <reference path='../../../../typings/app/types.d.ts' />
+/// <reference path='../../../../lib/misc.ts' />
+/// <reference path='../../../../lib/url.ts' />
+
+
+import * as t from 'types';
+
+declare let userName: string;
+declare let click   : any; 
+declare let socket  : any;
 
 ////////////////////////////////////////////////////////////////////
 // Auxiliary ///////////////////////////////////////////////////////
@@ -13,7 +22,7 @@ function newSaveTag() {
     return x;
 }
 
-function toTagged<A>(x: A): Tagged<A> {
+function toTagged<A>(x: A): t.Tagged<A> {
     return { tag: newSaveTag(), data: x };
 }
 
@@ -29,7 +38,7 @@ function createQuizCtrl($scope, $http, $location, $timeout, Data) {
     $scope.CommonData.userName = userName;
 
     // Auxiliary functions
-    $scope.charFromInt = charFromInt;
+    $scope.charFromInt = Misc.charFromInt;
 
     function getUserName(): string {
         return $scope.CommonData.userName;
@@ -126,7 +135,7 @@ function createQuizCtrl($scope, $http, $location, $timeout, Data) {
             (correctChoice < 0) || (correctChoice >= choices.length);
     }
 
-    function makeQuiz(): IQuizContent {
+    function makeQuiz(): t.IQuiz {
         return {
             courseId   : getCourseName(),
             description: $scope.textarea,
@@ -151,13 +160,13 @@ function createQuizCtrl($scope, $http, $location, $timeout, Data) {
             return;
         }
         setSaving();
-        $http.post(getSaveQuizURL(), makeQuiz())
+        $http.post(Url.getSaveQuizURL(), makeQuiz())
              .success((data, status) => {
                  showSaveNotification();
                  unsetSaving();
              })
              .error((data, status) => {
-                 serverError($scope, data, status, "click");
+                 Misc.serverError($scope, data, status, "click");
                  unsetSaving();
              });
     }
@@ -173,3 +182,22 @@ function createQuizCtrl($scope, $http, $location, $timeout, Data) {
 }
 
 click.controller('createQuizCtrl', createQuizCtrl);
+
+
+
+export function quizToHtml(q: t.IQuiz, showCorrect?: boolean) {
+    return (q) ? questionToHtml(q.description, q.options, showCorrect ? q.correct : undefined) : "";
+}
+
+function quizDescriptionToHtml(q: t.IQuiz) {
+    return marked(q.description);
+}
+
+export function questionToHtml(msg: string, opts: string[], correct?: number) {    
+    let withUndef = o => (o) ? o : "";
+    let optStrs = opts.map((o, i) => 
+        (i === correct) ? Misc.inBold(Misc.charFromInt(i) + '. ' + withUndef(o)) :
+                          Misc.inBold(Misc.charFromInt(i) + '. ') + withUndef(o));    
+    let sep = "<hr>"
+    return marked([msg, sep].concat(optStrs).join('\n\n'));
+}

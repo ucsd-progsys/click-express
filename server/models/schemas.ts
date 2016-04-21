@@ -1,59 +1,56 @@
 
-import mongoose = require('mongoose');
-var plm         = require('passport-local-mongoose');
-var Schema      = mongoose.Schema;
-var ObjectId    = Schema.Types.ObjectId;
 
-////////////////////////////////////////////////////////////////////////
-// Schemas//////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////
+/**
+ * https://github.com/Appsilon/styleguide/wiki/mongoose-typescript-models
+ */
 
-var AccountS = new Schema({ username: { type  : String
-                                      , index : true 
-                                      , unique: true
-                                      }
-                          , password: String
-                          , email   : String
-                          });
+import * as plmongoose from 'passport-local-mongoose';
+import * as mongoose   from 'mongoose';
+import * as m          from 'models';
 
-AccountS.plugin(plm);
+let Schema   = mongoose.Schema;
+let ObjectId = Schema.Types.ObjectId;
 
-var QuizS    = new Schema({ courseId   : String         // coursename
-                          , description: String
-                          , options    : [String]       // was: [OptionS]
-                          , correct    : Number
-                          , author     : String         // username
-                          , timeCreated: Date
-                          });
+// Schemas
 
-var CourseS  = new Schema({ _id        : String
-                          , description: String
-                          , instructor : String         // username
-                          });
+let accountSchema: mongoose.PassportLocalSchema = new Schema({
+    username: { type: String, index: true, unique: true },
+    password: String,
+    email: String
+}).plugin(plmongoose);
 
-var ClickS   = new Schema({ username   : String
-                          , quizId     : ObjectId      // quiz id
-                          , choice     : String
-                          , submitTime : Date
-                          });
+let quizSchema = new Schema({
+    courseId: String,
+    description: String,
+    options: [String],
+    correct: Number,
+    author: String,
+    timeCreated: Date
+});
 
-var EnrollS  = new Schema({ userId     : String
-                          , courseId   : String
-                          });
+let courseSchema = new Schema({
+    name: String,
+    description: String,
+    instructor: String
+});
 
-////////////////////////////////////////////////////////////////////////
-// Models //////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////
+let clickSchema = new Schema({
+    username: String,
+    quizId: ObjectId,
+    choice: Number,
+    submitTime: Date
+});
 
-export var Account   = mongoose.model('Account', AccountS);
+let enrollSchema = new Schema({
+    userId: String,
+    courseId: String
+});
 
-// export var Option    = mongoose.model('Option' , OptionS);
 
-export var Quiz      = mongoose.model('Quiz'   , QuizS);
-export var Course    = mongoose.model('Course' , CourseS);
-export var Click     = mongoose.model('Click'  , ClickS);
-export var Enroll    = mongoose.model('Enroll' , EnrollS);
+// Models
 
-export type UserId   = string; //  mongoose.Types.ObjectId;
-export type CourseId = string; //  mongoose.Types.ObjectId;
-export type QuizId   = string; //  mongoose.Types.ObjectId;
+export let Account  = mongoose.model<m.IAccountModel>('Account', accountSchema);
+export let Quiz     = mongoose.model<m.IQuizModel>   ('Quiz'   , quizSchema);
+export let Course   = mongoose.model<m.ICourseModel> ('Course' , courseSchema);
+export let Click    = mongoose.model<m.IClickModel>  ('Click'  , clickSchema);
+export let Enroll   = mongoose.model<m.IEnrollModel> ('Enroll' , enrollSchema);

@@ -1,4 +1,11 @@
 
+/// <reference path='../../typings/tsd.d.ts' />
+/// <reference path='../../../../typings/app/types.d.ts' />
+/// <reference path='../../../../lib/misc.ts' />
+/// <reference path='../../../../lib/url.ts' />
+
+import * as t from 'types';
+
 function navCtrl($scope, $http, $location, Data) {
     $scope.CommonData = Data;
     
@@ -8,7 +15,7 @@ function navCtrl($scope, $http, $location, Data) {
         $scope.CommonData.courseName = course;    
         if ($scope.CommonData.socket) {
             console.log('Joining class room');  
-            $scope.CommonData.socket.emit(JOIN_CLASSROOM, course);
+            $scope.CommonData.socket.emit('JOIN_CLASSROOM', course);
         }
         else {
             console.log('Socket not set');
@@ -18,11 +25,11 @@ function navCtrl($scope, $http, $location, Data) {
         // method then get the pool of questions for this class from the 
         // server
         if ($scope.CommonData.updateQuestionPool) {        
-            $http.post(getQuestionsURL(), { courseName: course }).success((data, status) => {
-                let quizList: IQuiz[] = JSON.parse(data.questionPool);   
+            $http.post(Url.getQuestionsURL(), { courseName: course }).success((data, status) => {
+                let quizList: t.IQuiz[] = JSON.parse(data.questionPool);   
                 $scope.CommonData.updateQuestionPool(quizList);                  
             }).error((data, status) => {
-                serverError($scope, data, status, "click");
+                Misc.serverError($scope, data, status, "click");
             });        
         }
     }

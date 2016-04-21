@@ -1,37 +1,19 @@
 
-import { Request, RequestH, Response }  from '../helper/types';
-import { Quiz }                         from '../models/schemas';
+import * as t           from 'types';
+import * as m           from 'models';
 
-// export var getQuestions: RequestH = (req, res) => {
-//     Quiz.find({ 'courseId': req.body.courseName }, (err: any, quizzes: IQuiz[]) => {
-//         if (err) {
-//             console.log('ERROR: Could not find questions for class ', req.body.courseName);
-//         }
-//         res.json({ questionPool: JSON.stringify(quizzes) });
-//     });
-// }
+import { Quiz }         from '../models/schemas';
+import { QueryFields }  from '../lib/db';
 
+type onFulFillTy = (m: m.IQuizModel[]) => void;
+type onErrorTy   = (err: any) => void;
 
-
-
-
-export function findAll(courseId: string): IQuiz[] {
-    Quiz.find({ 'courseId': courseId }, (err: any, quizzes: IQuiz[]) => {
-        if (err) {
-            console.log('ERROR: Could not find questions for class ', courseId);
-        }
-        res.json({ questionPool: JSON.stringify(quizzes) });
-    }).exec(cb).complete;
+export async function find(course?: t.CourseId): Promise<m.IQuizModel[]> {
+    let query = new QueryFields();
+    query.is('courseId', course);
+    return Quiz.find(query.toFields()).exec();
 }
 
-
-
-
-export function getQuestions(courseId: string): any {
-    Quiz.find({ 'courseId': courseId }, (err: any, quizzes: IQuiz[]) => {
-        if (err) {
-            console.log('ERROR: Could not find questions for class ', courseId);
-        }
-        res.json({ questionPool: JSON.stringify(quizzes) });
-    }).exec(cb);
+export function add(quiz: t.IQuiz) {
+    new Quiz(quiz).save();
 }

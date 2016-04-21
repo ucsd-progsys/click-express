@@ -1,69 +1,81 @@
 
-////////////////////////////////////////////////////////////////////////
-// Globally Useful Type Definitions ////////////////////////////////////
-////////////////////////////////////////////////////////////////////////
+declare module "types" {
 
-declare type MessageDscr = string;
+    module t {
 
-// TODO: fix ?
-declare const enum Message {
-    QuizCreate,
-    QuizBCast,
-    QuizStop,
-    QuizAck,
-    UserExists,
-    ClickFail,
-    ClickOk
+        const enum Message {
+            QuizCreate,
+            QuizBCast,
+            QuizStop,
+            QuizAck,
+            UserExists,
+            ClickFail,
+            ClickOk
+        }
+
+        interface SocketEvent {
+            kind: MessageDscr,
+            info: any
+        }
+
+
+        // Type aliases
+
+        type MessageDscr = string;
+        type UserId      = string; //  mongoose.Types.ObjectId;
+        type CourseId    = string; //  mongoose.Types.ObjectId;
+        type QuizId      = string; //  mongoose.Types.ObjectId;
+        type StudentId   = string;
+        type UserName    = string;
+
+        // Model types
+
+        interface IAccount {
+            username: string;
+            password: string;
+            email: string;
+        }
+
+        interface IQuiz {
+            courseId: string;
+            description: string;
+            options: string[];
+            correct: number;
+            author: string;
+            timeCreated: Date;
+        }
+
+        interface ICourse {
+            name: string;
+            description: string;
+            intstructor: string;
+        }
+
+        interface IClick {
+            username: string;
+            quizId: QuizId;
+            choice: number;
+            submitTime: Date;
+        }
+
+        interface IEnroll {
+            userId: UserId;
+            courseId: CourseId;
+        }
+
+        interface IMaskedQuiz extends IQuiz {
+            correct: number;       // { v = -1 }    
+        }
+
+        interface Tagged<A> {
+            tag: number;
+            data: A;
+        }
+
+        interface Map<K, V> { [x: string]: V }
+        
+    }
+
+    export = t
+
 }
-
-interface SocketEvent {
-    kind: MessageDscr,
-    info: any
-}
-
-// declare type Option  = { index: string, text: string };
-declare type Options = string[];    // Option[]
-
-// Corresponds to the QuizS schema
-interface IQuizContent {
-    courseId   : string;
-    description: string;         // Text description
-    options    : string[];       // was Options;        // Available options
-    correct    : number;         // The correct answer
-    author     : string;
-    timeCreated: Date;
-}
-
-interface ICourse {
-    _id        : string;
-    description: string;
-    instructor : string;
-}
-
-interface IQuiz extends IQuizContent {
-    _id         : string;       // Object Id for QuizContent
-}
-
-interface IMaskedQuiz extends IQuiz {
-    correct     : number;       // { v = -1 }    
-}
-
-interface IClick {
-    username   : string;
-    quizId     : string;        // The quiz ObjecId
-    choice     : number;
-    submitTime : Date;
-}
-
-interface Tagged<A> {
-    tag: number;
-    data: A;
-}
-
-interface Map<K,V> { [x: string]: V }
-interface Set<V>   {  }
-
-
-type StudentId = string;
-type CourseId  = string;
-

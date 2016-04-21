@@ -1,6 +1,17 @@
-declare var userName: string;
-var debug = false;
-var socket = io({ query: 'userName=' + userName });
+
+import * as t from 'types';
+
+var m   = require('../../../../lib/misc');
+var App = require('../../clicker.app');
+
+
+declare let userName: string;
+declare let io      : any;
+
+declare function quizToHtml(q: t.IQuiz, showCorrect?: boolean);
+
+
+let socket = io({ query: 'userName=' + userName });
 
 ////////////////////////////////////////////////////////////////////
 // Instructor Controller ///////////////////////////////////////////
@@ -14,7 +25,7 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
     $scope.CommonData.userName = userName;
 
     // Auxiliary functions
-    $scope.charFromInt = charFromInt;
+    $scope.charFromInt = m.charFromInt;
 
     ////////////////////////////////////////////////////////////////////
     // State Flags /////////////////////////////////////////////////////
@@ -40,8 +51,8 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
     function acceptStates(xs: string[]) {
         let s = currentState();
         if (xs.indexOf(s) === -1) {
-            var e = new Error('dummy');
-            var stack = e.stack.replace(/^[^\(]+?[\n$]/gm, '')
+            let e = new Error('dummy');
+            let stack = e.stack.replace(/^[^\(]+?[\n$]/gm, '')
                 .replace(/^\s+at\s+/gm, '')
                 .replace(/^Object.<anonymous>\s*\(/gm, '{anonymous}()@')
                 .split('\n');
@@ -98,13 +109,13 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
     // Current quiz ////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
 
-    function setCurrentQuiz(q: IQuiz) {
+    function setCurrentQuiz(q: t.IQuiz) {
         $scope.selectedQuestion = q;
     }
     function unsetCurrentQuiz() {
         $scope.selectedQuestion = undefined;
     }
-    function getCurrentQuiz(): IQuiz {
+    function getCurrentQuiz(): t.IQuiz {
         return $scope.selectedQuestion;
     }
 
@@ -151,7 +162,7 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
         acceptStates(['quizReady']);
         let q = getCurrentQuiz()
         if (q) {
-            socket.emit(QUIZ_START, q);
+            socket.emit('QUIZ_START', q);
             startTimeCounter();
             resetAnswerCounters();
             setQuizStarted();
@@ -162,7 +173,7 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
 
     function stopQuiz() {
         acceptStates(['quizStarted']);
-        socket.emit(QUIZ_STOP, {});
+        socket.emit('QUIZ_STOP', {});
         resetTimeCounter();
         setQuizReady();
     }
@@ -173,7 +184,7 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
     // Number of students that have answered
     $scope.connectedStudentIds = [];
 
-    socket.on(CONNECTED_STUDENTS, (data: { connectedStudentIds: string[] }) => {
+    socket.on('CONNECTED_STUDENTS', (data: { connectedStudentIds: string[] }) => {
         $scope.totalStudentsInRoom = Object.keys(data.connectedStudentIds).length;
     });
 
@@ -188,7 +199,7 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
     }           
 
     // Inform about a student answering a question
-    socket.on(ANSWER_RECEIVED, (data: { isCorrect: boolean }) => {
+    socket.on('ANSWER_RECEIVED', (data: { isCorrect: boolean }) => {
         console.log('An answer:', data.isCorrect, 'was received');
         $scope.studentsAnsweredCount++;
         if (data.isCorrect) {
@@ -205,78 +216,78 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
 
     function viewResponses() {
         let quiz = getCurrentQuiz();
-        let qid = quiz._id;
-        socket.emit(REQ_QUIZ_RESULTS, { qid: qid });
+        let qid = 'TODO' // XXX: quiz.quizId;
+        socket.emit('REQ_QUIZ_RESULTS', { qid: qid });
     }
 
     $scope.viewResponses = viewResponses;
 
-    ////////////////////////////////////////////////////////////////////
-    // This is just a sample chart
+    // ////////////////////////////////////////////////////////////////////
+    // // This is just a sample chart
 
-    var margin = { top: 20, right: 20, bottom: 30, left: 40 },
-        width = 960 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+    // let margin = { top: 20, right: 20, bottom: 30, left: 40 },
+    //     width = 960 - margin.left - margin.right,
+    //     height = 500 - margin.top - margin.bottom;
 
-    var x = d3.scale.ordinal()
-        .rangeRoundBands([0, width], .1);
+    // let x = d3.scale.ordinal()
+    //     .rangeRoundBands([0, width], .1);
 
-    var y = d3.scale.linear()
-        .range([height, 0]);
+    // let y = d3.scale.linear()
+    //     .range([height, 0]);
 
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom");
+    // let xAxis = d3.svg.axis()
+    //     .scale(x)
+    //     .orient("bottom");
 
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left")
-        .ticks(10, "%");
+    // let yAxis = d3.svg.axis()
+    //     .scale(y)
+    //     .orient("left")
+    //     .ticks(10, "%");
 
-    var svg = d3.select("#viz").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    // let svg = d3.select("#viz").append("svg")
+    //     .attr("width", width + margin.left + margin.right)
+    //     .attr("height", height + margin.top + margin.bottom)
+    //     .append("g")
+    //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    d3.tsv("/assets/data.tsv", type, function(error, data) {
-        if (error) throw error;
+    // d3.tsv("/assets/data.tsv", type, function(error, data) {
+    //     if (error) throw error;
 
-        x.domain(data.map((d: any) => d.letter));
-        y.domain([0, d3.max(data, (d: any) => d.frequency)]);
+    //     x.domain(data.map((d: any) => d.letter));
+    //     y.domain([0, d3.max(data, (d: any) => d.frequency)]);
 
-        svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(xAxis);
+    //     svg.append("g")
+    //         .attr("class", "x axis")
+    //         .attr("transform", "translate(0," + height + ")")
+    //         .call(xAxis);
 
-        svg.append("g")
-            .attr("class", "y axis")
-            .call(yAxis)
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", ".71em")
-            .style("text-anchor", "end")
-            .text("Frequency");
+    //     svg.append("g")
+    //         .attr("class", "y axis")
+    //         .call(yAxis)
+    //         .append("text")
+    //         .attr("transform", "rotate(-90)")
+    //         .attr("y", 6)
+    //         .attr("dy", ".71em")
+    //         .style("text-anchor", "end")
+    //         .text("Frequency");
 
-        svg.selectAll(".bar")
-            .data(data)
-            .enter().append("rect")
-            .attr("class", "bar")
-            .attr("x", (d: any) => x(d.letter))
-            .attr("width", x.rangeBand())
-            .attr("y", (d: any) => y(d.frequency))
-            .attr("height", (d: any) => height - y(d.frequency));
-    });
+    //     svg.selectAll(".bar")
+    //         .data(data)
+    //         .enter().append("rect")
+    //         .attr("class", "bar")
+    //         .attr("x", (d: any) => x(d.letter))
+    //         .attr("width", x.rangeBand())
+    //         .attr("y", (d: any) => y(d.frequency))
+    //         .attr("height", (d: any) => height - y(d.frequency));
+    // });
 
-    function type(d) {
-        d.frequency = +d.frequency;
-        return d;
-    }
-    ////////////////////////////////////////////////////////////////////
+    // function type(d) {
+    //     d.frequency = +d.frequency;
+    //     return d;
+    // }
+    // ////////////////////////////////////////////////////////////////////
 
 
 }
 
-click.controller('instructorClickCtrl', instructorClickCtrl);
+App.click.controller('instructorClickCtrl', instructorClickCtrl);

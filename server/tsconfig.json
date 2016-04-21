@@ -1,9 +1,7 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "es6",
         "module": "commonjs",
-        "isolatedModules": false,
-        "declaration": false,
         "noImplicitAny": true,
         "removeComments": true,
         "noLib": false,
@@ -13,8 +11,10 @@
         "watch": true       
     },
     "filesGlob": [
+        "index.ts",
+        "../lib/misc.ts",
         "../typings/tsd.d.ts",
-        "../typings/passport-local-mongoose.d.ts",
+        "../typings/app/types.d.ts",        
         "**/*.ts"
     ]
 }

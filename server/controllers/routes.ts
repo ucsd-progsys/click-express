@@ -1,109 +1,78 @@
 /// <reference path='../../typings/tsd.d.ts' />
 
-import express  = require('express');
-import passport = require('passport');
-import socketIO = require('socket.io');
-import t        = require('../helper/types');
-import path     = require('path');
-import fs       = require('fs');
+import * as express  from 'express';
+import * as passport from 'passport';
 
+import * as t        from 'types';
+import * as m        from 'models';
 
-import { Account, Click, Quiz, UserId } from '../models/schemas'
-import { Request, RequestH, Response }  from '../helper/types'
+import * as Account  from '../models/account';
+import * as Quiz     from '../models/quiz';
+import * as Click    from '../models/click';
 
-var router      = express.Router();
 
 ////////////////////////////////////////////////////////////////////////
 // Messages ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-var msgUserExists = {
-    kind   : Message.UserExists
-  , info   : "Sorry, that username already exists. Try again."
-}
+let msgUserExists = {
+    kind: t.Message.UserExists,
+    info: 'Sorry, that username already exists. Try again.'
+};
 
-var msgClickFail  = {
-    kind   : Message.ClickFail
-  , info   : false
-}
-
-var msgClickOk = (n:number) => ({
-    kind   : Message.ClickOk
-  , info   : n
-})
-
-var msgQuiz = (msg: Message) => ({
-    kind   : msg
-  , info   : Date.now()
-})
-
-// var msgQuizAck : t.SocketEvent = {
-//     kind   : t.Message.QuizAck
-//   , info   : true
-// }
-
-function sendSocket(io:SocketIO.Server, e: SocketEvent) {
-  io.emit('message', e);
-}
-
-function sendHttp(res:express.Response, e:SocketEvent) {
-  res.json(e);
-}
 
 ////////////////////////////////////////////////////////////////////////
 // Constants ///////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-const CLASSES = JSON.stringify([ 'CSE130', 'CSE230' ]);
+const CLASSES = JSON.stringify(['CSE130', 'CSE230']);
 
 ////////////////////////////////////////////////////////////////////////
 // Register ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-export function registerWith(z: Object): RequestH {
+export function registerWith(z: Object): express.RequestHandler {
     return (req, res, next) => res.render('register', z);
 }
 
-export function register(req: Request, res: Response) {
-    let acc = new Account({
-        username: req.body.username,
-        email: req.body.email
-    });
-    console.log('USER: ' + req.body.username);
-    console.log('PASS: ' + req.body.password);
-    Account.register(acc, req.body.password, (err: any) => {
-        if (err) { 
-            return registerWith(msgUserExists)(req, res, undefined);
-        }
-        passport.authenticate('local')(req, res, () => res.redirect('/'));
-    });
+export function register(req: express.Request, res: express.Response) {
+    Account.register(
+        req.body.username,
+        req.body.email,
+        req.body.password,
+        // Error state
+        () => res.render('register', msgUserExists),
+        // Non-error state
+        passport.authenticate('local')(req, res, () => res.redirect('/'))
+    );
 }
+
 
 ////////////////////////////////////////////////////////////////////////
 // Login ///////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-export var getLogin: RequestH = (req, res, next) => {
-    res.render('login', {
-        user : req.user
-    });
+export function getLogin(req: express.Request, res: express.Response) {
+    res.render('login', { user: req.user });
 }
 
-export var postLogin =
-    passport.authenticate('local', { successRedirect: '/home'
-                                   , failureRedirect: '/login' });
+export let postLogin = passport.authenticate('local', {
+    successRedirect: '/home',
+    failureRedirect: '/login'
+});
+
 
 ////////////////////////////////////////////////////////////////////////
 // Authenticated Zone //////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
 // Simple route middleware to ensure user is authenticated.
-// Use this route middleware on any resource that needs to be protected.  If
-//   the request is authenticated (typically via a persistent login session),
-//   the request will proceed.  Otherwise, the user will be redirected to the
-//   login page.
+// Use this route middleware on any resource that needs to be protected.
+// If the request is authenticated (typically via a persistent login
+// session), the request will proceed.
+// Otherwise, the user will be redirected to the login page.
 
-export var auth: RequestH = (req, res, next) => {
+export function auth(req: express.Request, res: express.Response, next: Function): void {
     if (req.isAuthenticated()) {
         console.log('auth: OK'); // , req.user.username)
         return next();
@@ -113,7 +82,7 @@ export var auth: RequestH = (req, res, next) => {
 }
 
 // INVARIANT: AUTH
-export var redirectHome: RequestH = (req, res) => {
+export function redirectHome(req: express.Request, res: express.Response): void {
     res.redirect('/home');
 }
 
@@ -121,33 +90,42 @@ function isInstructorReq(req: express.Request) {
     return req.user.username === 'instructor';
 }
 
-export function home(url:string): RequestH {
-    return (req, res) => {
-        if (isInstructorReq(req)) {
-            Quiz.find({ 'courseId': 'CSE130' }, (err: any, quizzes: IQuiz[]) => {
-                // console.log('####### FOUND IDS');
-                // console.log(JSON.stringify(quizzes, null, '  '));
-                res.render('instructor', {
-                    user: req.user,
-                    isInstructor: true,
-                    serverURL : url,
-                    courseList: CLASSES,     // TODO: get them from the db
-                    questionPool: JSON.stringify(quizzes)
-                });
+function instructorHome(serverURL: string, req: express.Request, res: express.Response) {
+    let course = 'CSE130';
+    let user   = req.user;
+    let courseList = CLASSES;   // TODO: get from DB
+    Quiz.find(course)
+        .then((qs: m.IQuizModel[]) => {
+            res.render('instructor', {
+                user,
+                isInstructor: true,
+                serverURL,
+                courseList,
+                questionPool: JSON.stringify(qs)
             });
-        }
-        else {
-            res.render('student', {
-                user: req.user,
-                isInstructor: false,
-                serverURL : url,
-                courseList: CLASSES          // TODO: get them from the db
-            });
-        }
-    }
+        })
+        .catch((err: any) => {
+            // TODO
+        });
 }
 
-export var logout : RequestH = (req,res) => {
+function studentHome(serverURL: string, req: express.Request, res: express.Response) {
+    let courseList = CLASSES;   // TODO: get from DB
+    let user = req.user;
+    res.render('student', { user: user, isInstructor: false, serverURL, courseList });
+}
+
+export function home(url: string): express.RequestHandler {
+    return (req: express.Request, res: express.Response) => {
+        if (isInstructorReq(req)) {
+            instructorHome(url, req, res);
+        } else {
+            studentHome(url, req, res);
+        }
+    };
+}
+
+export function logout(req: express.Request, res: express.Response) {
     req.logout();
     res.redirect('/');
 }
@@ -157,7 +135,7 @@ export var logout : RequestH = (req,res) => {
 // Post a new Click ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-function requestUserId(req: Request): UserId {
+function requestUserId(req: express.Request): t.UserName {
     return req.user.username;
 }
 
@@ -165,34 +143,33 @@ function requestUserId(req: Request): UserId {
 // View Click History //////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-// INVARIANT: AUTH
-
-export let history: RequestH = (req, res) => {
+export function history(req: express.Request, res: express.Response) {
     res.render('history', {
         courseList: CLASSES,      // TODO: get them from the db
         isInstructor: isInstructorReq(req),
     });
 }
 
-export let historyData: RequestH = (req, res) => {
+export function historyData(req: express.Request, res: express.Response) {
     let myId = requestUserId(req);
-    Click.find({ userId: myId }).exec((err: any, clicks: any) => {
-        if (err) {
+    Click
+        .find({ quizId: myId })
+        .then((clicks: t.IClick[]) => {
+            res.json(clicks);
+        })
+        .catch((reason) => {
             res.render('history', {
-                error: err.toString(),
+                error: reason.toString(),
                 courseList: CLASSES      // TODO: get them from the db
             })
-        } else {
-            res.json(clicks);
-        }
-    });
+        });
 }
 
 ////////////////////////////////////////////////////////////////////////
 // Create Quiz /////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-export let createQuiz: RequestH = (req, res) => {
+export function createQuiz(req: express.Request, res: express.Response) {
     res.render('create', {
         user: req.user,
         isInstructor: isInstructorReq(req),
@@ -200,18 +177,9 @@ export let createQuiz: RequestH = (req, res) => {
     });
 }
 
-export let saveQuiz: RequestH = (req, res) => {
-    let username    = req.user.username;
-    let quiz: IQuiz = req.body;
-    // console.log('user ', req.user.username, ' created quiz: ');
-    // console.log(quiz);
-    new Quiz(quiz).save((err, _) => {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            console.log('quiz from ', quiz.author, ' saved.');
-            res.json({ satus: 'OK' });
-        }
-    });
+export function saveQuiz(req: express.Request, res: express.Response) {
+
+    console.log(req.body);
+
+    Quiz.add(req.body);
 }
