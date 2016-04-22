@@ -8,6 +8,11 @@ import * as t from 'types';
 declare let userName: string;
 declare let socket  : any;
 
+// import these correctly
+declare let charFromInt: any;
+declare let serverError: any;
+declare let questionToHtml: any; 
+
 ////////////////////////////////////////////////////////////////////
 // Auxiliary ///////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
@@ -36,7 +41,7 @@ function createQuizCtrl($scope, $http, $location, $timeout, Data) {
     $scope.CommonData.userName = userName;
 
     // Auxiliary functions
-    $scope.charFromInt = Misc.charFromInt;
+    $scope.charFromInt = charFromInt;
 
     function getUserName(): string {
         return $scope.CommonData.userName;
@@ -164,7 +169,7 @@ function createQuizCtrl($scope, $http, $location, $timeout, Data) {
                  unsetSaving();
              })
              .error((data, status) => {
-                 Misc.serverError($scope, data, status, "click");
+                 serverError($scope, data, status, "click");
                  unsetSaving();
              });
     }
@@ -181,21 +186,3 @@ function createQuizCtrl($scope, $http, $location, $timeout, Data) {
 
 click.controller('createQuizCtrl', createQuizCtrl);
 
-
-
-function quizToHtml(q: t.IQuiz, showCorrect?: boolean) {
-    return (q) ? questionToHtml(q.description, q.options, showCorrect ? q.correct : undefined) : "";
-}
-
-function quizDescriptionToHtml(q: t.IQuiz) {
-    return marked(q.description);
-}
-
-function questionToHtml(msg: string, opts: string[], correct?: number) {    
-    let withUndef = o => (o) ? o : "";
-    let optStrs = opts.map((o, i) => 
-        (i === correct) ? Misc.inBold(Misc.charFromInt(i) + '. ' + withUndef(o)) :
-                          Misc.inBold(Misc.charFromInt(i) + '. ') + withUndef(o));    
-    let sep = "<hr>"
-    return marked([msg, sep].concat(optStrs).join('\n\n'));
-}

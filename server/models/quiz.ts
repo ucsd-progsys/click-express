@@ -8,7 +8,7 @@ import { QueryFields }  from '../lib/db';
 type onFulFillTy = (m: m.IQuizModel[]) => void;
 type onErrorTy   = (err: any) => void;
 
-export async function find(course?: t.CourseId): Promise<m.IQuizModel[]> {
+export async function find(course?: t.CourseId): Promise<t.IQuiz[]> {
     let query = new QueryFields();
     query.is('courseId', course);
     return Quiz.find(query.toFields()).exec();

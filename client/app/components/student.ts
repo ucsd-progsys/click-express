@@ -1,12 +1,14 @@
 /// <reference path='../typings/tsd.d.ts' />
 /// <reference path='../../../typings/app/types.d.ts' />
-/// <reference path='../../../lib/misc.ts' />
-/// <reference path='../../../lib/url.ts' />
+/// <reference path='../shared/misc.ts' />
 
 import * as t from 'types';
 
+
 declare let userName: string;
 declare let io      : any;
+
+declare let charFromInt: any;
 
 let socket = io({ query: 'userName=' + userName });
 
@@ -95,7 +97,7 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout, Data) {
 
 function modalInstanceCtrl($scope, $uibModalInstance, question, options, /*counter, */ response) {
     $scope.quiz     = { val: question };
-    $scope.options  = { val: options.map((o, i) => { return { ii: Misc.charFromInt(i), text: o } }) };
+    $scope.options  = { val: options.map((o, i) => { return { ii: charFromInt(i), text: o } }) };
     // $scope.counter  = { val: counter };
     $scope.response = { val: 'ERROR_RESPONCE' };
     $scope.ok       = () => { $uibModalInstance.close($scope.response.rsp); };

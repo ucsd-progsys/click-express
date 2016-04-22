@@ -1,2 +1,90 @@
 
-<b>Welcome to course {{{ course }}}</b>
+<h1>Welcome to course {{{ course }}}</h1>
+
+{{#if isInstructor}}
+
+<div ng-controller="instructorClickCtrl" data-ng-init="instructorInit()">
+
+    <!-- Question selection -->
+    <p>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Select Question <span class="caret"></span>
+            </button>                        
+            <ul class="dropdown-menu" ng-disabled="quizStarted" >
+                <li><a href="#" ng-repeat='option in questionPool track by $index' 
+                       value="\{{ option }}" 
+                       ng-click="loadQuestion($index)">\{{ option.description.substring(0,40) }} ...</a></li>            
+            </ul>
+            
+            <!--<select ng-model="selectedTestAccount" ng-options="item.Id as item.Name for item in testAccounts">
+                <option value="">Select Account</option>
+            </select>-->
+            
+        </div>
+                
+        <!--<select class="btn btn-default  btn-large" ng-model="selectedQuestion" ng-change="loadQuestion()" ng-disabled="quizStarted">
+            <option class="btn btn-default" ng-repeat='option in questionPool track by $index' value="\{{ option }}">
+                \{{ option.description.substring(0,40) }} ...
+            </option>
+        </select>    -->
+    
+    <!-- Play/Stop buttons -->
+        
+        <button class="btn btn-default" ng-disabled="!quizReady" ng-click="startQuiz()" tooltip-class="btn" tooltip-placement="top" uib-tooltip="Start the Quiz!">
+            <span class="glyphicon glyphicon-play"/>
+        </button>
+        <button class="btn btn-default" ng-disabled="!quizStarted" ng-click="stopQuiz()" tooltip-class="btn" tooltip-placement="top" uib-tooltip="Stop the Quiz!">
+            <span class="glyphicon glyphicon-stop"/>
+        </button>
+        <!-- Show correct answer button -->
+        <span style="float:right">        
+        <button type="button" class="btn btn-default" ng-model="showCorrectAnswer" ng-disabled="!quizReady" uib-btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false">
+            Show correct answer
+        </button>
+        <button type="button" class="btn btn-default" ng-model="showResponses" ng-disabled="!quizReady" uib-btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false">
+            View responses
+        </button>    
+        </span>
+    </p>
+    
+    <!-- Preview box -->
+    <div class="panel panel-default">
+        <div class="panel-body" >
+            <p><label>Preview</label></p>
+            <p><span ng-bind-html="preview()" ng-cloak></span></p>
+        </div>
+    </div>
+    <!-- Status -->
+    <div>    
+        <table class="table table-nonfluid table-bordered" ng-show="quizStarted" ng-cloak>
+            <caption>Quiz In Progress</caption>
+            <tr>
+                <td>Elapsed Time</td>
+                <td> \{{ counterString }} </td>
+            </tr>
+            <tr>
+                <td>Participants</td>
+                <td>\{{ totalStudentsInRoom }} </td>
+            </tr>
+            <tr>
+                <td>Answers received</td>
+                <td>\{{ studentsAnsweredCount }} </td>
+            </tr>
+            <tr>
+                <td>Correct answers</td>
+                <td>\{{ studentsAnsweredCorrectCount }}</td>            
+            </tr>
+            <tr>
+                <td>Wrong answers</td>
+                <td>\{{ studentsAnsweredWrongCount }}</td>            
+            </tr>                   
+        </table>
+    </div>
+    
+</div>
+
+
+{{else}}
+    <h2>Wait for quiz</h2>
+{{/if}}

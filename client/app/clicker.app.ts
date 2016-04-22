@@ -1,6 +1,6 @@
 
 /// <reference path='typings/tsd.d.ts' />
-
+/// <reference path='./shared/misc.ts' />
 
 let click = angular.module('click', [
     'ngAnimate',           // Modal element (optional)

@@ -2,14 +2,15 @@
 /// <reference path='../typings/tsd.d.ts' />
 /// <reference path='../../../typings/app/types.d.ts' />
 /// <reference path='../shared/misc.ts' />
-/// <reference path='../shared/url.ts' />
 
 import * as t from 'types';
 
 declare let userName: string;
 declare let io      : any;
 
-declare function quizToHtml(q: t.IQuiz, showCorrect?: boolean);
+declare let charFromInt: any;
+declare let serverError: any;
+declare let quizToHtml : any; 
 
 
 let socket = io({ query: 'userName=' + userName });
@@ -26,7 +27,7 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
     $scope.CommonData.userName = userName;
 
     // Auxiliary functions
-    $scope.charFromInt = Misc.charFromInt;
+    $scope.charFromInt = charFromInt;
 
     ////////////////////////////////////////////////////////////////////
     // State Flags /////////////////////////////////////////////////////
@@ -65,6 +66,18 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
     ////////////////////////////////////////////////////////////////////
     // Question Pool ///////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
+
+
+    $scope.selectedTestAccount = null;
+    $scope.testAccounts = [];
+    
+    console.log('Asking for questions', window.location.pathname);
+
+    $http.get(window.location.pathname + '/questions').then((data, status, headers, config) => {
+        let questions = JSON.parse(data.data);
+        $scope.questionPool = questions;
+    });
+    
 
     $scope.questionPool = [];
 

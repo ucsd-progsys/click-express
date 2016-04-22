@@ -2,12 +2,7 @@
     "version": "1.5.0-beta",
     "compilerOptions": {
         "target": "es5",
-        "isolatedModules": false,
         "module": "commonjs",
-        "jsx": "react",
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "declaration": false,
         "noImplicitAny": false,
         "removeComments": true,
         "preserveConstEnums": false,
@@ -16,7 +11,8 @@
     },
     "files": [
         "../../typings/app/types.d.ts",
-        "../../lib/misc.ts",
+        "./shared/misc.ts",
+        "./shared/url.ts",
         "./clicker.app.ts",        
         "./components/navigation.ts",
         "./components/instructor.ts",

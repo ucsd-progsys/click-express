@@ -1,7 +1,4 @@
 
-/// <reference path='../shared/misc.ts' />
-/// <reference path='../shared/url.ts' />
-
 function classSelectionCtrl($scope, $http, $location, $window) {
     
     $http.get('/courselist').success((data, status, headers, config) => {

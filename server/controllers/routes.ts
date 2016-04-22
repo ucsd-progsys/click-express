@@ -109,20 +109,17 @@ export function courseSelect(req: express.Request, res: express.Response) {
 
 // Render a course
 export function course(req: express.Request, res: express.Response, next: any) {
-    let course = req.params.course_id;
-    let user = req.user;
-    console.log('matched', course);
+    let course       = req.params.course_id;
+    let user         = req.user;
+    let isInstructor = user.username === 'instructor';
+
     Course.exists(course).then((exists) => {
         if (exists) {
-            res.render('course', { user, course });
+            res.render('course', { user, course, isInstructor });
         } else {
             next();
         }
     });
-}
-
-function isInstructorReq(req: express.Request) {
-    return req.user.username === 'instructor';
 }
 
 // function instructorHome(serverURL: string, req: express.Request, res: express.Response) {
@@ -143,7 +140,7 @@ function isInstructorReq(req: express.Request) {
 //             // TODO
 //         });
 // }
-// 
+//
 // function studentHome(serverURL: string, req: express.Request, res: express.Response) {
 //     let courseList = CLASSES;   // TODO: get from DB
 //     let user = req.user;
@@ -156,9 +153,10 @@ function isInstructorReq(req: express.Request) {
 ////////////////////////////////////////////////////////////////////////
 
 export function history(req: express.Request, res: express.Response) {
+    let isInstructor = req.user.username === 'instructor';
     res.render('history', {
         courseList: CLASSES,      // TODO: get them from the db
-        isInstructor: isInstructorReq(req),
+        isInstructor,
     });
 }
 
@@ -193,22 +191,26 @@ export function courseList(req: express.Request, res: express.Response) {
           });
 }
 
+export function questions(req: express.Request, res: express.Response) {
+    let course = req.params.course_id;
+    Quiz.find(course).then((qs) => {
+        let jqs = JSON.stringify(qs);
+        res.json(jqs);
+    });
+}
+
 
 ////////////////////////////////////////////////////////////////////////
 // Create Quiz /////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
 export function createQuiz(req: express.Request, res: express.Response) {
-    res.render('create', {
-        user: req.user,
-        isInstructor: isInstructorReq(req),
-        courseList: CLASSES     // TODO: get them from the db
-    });
+    let user         = req.user;
+    let isInstructor = user.username === 'instructor';
+    res.render('create', { user, isInstructor, courseList: CLASSES });
 }
 
 export function saveQuiz(req: express.Request, res: express.Response) {
-
     console.log(req.body);
-
     Quiz.add(req.body);
 }

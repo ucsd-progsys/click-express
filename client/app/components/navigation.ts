@@ -1,10 +1,14 @@
 
 /// <reference path='../typings/tsd.d.ts' />
 /// <reference path='../../../typings/app/types.d.ts' />
+
 /// <reference path='../shared/misc.ts' />
-/// <reference path='../shared/url.ts' />
 
 import * as t from 'types';
+
+
+declare let serverError: any;
+
 
 function navCtrl($scope, $http, $location, Data) {
     $scope.CommonData = Data;
@@ -29,7 +33,7 @@ function navCtrl($scope, $http, $location, Data) {
                 let quizList: t.IQuiz[] = JSON.parse(data.questionPool);   
                 $scope.CommonData.updateQuestionPool(quizList);                  
             }).error((data, status) => {
-                Misc.serverError($scope, data, status, "click");
+                serverError($scope, data, status, "click");
             });        
         }
     }
