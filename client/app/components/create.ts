@@ -115,18 +115,18 @@ function createQuizCtrl($scope, $http, $location, $timeout, Data) {
     function showSaveNotification()         { dismissAllNotifications(); showNotification('saveSuccessfulVisible'); }
     function showEmptyQuizNotification()    { dismissAllNotifications(); showNotification('saveEmptyQuizVisible'); }
     function showNoUserNameNotification()   { dismissAllNotifications(); showNotification('saveNoCourseNameVisible'); }
-    function showNoCourseNameNotification() { dismissAllNotifications(); showNotification('saveNoCourseNameVisible'); }
+    // function showNoCourseNameNotification() { dismissAllNotifications(); showNotification('saveNoCourseNameVisible'); }
 
     function dismissSaveNotification()         { dismissNotification('saveSuccessfulVisible'); }
     function dismissEmptyQuizNotification()    { dismissNotification('saveEmptyQuizVisible'); }
     function dismissNoUserNameNotification()   { dismissNotification('saveNoCourseNameVisible'); }
-    function dismissNoCourseNameNotification() { dismissNotification('saveNoCourseNameVisible'); }
+    // function dismissNoCourseNameNotification() { dismissNotification('saveNoCourseNameVisible'); }
 
     function dismissAllNotifications() {
         dismissSaveNotification();
         dismissEmptyQuizNotification();
         dismissNoUserNameNotification();
-        dismissNoCourseNameNotification();
+        // dismissNoCourseNameNotification();
     }
 
     function emptyInputQuiz() {
@@ -158,13 +158,15 @@ function createQuizCtrl($scope, $http, $location, $timeout, Data) {
             showNoUserNameNotification();
             return;
         }
-        if (!getCourseName()) {
-            showNoCourseNameNotification();
-            return;
-        }
+        // if (!getCourseName()) {
+        //     showNoCourseNameNotification();
+        //     return;
+        // }
         setSaving();
+        console.log('making quiz', getSaveQuizURL());
         $http.post(getSaveQuizURL(), makeQuiz())
              .success((data, status) => {
+                 console.log('saved!');
                  showSaveNotification();
                  unsetSaving();
              })

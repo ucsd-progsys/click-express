@@ -19,7 +19,7 @@ let socket = io({ query: 'userName=' + userName });
 // Instructor Controller ///////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data) {
+function instructorClickCtrl($scope, $http, $window, $uibModal, $location, $timeout, Data) {
 
     // Populate CommonData
     $scope.CommonData = Data;
@@ -73,7 +73,11 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
     
     console.log('Asking for questions', window.location.pathname);
 
-    $http.get(window.location.pathname + '/questions').then((data, status, headers, config) => {
+    function replaceEndSlash(url: string) {     
+        return url.replace(/\/$/, "");
+    } 
+
+    $http.get(replaceEndSlash(window.location.pathname) + '/questions').then((data, status, headers, config) => {
         let questions = JSON.parse(data.data);
         $scope.questionPool = questions;
     });
@@ -92,6 +96,18 @@ function instructorClickCtrl($scope, $http, $uibModal, $location, $timeout, Data
 
     // Add a binding to the shared data for the navbar to access
     $scope.CommonData.updateQuestionPool = updateQuestionPool;
+
+
+
+    ////////////////////////////////////////////////////////////////////
+    // Current Question ////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
+
+    $scope.createQuestion = function() {
+        $window.location.href = replaceEndSlash(window.location.pathname) + '/create';    
+    }
+
+
 
     ////////////////////////////////////////////////////////////////////
     // Current Question ////////////////////////////////////////////////

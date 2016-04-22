@@ -7,7 +7,7 @@ let click = angular.module('click', [
     'ui.bootstrap',        // Modal element
     'ngSanitize',          // Markdown html sanitization
     'ng.bs.dropdown'       // dropdown
-    ]);
+    ])
 
 // Creating a custom 'Data' service, that can be accessed by 
 // controllers of the 'click' app.

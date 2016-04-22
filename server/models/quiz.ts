@@ -15,5 +15,12 @@ export async function find(course?: t.CourseId): Promise<t.IQuiz[]> {
 }
 
 export function add(quiz: t.IQuiz) {
-    new Quiz(quiz).save();
+    console.log('about to save');
+    new Quiz(quiz).save(function (err, res) {
+        if (err) {
+            console.log('error saving');
+        } else {
+            console.log('save successfully!');
+        }
+    });
 }

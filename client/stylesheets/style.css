@@ -13,14 +13,9 @@ a {
 }
 
 
+/* The following is from: http://work.smarchal.com/twbscolor/ */
 
-/*
-
-    The following is from: http://work.smarchal.com/twbscolor/
-    
-*/
-
-.navbar-default {
+/*.navbar-default {
   background-color: #59b6a6;
   border-color: #3fa39f;
 }
@@ -102,7 +97,7 @@ a {
 
 .x.axis path {
     display: none;
-}
+}*/
 
 
 /* Sqeeze table into its container */

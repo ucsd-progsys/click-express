@@ -1,11 +1,9 @@
 
 /// <reference path='../typings/tsd.d.ts' />
 /// <reference path='../../../typings/app/types.d.ts' />
-
 /// <reference path='../shared/misc.ts' />
 
 import * as t from 'types';
-
 
 declare let serverError: any;
 
@@ -37,6 +35,9 @@ function navCtrl($scope, $http, $location, Data) {
             });        
         }
     }
+    
+    console.log(window.location.href);
+    
 }
 
 click.controller('navCtrl', navCtrl);

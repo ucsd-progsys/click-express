@@ -204,13 +204,22 @@ export function questions(req: express.Request, res: express.Response) {
 // Create Quiz /////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
+function isInstructorReq(req: express.Request) {
+    return !!(req && req.user && req.user.username === 'instructor');
+}
+
 export function createQuiz(req: express.Request, res: express.Response) {
-    let user         = req.user;
-    let isInstructor = user.username === 'instructor';
-    res.render('create', { user, isInstructor, courseList: CLASSES });
+    if (isInstructorReq(req)) {
+        let courseId = req.params.course_id;
+        res.render('create', { user: req.user, isInstructor: true, courseId });
+    } else {
+        res.redirect('login');
+    }
 }
 
 export function saveQuiz(req: express.Request, res: express.Response) {
+    console.log('saveQuiz');
     console.log(req.body);
     Quiz.add(req.body);
+    res.end('success');
 }
