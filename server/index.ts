@@ -25,6 +25,9 @@ import models         = require('./models/schemas');
 import routes         = require('./controllers/routes');
 import sockets        = require('./controllers/sockets');
 
+import * as Course from './models/course';
+
+
 ////////////////////////////////////////////////////////////////////
 // Express /////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
@@ -81,23 +84,20 @@ app.use(express.static(path.join(__dirname, '../node_modules')));
 // Routes //////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-app.get( '/register'    ,              routes.registerWith({}));
-app.post('/register'    ,              routes.register);
-app.get( '/'            , routes.auth, routes.redirectHome);
-app.get( '/home'        , routes.auth, routes.home(serverPort));
-app.get( '/login'       ,              routes.getLogin);
-app.get( '/logout'      ,              routes.logout);
-app.get( '/history'     , routes.auth, routes.history);
-app.get( '/history-data', routes.auth, routes.historyData);
-app.get( '/courselist'  , routes.auth, routes.courseList);
-app.get( '/create'      , routes.auth, routes.createQuiz);             // Instructor
-app.post('/savequiz'    , routes.auth, routes.saveQuiz);               // Instructor
-// app.post('/questions'   , routes.auth, routes.getQuestions);           // Instructor
-app.post('/login'       ,              routes.postLogin);
-
-// app.post('/click'    , routes.auth, routes.postClick);                   // TODO: auth-student
-// app.get( '/quizstart', routes.auth, routes.postQuiz(io, t.QUIZ_CREATE)); // TODO: auth-instructor
-// app.get( '/quizstop' , routes.auth, routes.postQuiz(io, t.QUIZ_STOP));   // TODO: auth-instructor
+app.get ('/register'         ,              routes.registerWith({}));
+app.post('/register'         ,              routes.register);
+app.get ('/'                 , routes.auth, routes.redirectHome);
+app.get ('/home'             , routes.auth, routes.home(serverPort));
+app.get ('/course'           , routes.auth, routes.courseSelect);
+app.get ('/login'            ,              routes.getLogin);
+app.get ('/logout'           ,              routes.logout);
+app.get ('/history'          , routes.auth, routes.history);
+app.get ('/history-data'     , routes.auth, routes.historyData);
+app.get ('/courselist'       , routes.auth, routes.courseList);
+app.get ('/create'           , routes.auth, routes.createQuiz);
+app.post('/savequiz'         , routes.auth, routes.saveQuiz);
+app.post('/login'            ,              routes.postLogin);
+app.get ('/course/:course_id', routes.auth, routes.course);             // Route for each class
 
 ////////////////////////////////////////////////////////////////////
 // Passport config /////////////////////////////////////////////////

@@ -8,7 +8,8 @@
             <button class="btn btn-block btn-default" type="button"
                     style="white-space: normal; text-align: left;"
                     ng-cloak
-                    ng-click=""><b>\{{ class }}</b>
+                    ng-disabled="selectedCourse"
+                    ng-click="selectCourse(class)"><b>\{{ class }}</b>
             </button>                            
         </p>
     </div>

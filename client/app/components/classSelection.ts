@@ -2,15 +2,19 @@
 /// <reference path='../shared/misc.ts' />
 /// <reference path='../shared/url.ts' />
 
-function classSelectionCtrl($scope, $http) {
-    
-    console.log('asking for courselist');
+function classSelectionCtrl($scope, $http, $location, $window) {
     
     $http.get('/courselist').success((data, status, headers, config) => {
         let courseList = JSON.parse(data)
-        console.log(courseList);
         $scope.courseList = courseList;
     });
+    
+    $scope.selectCourse = function(course: string) {        
+        $scope.selectedCourse = course;
+        // Redirect to relevant course
+        $window.location.href = '/course/' + course;
+        // $location.path(course); // this adds hashes ...
+    };
         
 }
 

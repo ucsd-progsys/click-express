@@ -25,3 +25,7 @@ function getSelectClassURL() {
     return getServerURL() + '/select';
 }
 
+function getCourseURL(course: string) {
+    return getServerURL() + '/course/' + course;
+}
+

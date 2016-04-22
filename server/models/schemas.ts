@@ -1,8 +1,5 @@
 
-
-/**
- * https://github.com/Appsilon/styleguide/wiki/mongoose-typescript-models
- */
+// https://github.com/Appsilon/styleguide/wiki/mongoose-typescript-models
 
 import * as plmongoose from 'passport-local-mongoose';
 import * as mongoose   from 'mongoose';

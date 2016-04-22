@@ -9,6 +9,7 @@ import * as m        from 'models';
 import * as Account  from '../models/account';
 import * as Quiz     from '../models/quiz';
 import * as Click    from '../models/click';
+import * as Course   from '../models/course';
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -74,10 +75,8 @@ export let postLogin = passport.authenticate('local', {
 
 export function auth(req: express.Request, res: express.Response, next: Function): void {
     if (req.isAuthenticated()) {
-        console.log('auth: OK'); // , req.user.username)
         return next();
     }
-    console.log('auth: FAIL'); // , req.user.username)
     res.render('index');
 }
 
@@ -86,54 +85,14 @@ export function redirectHome(req: express.Request, res: express.Response): void 
     res.redirect('/home');
 }
 
-function isInstructorReq(req: express.Request) {
-    return req.user.username === 'instructor';
-}
-
-function instructorHome(serverURL: string, req: express.Request, res: express.Response) {
-    let course = 'CSE130';
-    let user   = req.user;
-    let courseList = CLASSES;   // TODO: get from DB
-    Quiz.find(course)
-        .then((qs: m.IQuizModel[]) => {
-            res.render('instructor', {
-                user,
-                isInstructor: true,
-                serverURL,
-                courseList,
-                questionPool: JSON.stringify(qs)
-            });
-        })
-        .catch((err: any) => {
-            // TODO
-        });
-}
-
-function studentHome(serverURL: string, req: express.Request, res: express.Response) {
-    let courseList = CLASSES;   // TODO: get from DB
-    let user = req.user;
-    res.render('student', { user: user, isInstructor: false, serverURL, courseList });
-}
-
 export function home(url: string): express.RequestHandler {
-
-    function courseNotSelected() { return true; }
-
-
-    return (req: express.Request, res: express.Response) => {
-        let user = req.user;
+    // Redirect user to pick a course
+    return (req: express.Request, res: express.Response, next: any) => {
         if (courseNotSelected()) {
-            res.render('select', { user });
+            res.redirect('course');
         }
     };
-
-    // return (req: express.Request, res: express.Response) => {
-    //     if (isInstructorReq(req)) {
-    //         instructorHome(url, req, res);
-    //     } else {
-    //         studentHome(url, req, res);
-    //     }
-    // };
+    function courseNotSelected() { return true; }
 }
 
 export function logout(req: express.Request, res: express.Response) {
@@ -141,14 +100,56 @@ export function logout(req: express.Request, res: express.Response) {
     res.redirect('/');
 }
 
-
-////////////////////////////////////////////////////////////////////////
-// Post a new Click ////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////
-
-function requestUserId(req: express.Request): t.UserName {
-    return req.user.username;
+// Select course
+export function courseSelect(req: express.Request, res: express.Response) {
+    let user = req.user;
+    // console.log('courseSelect: user is set', user);
+    res.render('courses', { user });
 }
+
+// Render a course
+export function course(req: express.Request, res: express.Response, next: any) {
+    let course = req.params.course_id;
+    let user = req.user;
+    console.log('matched', course);
+    Course.exists(course).then((exists) => {
+        if (exists) {
+            res.render('course', { user, course });
+        } else {
+            next();
+        }
+    });
+}
+
+function isInstructorReq(req: express.Request) {
+    return req.user.username === 'instructor';
+}
+
+// function instructorHome(serverURL: string, req: express.Request, res: express.Response) {
+//     let course = 'CSE130';
+//     let user   = req.user;
+//     let courseList = CLASSES;   // TODO: get from DB
+//     Quiz.find(course)
+//         .then((qs: m.IQuizModel[]) => {
+//             res.render('instructor', {
+//                 user,
+//                 isInstructor: true,
+//                 serverURL,
+//                 courseList,
+//                 questionPool: JSON.stringify(qs)
+//             });
+//         })
+//         .catch((err: any) => {
+//             // TODO
+//         });
+// }
+// 
+// function studentHome(serverURL: string, req: express.Request, res: express.Response) {
+//     let courseList = CLASSES;   // TODO: get from DB
+//     let user = req.user;
+//     res.render('student', { user: user, isInstructor: false, serverURL, courseList });
+// }
+
 
 ////////////////////////////////////////////////////////////////////////
 // View Click History //////////////////////////////////////////////////
@@ -161,26 +162,35 @@ export function history(req: express.Request, res: express.Response) {
     });
 }
 
+
+////////////////////////////////////////////////////////////////////////
+// Data Requests (JSON) ////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
 export function historyData(req: express.Request, res: express.Response) {
-    let myId = requestUserId(req);
-    Click
-        .find({ quizId: myId })
-        .then((clicks: t.IClick[]) => {
-            res.json(clicks);
-        })
-        .catch((reason) => {
-            res.render('history', {
-                error: reason.toString(),
-                courseList: CLASSES      // TODO: get them from the db
-            })
-        });
+    let username = req.user.username;
+    Click.find({ quizId: username })
+         .then((clicks: t.IClick[]) => {
+             res.json(clicks);
+         })
+         .catch((reason) => {
+             res.render('history', {
+                 error: reason.toString(),
+                 courseList: CLASSES      // TODO: get them from the db
+             })
+         });
 }
 
-
 // Request class list
-// TODO: get them from the db
 export function courseList(req: express.Request, res: express.Response) {
-    res.json(CLASSES);
+    Course.getAll()
+          .then((courses: t.ICourse[]) => {
+              res.json(JSON.stringify(courses.map(c => c.name)));
+          })
+          .catch((reason) => {
+              console.log('error at recovering classes!!!');
+              res.json(JSON.stringify([]));
+          });
 }
 
 
