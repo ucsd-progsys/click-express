@@ -1,9 +1,33 @@
+/*
+    Assume the db is a key-value store.
+*/
+
+
+/*
+    Generic Query to a key value store:
+ 
+    For each method `r` denotes an object matching the predicate 
+    described by the query.
+    
+ */
+interface IQuery {
+
+    /*@ is<V>(k: string, v: V): void || post: { offset(r, k) = v } */
+    is<V>(k: string, v: V): void;
+
+    /*@ between<V>(k: string, v1: V, v2: V): void; || post: { offset(r, k) > v1 && ... } */
+    between<V>(k: string, v1: V, v2: V): void;
+
+}
 
 // Mongoose query
 
 type KeyMap = { [x: string]: any };
 
-export class QueryFields {
+/*
+    For the implementation of  
+ */
+export class MongooseQuery implements IQuery {
     private _fields: KeyMap = {};
 
     public toFields() {

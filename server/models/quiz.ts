@@ -3,13 +3,17 @@ import * as t           from 'types';
 import * as m           from 'models';
 
 import { Quiz }         from '../models/schemas';
-import { QueryFields }  from '../lib/db';
+import { MongooseQuery }  from '../lib/db';
 
 type onFulFillTy = (m: m.IQuizModel[]) => void;
 type onErrorTy   = (err: any) => void;
 
+/*@ find ::
+    pre: USER == 'instructor'  
+    (course?: CourseId): Promise<t.IQuiz[]> 
+ */
 export async function find(course?: t.CourseId): Promise<t.IQuiz[]> {
-    let query = new QueryFields();
+    let query = new MongooseQuery();
     query.is('courseId', course);
     return Quiz.find(query.toFields()).exec();
 }

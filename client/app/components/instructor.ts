@@ -71,8 +71,6 @@ function instructorClickCtrl($scope, $http, $window, $uibModal, $location, $time
     $scope.selectedTestAccount = null;
     $scope.testAccounts = [];
     
-    console.log('Asking for questions', window.location.pathname);
-
     function replaceEndSlash(url: string) {     
         return url.replace(/\/$/, "");
     } 
