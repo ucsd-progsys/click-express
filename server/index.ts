@@ -12,9 +12,7 @@
         /course/:course_id/         --> only allow enrolled students
         
         /course/:course_id/create   --> only allow instructor of class
-    
-        
-        
+                    
         
         /user/:user_id/history/
     
@@ -57,6 +55,7 @@ import * as socketIO       from 'socket.io';
 import * as handlebars     from 'express-handlebars';
 import * as favicon        from 'serve-favicon';
 import * as http           from 'http';
+
 import * as cookieParser   from 'cookie-parser';
 
 import * as routes         from './controllers/routes';
@@ -68,8 +67,9 @@ let LocalStrategy = passportLocal.Strategy;
 
 // Express app
 let app           = express();
+let httpServer    = http.createServer(app);
 
-let httpServer    = http.createServer();
+// Socket
 let io            = socketIO(httpServer);
 
 
