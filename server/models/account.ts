@@ -1,7 +1,7 @@
 
 import { Account } from '../models/schemas';
 import * as t      from 'types';
-import { MongooseQuery }  from '../lib/db';
+import { MgQuery } from '../lib/db';
 
 
 export function register(username: t.UserName, email: string, password: string, cbError: () => void, cbSuccess: () => void) {
@@ -20,7 +20,7 @@ export function register(username: t.UserName, email: string, password: string, 
 
 
 export function view(username: t.UserId) {
-    let query = new MongooseQuery();
+    let query = new MgQuery();
     query.is('username', username);
 
     Account.find(query.toFields());

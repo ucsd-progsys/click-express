@@ -27,7 +27,7 @@ type KeyMap = { [x: string]: any };
 /*
     For the implementation of  
  */
-export class MongooseQuery implements IQuery {
+export class MgQuery implements IQuery {
     private _fields: KeyMap = {};
 
     public toFields() {

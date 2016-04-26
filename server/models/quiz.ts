@@ -1,9 +1,8 @@
 
-import * as t           from 'types';
-import * as m           from 'models';
-
-import { Quiz }         from '../models/schemas';
-import { MongooseQuery }  from '../lib/db';
+import * as t       from 'types';
+import * as m       from 'models';
+import { Quiz }     from '../models/schemas';
+import { MgQuery }  from '../lib/db';
 
 type onFulFillTy = (m: m.IQuizModel[]) => void;
 type onErrorTy   = (err: any) => void;
@@ -13,7 +12,7 @@ type onErrorTy   = (err: any) => void;
     (course?: CourseId): Promise<t.IQuiz[]> 
  */
 export async function find(course?: t.CourseId): Promise<t.IQuiz[]> {
-    let query = new MongooseQuery();
+    let query = new MgQuery();
     query.is('courseId', course);
     return Quiz.find(query.toFields()).exec();
 }

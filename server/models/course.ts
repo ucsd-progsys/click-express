@@ -1,11 +1,11 @@
 
-import * as t           from 'types';
-import * as m           from 'models';
-import { MongooseQuery }  from '../lib/db';
-import { Course }       from '../models/schemas';
+import * as t       from 'types';
+import * as m       from 'models';
+import { MgQuery }  from '../lib/db';
+import { Course }   from '../models/schemas';
 
 export async function getAll(): Promise<m.ICourseModel[]> {
-    let query = new MongooseQuery();
+    let query = new MgQuery();
     return Course.find(query.toFields()).exec();
 }
 
