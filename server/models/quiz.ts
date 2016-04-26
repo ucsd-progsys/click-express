@@ -1,14 +1,11 @@
 
-import { Schema, model } from 'mongoose';
-import * as t            from 'types';
-import * as m            from 'models';
-import { MgQuery }       from '../lib/db';
+import * as m      from 'mongoose';
+import * as t      from 'types';
+import { MgQuery } from '../lib/db';
 
-type onFulFillTy = (m: m.IQuizModel[]) => void;
-type onErrorTy   = (err: any) => void;
 
 // Schema
-let quizSchema = new Schema({
+let quizSchema = new m.Schema({
     courseId: String,
     description: String,
     options: [String],
@@ -18,9 +15,8 @@ let quizSchema = new Schema({
 });
 
 // Model
-export let Quiz = model<m.IQuizModel>   ('Quiz'   , quizSchema);
-
-
+interface IQuizModel extends t.IQuiz, m.Document {}
+export let Quiz = m.model<IQuizModel>('Quiz', quizSchema);
 
 /*@ find ::
     pre: USER == 'instructor'  

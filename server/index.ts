@@ -43,32 +43,34 @@
 
 
 // package imports
-import express        = require('express');
-import logger         = require('morgan');
-import cookieParser   = require('cookie-parser');
-import bodyParser     = require('body-parser');
-import methodOverride = require('method-override');
-import session        = require('express-session');
-import passport       = require('passport');
-import mongoose       = require('mongoose');
-import path           = require('path');
-import passportLocal  = require('passport-local');
-import socketIO       = require('socket.io');
 
-let LocalStrategy     = passportLocal.Strategy;
-let handlebars        = require('express-handlebars');
-let favicon           = require('serve-favicon');
-// let flash          = require('connect-flash');
-let app               = express();
-let http              = require('http').Server(app);
-let io                = socketIO(http);
+// ES6
+import * as express        from 'express';
+import * as logger         from 'morgan';
+import * as bodyParser     from 'body-parser';
+import * as session        from 'express-session';
+import * as passport       from 'passport';
+import * as mongoose       from 'mongoose';
+import * as path           from 'path';
+import * as passportLocal  from 'passport-local';
+import * as socketIO       from 'socket.io';
+import * as handlebars     from 'express-handlebars';
+import * as favicon        from 'serve-favicon';
+import * as http           from 'http';
+import * as cookieParser   from 'cookie-parser';
 
+import * as routes         from './controllers/routes';
+import * as sockets        from './controllers/sockets';
+import { Account }         from './models/account';
 
-import models         = require('./models/schemas');
-import routes         = require('./controllers/routes');
-import sockets        = require('./controllers/sockets');
+// Passport
+let LocalStrategy = passportLocal.Strategy;
 
-import * as Course from './models/course';
+// Express app
+let app           = express();
+
+let httpServer    = http.createServer();
+let io            = socketIO(httpServer);
 
 
 ////////////////////////////////////////////////////////////////////
@@ -129,7 +131,6 @@ app.use(express.static(path.join(__dirname, '../node_modules')));
 
 // Order matters here
 
-
 app.get ('/register'    ,              routes.registerWith({}));
 app.post('/register'    ,              routes.register);
 app.get ('/'            , routes.auth, routes.redirectHome);
@@ -151,8 +152,6 @@ app.get ('/course/:course_id/create'   , routes.auth, routes.createQuiz);
 // Passport config /////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-let Account: any = models.Account;
-// require('./models/account');
 passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
@@ -194,7 +193,7 @@ app.use(handle404);
 app.use(handle500);
 
 // Go!
-http.listen(app.get('port'), () => {
+httpServer.listen(app.get('port'), () => {
     console.log(
         'Express START: http://localhost:',
         serverPort, // app.get('port')

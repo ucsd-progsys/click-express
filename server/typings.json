@@ -1,0 +1,24 @@
+{
+  "version": false,
+  "dependencies": {},
+  "ambientDependencies": {
+    "body-parser": "registry:dt/body-parser#0.0.0+20160317120654",
+    "clicker": "file:../local-typings/clicker.d.ts",
+    "cookie-parser": "registry:dt/cookie-parser#1.3.4+20160316155526",
+    "express": "registry:dt/express#4.0.0+20160317120654",
+    "express-handlebars": "registry:dt/express-handlebars#0.0.0+20160316155526",
+    "express-serve-static-core": "registry:dt/express-serve-static-core#0.0.0+20160322035842",
+    "express-session": "registry:dt/express-session#0.0.0+20160331200931",
+    "method-override": "registry:dt/method-override#0.0.0+20160317120654",
+    "mime": "registry:dt/mime#0.0.0+20160316155526",
+    "mongoose": "registry:dt/mongoose#3.8.5+20160316155526",
+    "morgan": "registry:dt/morgan#1.2.2+20160317120654",
+    "node": "registry:dt/node#4.0.0+20160423143914",
+    "passport": "registry:dt/passport#0.2.0+20160317120654",
+    "passport-local": "registry:dt/passport-local#0.0.0+20160316155526",
+    "passport-local-mongoose": "file:local-typings/passport-local-mongoose.d.ts",
+    "serve-favicon": "registry:dt/serve-favicon#0.0.0+20160316155526",
+    "serve-static": "registry:dt/serve-static#0.0.0+20160317120654",
+    "socket.io": "registry:dt/socket.io#1.4.4+20160317120654"
+  }
+}

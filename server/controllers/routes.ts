@@ -1,11 +1,7 @@
-/// <reference path='../../typings/tsd.d.ts' />
 
 import * as express  from 'express';
 import * as passport from 'passport';
-
 import * as t        from 'types';
-import * as m        from 'models';
-
 import * as Account  from '../models/account';
 import * as Quiz     from '../models/quiz';
 import * as Click    from '../models/click';

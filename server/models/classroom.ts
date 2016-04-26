@@ -1,5 +1,5 @@
-import * as t   from 'types';
 
+import * as t   from 'types';
 
 // In memory classroom
 

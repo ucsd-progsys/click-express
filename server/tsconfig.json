@@ -2,19 +2,25 @@
     "compilerOptions": {
         "target": "es6",
         "module": "commonjs",
-        "noImplicitAny": true,
+        "noImplicitAny": true,        
         "removeComments": true,
         "noLib": false,
         "preserveConstEnums": false,
         "suppressImplicitAnyIndexErrors": false,
         "strictNullChecks": true, 
         "watch": true       
-    },
-    "filesGlob": [
-        "index.ts",
-        "../lib/misc.ts",
-        "../typings/tsd.d.ts",
-        "../typings/app/types.d.ts",        
-        "**/*.ts"
+    },  
+    // "filesGlob": [
+    //     "./typings/main.d.ts",
+    //     "./index.ts",
+    //     "./models/*.ts",
+    //     "./controllers/*.ts",
+    //     "./lib/*.ts",
+    //     "../myTypings/app/types.d.ts"
+    // ],
+    "exclude": [
+        "local-typings",
+        "typings/browser",
+        "typings/browser.d.ts"        
     ]
 }

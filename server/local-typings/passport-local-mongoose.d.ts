@@ -1,16 +1,20 @@
 
-// Taken from here http://stackoverflow.com/questions/31829109/header-files-for-mongoose-plugin-method-extending-via-methods-and-statics/31976813#31976813
+// Taken from:
+// http://stackoverflow.com/questions/31829109/header-files-for-mongoose-plugin-method-extending-via-methods-and-statics/31976813#31976813
 
 declare module 'mongoose' {
     // methods
     export interface PassportLocalDocument extends Document {
-        setPassword(pass: string, cb: (err: any) => void): void;
+        setPassword(pass: string, cb: (err: any) => void): any;
     }
 
     // statics
     export interface PassportLocalModel<T extends PassportLocalDocument> extends Model<T> {
-        authenticate(username: string, password: string, cb: (err: any) => void): void;
-        register(username: T, password: string, cb: (err: any) => void): void;    
+        authenticate(): (username: string, password: string, cb: (err: any) => void) => any;
+        // PV
+        register(user: PassportLocalDocument, password: string, cb: (err: any) => void): any;
+        serializeUser(): (user: any, cb: Function) => void;
+        deserializeUser(): (username: string, cb: Function) => void;
     }
 
     // plugin options
