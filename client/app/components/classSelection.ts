@@ -1,5 +1,5 @@
 
-function classSelectionCtrl($scope, $http, $location, $window) {
+export function classSelectionCtrl($scope, $http, $location, $window) {
     
     $http.get('/courselist').success((data, status, headers, config) => {
         let courseList = JSON.parse(data)
@@ -15,4 +15,3 @@ function classSelectionCtrl($scope, $http, $location, $window) {
         
 }
 
-click.controller('classSelectionCtrl', classSelectionCtrl);

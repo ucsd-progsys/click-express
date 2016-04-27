@@ -1,6 +1,3 @@
-/// <reference path='../typings/tsd.d.ts' />
-/// <reference path='../../../typings/app/types.d.ts' />
-/// <reference path='../shared/misc.ts' />
 
 import * as t from 'types';
 
@@ -104,5 +101,5 @@ function modalInstanceCtrl($scope, $uibModalInstance, question, options, /*count
     $scope.cancel   = () => { $uibModalInstance.dismiss('cancel'); }
 };
 
-click.controller('studentClickCtrl', studentClickCtrl);
-click.controller('ModalInstanceCtrl', modalInstanceCtrl);
+// click.controller('studentClickCtrl', studentClickCtrl);
+// click.controller('ModalInstanceCtrl', modalInstanceCtrl);

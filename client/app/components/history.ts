@@ -8,6 +8,6 @@ function historyCtrl($scope, $http) {
 	
 }
 
-click.controller('historyCtrl', historyCtrl);
+// click.controller('historyCtrl', historyCtrl);
 
 

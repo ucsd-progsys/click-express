@@ -1,8 +1,4 @@
 
-/// <reference path='../typings/tsd.d.ts' />
-/// <reference path='../../../typings/app/types.d.ts' />
-/// <reference path='../shared/misc.ts' />
-
 import * as t from 'types';
 
 declare let userName: string;
@@ -54,7 +50,7 @@ function instructorClickCtrl($scope, $http, $window, $uibModal, $location, $time
         let s = currentState();
         if (xs.indexOf(s) === -1) {
             let e = new Error('dummy');
-            let stack = e.stack.replace(/^[^\(]+?[\n$]/gm, '')
+            let stack = (<any>e).stack.replace(/^[^\(]+?[\n$]/gm, '')
                 .replace(/^\s+at\s+/gm, '')
                 .replace(/^Object.<anonymous>\s*\(/gm, '{anonymous}()@')
                 .split('\n');
@@ -318,4 +314,4 @@ function instructorClickCtrl($scope, $http, $window, $uibModal, $location, $time
 
 }
 
-click.controller('instructorClickCtrl', instructorClickCtrl);
+// click.controller('instructorClickCtrl', instructorClickCtrl);

@@ -24,63 +24,35 @@
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="/vendor/marked/marked.min.js"></script>
     <script src="/vendor/dropdown/bsDropdown.min.js"></script>
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.js"></script>-->
-
 
   </head>
 
     <body data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="click">
 
-    <!-- Navbar ================================================== -->
-    <nav class="navbar navbar-default navbar-static-top" ng-controller="navCtrl">
+    <!-- Navbar -->
+    <nav class="navbar navbar-default navbar-static-top" role="navigation">
       <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Click Express</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
+      <!-- Brand and toggle get grouped for better mobile display -->
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="/home">Home</a></li>
-            {{#if courseList}}
-                <li class="dropdown" >
-                    <a href="#" class="dropdown-toggle" 
-                       data-toggle="dropdown" role="button" aria-haspopup="true"
-                        aria-expanded="false">Select a course<span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#" ng-repeat='course in {{{ courseList }}}' ng-click="onSelectCourse(course)">\{{ course }}</a></li>
-                    </ul>
-                </li>
+            <a class="navbar-brand" href="/home">Click Express</a>
+            <!-- Course -->
+            {{#if course}}
+            <li><a href="#"><b>{{{ course }}}</b></a></li>
             {{/if}}
-            <li ng-show="CommonData.courseName" ng-cloak><a><b>\{{ CommonData.courseName }}</b></a></li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
+            <!-- User -->
             {{#if user}}
-                <li><a ng-model="CommonData.userName"><b>{{ user.username }}</b></a></li>
-                <li class="active"><a href="/logout">Logout <span class="sr-only">(current)</span></a></li>
+              <li class="active pull-right"><a href="/logout">Logout <span class="sr-only">(current)</span></a></li>
+              <li class="social pull-right"><a href="/user/{{ user.username }}">{{ user.username }}</a></li>
             {{else}}
-                <p class="navbar-text">
-                    <li><a href="/register">Register</a></li>
-                    <li class="active"><a href="./login">Login <span class="sr-only">(current)</span></a></li>
-                </p>
+              <li class="active pull-right"><a href="/login">Login <span class="sr-only">(current)</span></a></li>
+              <li class="pull-right"><a href="/register">Register <span class="sr-only">(current)</span></a></li>
             {{/if}}
           </ul>
-        </div><!--/.nav-collapse -->
+        </div>
       </div>
     </nav>
-
-    <!-- Header ================================================== -->
-
-    <!-- <header><img src="/img/logo.png" alt="ClickExpress"></header> -->
-    <!--<div class="jumbotron">
-      <div class="container">
-        <h1>Click Express</h1>
-      </div>
-    </div>-->
 
     <!-- Actual Body ================================================== -->
 
@@ -95,25 +67,10 @@
   <!-- Passing user name here -->
   <script type="text/javascript">
   {{#if user}}
-    var userName = "{{ user.username }}";
+  var userName = "{{ user.username }}";
   {{/if}}
   </script>
 
-  <script src="/app/clicker.app.js"></script>
-  <script src="/app/components/navigation.js"></script>
-
-  {{#if user}}
-    <script src="/app/shared/url.js"></script>
-    <script src="/app/shared/misc.js"></script>
-    <script src="/app/components/classSelection.js"></script>
-    
-    {{#if isInstructor}}
-        <script src="/app/components/instructor.js"></script>
-        <script src="/app/components/create.js"></script>
-    {{/if}}
-
-    <!--<script src="/app/components/student.js"></script>-->
-    <!--<script src="/app/components/history.js"></script>-->
-  {{/if}}
+  <script src="/app/bundle.js"></script>
 
 </html>

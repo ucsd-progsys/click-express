@@ -9,16 +9,8 @@
         "suppressImplicitAnyIndexErrors": false,
         "watch": true
     },
-    "files": [
-        "../../typings/app/types.d.ts",
-        "./shared/misc.ts",
-        "./shared/url.ts",
-        "./clicker.app.ts",        
-        "./components/navigation.ts",
-        "./components/instructor.ts",
-        "./components/student.ts",
-        "./components/history.ts",
-        "./components/create.ts",
-        "./components/classSelection.ts"
+    "exclude": [
+        "typings/main",
+        "typings/main.d.ts"        
     ]
 }

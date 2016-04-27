@@ -1,0 +1,12 @@
+{
+  "version": false,
+  "dependencies": {
+    "requirejs": "registry:npm/requirejs#2.2.0+20160319062357"
+  },
+  "ambientDependencies": {
+    "angular": "registry:dt/angular#1.5.0+20160412133217",
+    "clicker": "file:../../local-typings/clicker.d.ts",
+    "jquery": "registry:dt/jquery#1.10.0+20160417213236",
+    "marked": "registry:dt/marked#0.0.0+20160325085301"
+  }
+}

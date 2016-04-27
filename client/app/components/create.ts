@@ -1,7 +1,3 @@
-/// <reference path='../shared/misc.ts' />
-/// <reference path='../shared/url.ts' />
-
-/// <reference path='../../../typings/app/types.d.ts' />
 
 import * as t from 'types';
 
@@ -33,7 +29,7 @@ function toTagged<A>(x: A): t.Tagged<A> {
 // Create Quiz Controller //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-function createQuizCtrl($scope, $http, $location, $timeout, Data) {
+export function createQuizCtrl($scope, $http, $location, $timeout, Data) {
 
     // Populate CommonData
     $scope.CommonData = Data;
@@ -185,6 +181,4 @@ function createQuizCtrl($scope, $http, $location, $timeout, Data) {
     $scope.preview = () => questionToHtml($scope.textarea, $scope.choices.map(c => c.text));
 
 }
-
-click.controller('createQuizCtrl', createQuizCtrl);
 

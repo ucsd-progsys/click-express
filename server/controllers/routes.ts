@@ -98,9 +98,10 @@ export function logout(req: express.Request, res: express.Response) {
 
 // Select course
 export function courseSelect(req: express.Request, res: express.Response) {
+    /*  TODO: Make this more generic */
     let user = req.user;
-    // console.log('courseSelect: user is set', user);
-    res.render('courses', { user });
+    let course = '';
+    res.render('courses', { user, course });
 }
 
 // Render a course
@@ -169,9 +170,8 @@ export function historyData(req: express.Request, res: express.Response) {
          })
          .catch((reason) => {
              res.render('history', {
-                 error: reason.toString(),
-                 courseList: CLASSES      // TODO: get them from the db
-             })
+                 error: reason.toString()
+             });
          });
 }
 
@@ -206,8 +206,10 @@ function isInstructorReq(req: express.Request) {
 
 export function createQuiz(req: express.Request, res: express.Response) {
     if (isInstructorReq(req)) {
-        let courseId = req.params.course_id;
-        res.render('create', { user: req.user, isInstructor: true, courseId });
+        let user         = req.user;
+        let course       = req.params.course_id;
+        let isInstructor = true;
+        res.render('create', { user, isInstructor, course });
     } else {
         res.redirect('login');
     }

@@ -1,21 +1,18 @@
 
-/// <reference path='typings/tsd.d.ts' />
-/// <reference path='./shared/misc.ts' />
+import * as ng from 'angular';
 
-let click = angular.module('click', [
-    'ngAnimate',           // Modal element (optional)
-    'ui.bootstrap',        // Modal element
-    'ngSanitize',          // Markdown html sanitization
-    'ng.bs.dropdown'       // dropdown
-    ])
+import { FactoryService     } from './services/factory';
+import { navCtrl            } from './components/navigation';
 
-// Creating a custom 'Data' service, that can be accessed by 
-// controllers of the 'click' app.
-click.factory('Data', function clickFactory () {
-    return { 
-        courseName: '',
-        userName  : '',
-        socket    : undefined,
-        courseList: []
-    };
-});
+import { classSelectionCtrl } from './components/classSelection';   // TODO --> TS
+import { createQuizCtrl     } from './components/create';           // TODO --> TS
+
+// 'ngSanitize',     --> Markdown html sanitization
+// 'ng.bs.dropdown'  --> dropdown
+
+export let click = angular
+    .module    ('click'             , ['ngSanitize', 'ng.bs.dropdown'])
+    .factory   ('Data'              , () => new FactoryService())
+    .controller('navCtrl'           , navCtrl)
+    .controller('classSelectionCtrl', classSelectionCtrl)   
+    .controller('createQuizCtrl'    , createQuizCtrl);
