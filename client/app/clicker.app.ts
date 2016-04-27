@@ -3,7 +3,7 @@ import * as ng from 'angular';
 
 import { FactoryService     } from './services/factory';
 
-import { classSelectionCtrl } from './components/classSelection';   // TODO --> TS
+import { ClassSelectionCtrl } from './components/classSelection';   // TODO --> TS
 import { createQuizCtrl     } from './components/create';           // TODO --> TS
 
 // 'ngSanitize',     --> Markdown html sanitization
@@ -12,5 +12,5 @@ import { createQuizCtrl     } from './components/create';           // TODO --> 
 export let click = angular
     .module    ('click'             , ['ngSanitize', 'ng.bs.dropdown'])
     .factory   ('Data'              , () => new FactoryService())
-    .controller('classSelectionCtrl', classSelectionCtrl)   
+    .controller('classSelectionCtrl', ClassSelectionCtrl)   
     .controller('createQuizCtrl'    , createQuizCtrl);

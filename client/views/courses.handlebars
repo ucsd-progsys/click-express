@@ -1,15 +1,15 @@
 
 
-<section ng-controller="classSelectionCtrl">
+<section ng-controller="classSelectionCtrl as selector">
 
     <div style="width: 50%;">
         <p>Select class</p>
-        <p ng-repeat="class in courseList">                                    
+        <p ng-repeat="course in courseList">                                    
             <button class="btn btn-block btn-default" type="button"
                     style="white-space: normal; text-align: left;"
                     ng-cloak
                     ng-disabled="selectedCourse"
-                    ng-click="selectCourse(class)"><b>\{{ class }}</b>
+                    ng-click="selector.selectCourse(course)"><b>\{{ course }}</b>
             </button>                            
         </p>
     </div>
