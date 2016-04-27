@@ -1,6 +1,6 @@
 
 import * as t        from 'types';
-import * as c        from '../../lib/consts';
+import * as c        from '../../shared/consts';
 
 
 ////////////////////////////////////////////////////////////////////
