@@ -1,0 +1,13 @@
+
+<div style="width: 50%;">
+    <h2>Select course</h2>
+    {{#each courseList}}
+        <a href="/course/{{this.name}}" class="btn btn-block btn-default" type="button" style="white-space: normal; text-align: left;">
+            <b>{{this.name}}</b>
+            <br/>
+            <i style="color:#888;" >{{this.description}}</i>
+        </a>
+    {{else}}
+    <span><p>You haven't subscribed to any courses</p></span>               
+    {{/each}}                         
+</div>

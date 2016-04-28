@@ -2,18 +2,18 @@
 import * as t from 'types';
 
 
-declare let userName: string;
+declare let username: string;
 declare let io      : any;
 
 declare let charFromInt: any;
 
-let socket = io({ query: 'userName=' + userName });
+let socket = io({ query: 'username=' + username });
 
 ///////////////////////////////////////////////////////////////////////
 
 function makeClick(scope: any, quiz: t.IQuiz, answer: number): t.IClick {
     return {
-        username   : scope.CommonData.userName,
+        username   : scope.CommonData.username,
         quizId     : "", // quiz._id,
         choice     : answer,
         submitTime : new Date()
@@ -25,7 +25,7 @@ function studentClickCtrl($scope, $uibModal, $location, $timeout, Data) {
     // Populate CommonData
     $scope.CommonData = Data;
     $scope.CommonData.socket = socket;
-    $scope.CommonData.userName = userName;
+    $scope.CommonData.username = username;
 
     // Auxiliary functions
     // $scope.charFromInt = charFromInt;

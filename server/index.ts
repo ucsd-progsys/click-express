@@ -144,12 +144,11 @@ app.get ('/logout'                     ,              routes.logout);
 app.get ('/quiz'                       , routes.auth, routes.quizSelect);
 app.get ('/quiz/new'                   , routes.auth, routes.quizNew);
 app.post('/quiz/new'                   , routes.auth, routes.quizNewSubmit);
-app.get ('/quiz/:quiz_id'              , routes.auth, routes.quiz);
+app.get ('/quiz/:quiz_id'              , routes.auth, routes.quizHome);
 app.get ('/quiz/:quiz_id/edit'         , routes.auth, routes.quizEdit);
 app.post('/quiz/:quiz_id/edit'         , routes.auth, routes.quizEditSubmit);
 
 // Course API
-app.get ('/course'                     , routes.auth, routes.courseSelect);
 app.get ('/course/:course_id'          , routes.auth, routes.courseHome);
 app.get ('/course/:course_id/students' , routes.auth, routes.courseStudents);
 app.get ('/course/:course_id/history'  , routes.auth, routes.courseHistory);
@@ -160,7 +159,6 @@ app.get ('/user/:user_id/history'      , routes.auth, routes.userHistory);
 
 // data access
 app.get ('/course/:course_id/questions', routes.auth, routes.questions);
-app.get ('/courselist'                 , routes.auth, routes.courseList);
 
 
 ////////////////////////////////////////////////////////////////////

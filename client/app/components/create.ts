@@ -1,7 +1,7 @@
 
 import * as t from 'types';
 
-declare let userName: string;
+declare let username: string;
 declare let socket  : any;
 
 // import these correctly
@@ -34,13 +34,13 @@ export function createQuizCtrl($scope, $http, $location, $timeout, Data) {
     // Populate CommonData
     $scope.CommonData = Data;
     $scope.CommonData.socket = socket;
-    $scope.CommonData.userName = userName;
+    $scope.CommonData.username = username;
 
     // Auxiliary functions
     $scope.charFromInt = charFromInt;
 
     function getUserName(): string {
-        return $scope.CommonData.userName;
+        return $scope.CommonData.username;
     }
     function getCourseName(): string {
         return $scope.CommonData.courseName;

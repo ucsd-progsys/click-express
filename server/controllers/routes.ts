@@ -58,22 +58,17 @@ export function redirectHome(req: express.Request, res: express.Response): void 
     res.redirect('/home');
 }
 
-
 export function home(url: string): express.RequestHandler {
-    // Redirect user to pick a course
     return (req: express.Request, res: express.Response, next: any) => {
-        if (courseNotSelected()) {
-            res.redirect('course');
-        }
+        let path = '/user/' + req.user.username;
+        res.redirect(path);
     };
-    function courseNotSelected() { return true; }
 }
 
 export function logout(req: express.Request, res: express.Response) {
     req.logout();
     res.redirect('/');
 }
-
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -109,8 +104,7 @@ export function newQuiz(req: express.Request, res: express.Response) {
     }
 }
 
-
-export function quiz(req: express.Request, res: express.Response, next: any) {
+export function quizHome(req: express.Request, res: express.Response, next: any) {
     res.render('503');
 }
 
@@ -129,18 +123,10 @@ export function quizEditSubmit(req: express.Request, res: express.Response, next
 // Course API //////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-export function courseSelect(req: express.Request, res: express.Response) {
-    /*  TODO: Make this more generic */
-    let user = req.user;
-    let course = '';
-    res.render('courses', { user, course });
-}
-
 export function courseHome(req: express.Request, res: express.Response, next: any) {
     let course       = req.params.course_id;
     let user         = req.user;
     let isInstructor = user.username === 'instructor';
-
     Course.exists(course).then((exists) => {
         if (exists) {
             res.render('course', { user, course, isInstructor });
@@ -163,9 +149,16 @@ export function courseHistory(req: express.Request, res: express.Response, next:
 // User API ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-// TODO
 export function userHome(req: express.Request, res: express.Response) {
-    res.render('503');
+    // TODO: only get the courses that the 'user' is subscribed to     
+    Course.getAll()
+        .then((courses: t.ICourse[]) => {
+            res.render('user', { courseList: courses });
+        })
+        .catch((reason) => {
+            console.log('error at accessing classes!!!');
+            res.json(JSON.stringify([]));
+        });
 }
 
 export function userHistory(req: express.Request, res: express.Response) {
@@ -189,18 +182,6 @@ export function historyData(req: express.Request, res: express.Response) {
                  error: reason.toString()
              });
          });
-}
-
-// Request class list
-export function courseList(req: express.Request, res: express.Response) {
-    Course.getAll()
-          .then((courses: t.ICourse[]) => {
-              res.json(JSON.stringify(courses.map(c => c.name)));
-          })
-          .catch((reason) => {
-              console.log('error at accessing classes!!!');
-              res.json(JSON.stringify([]));
-          });
 }
 
 export function questions(req: express.Request, res: express.Response) {

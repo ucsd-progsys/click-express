@@ -3,7 +3,13 @@
 
 {{#if isInstructor}}
 
-<div ng-controller="instructorClickCtrl" data-ng-init="instructorInit()">
+<!--
+    
+    Instructor View
+    
+    -->
+
+<div ng-controller="instructorCtrl" data-ng-init="instructorInit()">
 
     <!-- Question selection -->
     <p>
@@ -92,5 +98,14 @@
 
 
 {{else}}
+
+
+<!--
+    
+    Student View
+    
+    -->
+
+
     <h2>Wait for quiz</h2>
 {{/if}}
