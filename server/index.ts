@@ -149,7 +149,7 @@ app.get ('/quiz/:quiz_id/edit'         , routes.auth, routes.quizEdit);
 app.post('/quiz/:quiz_id/edit'         , routes.auth, routes.quizEditSubmit);
 
 // Course API
-app.get ('/course/:course_id'          , routes.auth, routes.courseHome);
+app.get ('/course/:course_id'          ,              routes.courseHome);
 app.get ('/course/:course_id/students' , routes.auth, routes.courseStudents);
 app.get ('/course/:course_id/history'  , routes.auth, routes.courseHistory);
 

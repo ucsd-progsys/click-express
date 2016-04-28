@@ -127,13 +127,24 @@ export function courseHome(req: express.Request, res: express.Response, next: an
     let course       = req.params.course_id;
     let user         = req.user;
     let isInstructor = user.username === 'instructor';
-    Course.exists(course).then((exists) => {
-        if (exists) {
-            res.render('course', { user, course, isInstructor });
-        } else {
-            next();
-        }
-    });
+    Quiz.find(course)
+        .then(quizList => {
+            res.render('course', {
+                user,
+                isInstructor,
+                quizList: quizList.map((q, i) => {
+                    return {
+                        id: i + 1,
+                        hash: q._id,
+                        text: q.description.substring(0, 80)
+                    };
+                })
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            console.log('No course found.');
+        });
 }
 
 // TODO
@@ -150,10 +161,14 @@ export function courseHistory(req: express.Request, res: express.Response, next:
 ////////////////////////////////////////////////////////////////////////
 
 export function userHome(req: express.Request, res: express.Response) {
-    // TODO: only get the courses that the 'user' is subscribed to     
+    // TODO: only get the courses that the 'user' is subscribed to
+    let user = req.user;
     Course.getAll()
         .then((courses: t.ICourse[]) => {
-            res.render('user', { courseList: courses });
+            res.render('user', {
+                user,
+                courseList: courses
+            });
         })
         .catch((reason) => {
             console.log('error at accessing classes!!!');
