@@ -1,40 +1,40 @@
 
-/* 
+/*
     Privacy Properties:
-    
+
         1. Student A can only access his/her 'Account' info.
-        
-        2. Only the instructor can access the quizzes.  
-         
-  
-    Route authentication: 
-        
+
+        2. Only the instructor can access the quizzes.
+
+
+    Route authentication:
+
         /course/:course_id/         --> only allow enrolled students
-        
+
         /course/:course_id/create   --> only allow instructor of class
-                    
-        
+
+
         /user/:user_id/history/
-    
+
         /user/:user_id/history/all
-        
+
         /user/:user_id/history/:course_id
-        
+
                 |
                 V
-               
+
             exposed through req.params
-            
-    
-    
+
+
+
     State (express.Request):
-    
+
         - require these parts to be Immutable or Unique (and track evolution)
-    
-        - assume to be invariant throughout execution of routing  
-    
+
+        - assume to be invariant throughout execution of routing
+
         USER_ID := req.user.username   --> invariant
-        
+
         CLASS_ID := req.params.
 
 */
@@ -131,21 +131,36 @@ app.use(express.static(path.join(__dirname, '../node_modules')));
 
 // Order matters here
 
-app.get ('/register'    ,              routes.registerWith({}));
-app.post('/register'    ,              routes.register);
-app.get ('/'            , routes.auth, routes.redirectHome);
-app.get ('/home'        , routes.auth, routes.home(serverPort));
-app.get ('/course'      , routes.auth, routes.courseSelect);
-app.get ('/login'       ,              routes.getLogin);
-app.get ('/logout'      ,              routes.logout);
-app.get ('/history'     , routes.auth, routes.history);
-app.get ('/history-data', routes.auth, routes.historyData);
-app.get ('/courselist'  , routes.auth, routes.courseList);
-app.post('/savequiz'    , routes.auth, routes.saveQuiz);
-app.post('/login'       ,              routes.postLogin);
-app.get ('/course/:course_id'          , routes.auth, routes.course);
+// Admin API
+app.get ('/register'                   ,              routes.registerWith({}));
+app.post('/register'                   ,              routes.register);
+app.get ('/'                           , routes.auth, routes.redirectHome);
+app.get ('/home'                       , routes.auth, routes.home(serverPort));
+app.get ('/login'                      ,              routes.getLogin);
+app.post('/login'                      ,              routes.postLogin);
+app.get ('/logout'                     ,              routes.logout);
+
+// Quiz API
+app.get ('/quiz'                       , routes.auth, routes.quizSelect);
+app.get ('/quiz/new'                   , routes.auth, routes.quizNew);
+app.post('/quiz/new'                   , routes.auth, routes.quizNewSubmit);
+app.get ('/quiz/:quiz_id'              , routes.auth, routes.quiz);
+app.get ('/quiz/:quiz_id/edit'         , routes.auth, routes.quizEdit);
+app.post('/quiz/:quiz_id/edit'         , routes.auth, routes.quizEditSubmit);
+
+// Course API
+app.get ('/course'                     , routes.auth, routes.courseSelect);
+app.get ('/course/:course_id'          , routes.auth, routes.courseHome);
+app.get ('/course/:course_id/students' , routes.auth, routes.courseStudents);
+app.get ('/course/:course_id/history'  , routes.auth, routes.courseHistory);
+
+// User API
+app.get ('/user/:user_id'              , routes.auth, routes.userHome);
+app.get ('/user/:user_id/history'      , routes.auth, routes.userHistory);
+
+// data access
 app.get ('/course/:course_id/questions', routes.auth, routes.questions);
-app.get ('/course/:course_id/create'   , routes.auth, routes.createQuiz);
+app.get ('/courselist'                 , routes.auth, routes.courseList);
 
 
 ////////////////////////////////////////////////////////////////////

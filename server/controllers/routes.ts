@@ -9,23 +9,7 @@ import * as Course   from '../models/course';
 
 
 ////////////////////////////////////////////////////////////////////////
-// Messages ////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////
-
-let msgUserExists = {
-    kind: t.Message.UserExists,
-    info: 'Sorry, that username already exists. Try again.'
-};
-
-
-////////////////////////////////////////////////////////////////////////
-// Constants ///////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////
-
-const CLASSES = JSON.stringify(['CSE130', 'CSE230', 'CSE231', 'CSE105']);
-
-////////////////////////////////////////////////////////////////////////
-// Register ////////////////////////////////////////////////////////////
+// Admin ///////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
 export function registerWith(z: Object): express.RequestHandler {
@@ -38,16 +22,14 @@ export function register(req: express.Request, res: express.Response) {
         req.body.email,
         req.body.password,
         // Error state
-        () => res.render('register', msgUserExists),
+        () => res.render('register', {
+            kind: t.Message.UserExists,
+            info: 'Sorry, that username already exists. Try again.'
+        }),
         // Non-error state
         passport.authenticate('local')(req, res, () => res.redirect('/'))
     );
 }
-
-
-////////////////////////////////////////////////////////////////////////
-// Login ///////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////
 
 export function getLogin(req: express.Request, res: express.Response) {
     res.render('login', { user: req.user });
@@ -58,10 +40,6 @@ export let postLogin = passport.authenticate('local', {
     failureRedirect: '/login'
 });
 
-
-////////////////////////////////////////////////////////////////////////
-// Authenticated Zone //////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////
 
 // Simple route middleware to ensure user is authenticated.
 // Use this route middleware on any resource that needs to be protected.
@@ -76,10 +54,10 @@ export function auth(req: express.Request, res: express.Response, next: Function
     res.render('index');
 }
 
-// INVARIANT: AUTH
 export function redirectHome(req: express.Request, res: express.Response): void {
     res.redirect('/home');
 }
+
 
 export function home(url: string): express.RequestHandler {
     // Redirect user to pick a course
@@ -96,7 +74,61 @@ export function logout(req: express.Request, res: express.Response) {
     res.redirect('/');
 }
 
-// Select course
+
+
+////////////////////////////////////////////////////////////////////////
+// Quiz API ////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+// TODO
+export function quizSelect(req: express.Request, res: express.Response, next: any) {
+    res.render('503');
+}
+
+// GET
+export function quizNew(req: express.Request, res: express.Response, next: any) {
+    res.render('503');
+}
+
+// POST - TODO: fix?
+export function quizNewSubmit(req: express.Request, res: express.Response) {
+    console.log('saveQuiz');
+    console.log(req.body);
+    Quiz.add(req.body);
+    res.end('success');
+}
+
+export function newQuiz(req: express.Request, res: express.Response) {
+    if (req && req.user && req.user.username === 'instructor') {
+        let user         = req.user;
+        let course       = req.params.course_id;
+        let isInstructor = true;
+        res.render('create', { user, isInstructor, course });
+    } else {
+        res.redirect('login');
+    }
+}
+
+
+export function quiz(req: express.Request, res: express.Response, next: any) {
+    res.render('503');
+}
+
+// GET
+export function quizEdit(req: express.Request, res: express.Response, next: any) {
+    res.render('503');
+}
+
+// POST
+export function quizEditSubmit(req: express.Request, res: express.Response, next: any) {
+    res.render('503');
+}
+
+
+////////////////////////////////////////////////////////////////////////
+// Course API //////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
 export function courseSelect(req: express.Request, res: express.Response) {
     /*  TODO: Make this more generic */
     let user = req.user;
@@ -104,8 +136,7 @@ export function courseSelect(req: express.Request, res: express.Response) {
     res.render('courses', { user, course });
 }
 
-// Render a course
-export function course(req: express.Request, res: express.Response, next: any) {
+export function courseHome(req: express.Request, res: express.Response, next: any) {
     let course       = req.params.course_id;
     let user         = req.user;
     let isInstructor = user.username === 'instructor';
@@ -119,42 +150,26 @@ export function course(req: express.Request, res: express.Response, next: any) {
     });
 }
 
-// function instructorHome(serverURL: string, req: express.Request, res: express.Response) {
-//     let course = 'CSE130';
-//     let user   = req.user;
-//     let courseList = CLASSES;   // TODO: get from DB
-//     Quiz.find(course)
-//         .then((qs: m.IQuizModel[]) => {
-//             res.render('instructor', {
-//                 user,
-//                 isInstructor: true,
-//                 serverURL,
-//                 courseList,
-//                 questionPool: JSON.stringify(qs)
-//             });
-//         })
-//         .catch((err: any) => {
-//             // TODO
-//         });
-// }
-//
-// function studentHome(serverURL: string, req: express.Request, res: express.Response) {
-//     let courseList = CLASSES;   // TODO: get from DB
-//     let user = req.user;
-//     res.render('student', { user: user, isInstructor: false, serverURL, courseList });
-// }
+// TODO
+export function courseStudents(req: express.Request, res: express.Response, next: any) {
+    res.render('503');
+}
 
+export function courseHistory(req: express.Request, res: express.Response, next: any) {
+    res.render('503');
+}
 
 ////////////////////////////////////////////////////////////////////////
-// View Click History //////////////////////////////////////////////////
+// User API ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-export function history(req: express.Request, res: express.Response) {
-    let isInstructor = req.user.username === 'instructor';
-    res.render('history', {
-        courseList: CLASSES,      // TODO: get them from the db
-        isInstructor,
-    });
+// TODO
+export function userHome(req: express.Request, res: express.Response) {
+    res.render('503');
+}
+
+export function userHistory(req: express.Request, res: express.Response) {
+    res.render('503');
 }
 
 
@@ -162,6 +177,7 @@ export function history(req: express.Request, res: express.Response) {
 // Data Requests (JSON) ////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
+// Deprecated
 export function historyData(req: express.Request, res: express.Response) {
     let username = req.user.username;
     Click.find({ quizId: username })
@@ -182,7 +198,7 @@ export function courseList(req: express.Request, res: express.Response) {
               res.json(JSON.stringify(courses.map(c => c.name)));
           })
           .catch((reason) => {
-              console.log('error at recovering classes!!!');
+              console.log('error at accessing classes!!!');
               res.json(JSON.stringify([]));
           });
 }
@@ -193,31 +209,4 @@ export function questions(req: express.Request, res: express.Response) {
         let jqs = JSON.stringify(qs);
         res.json(jqs);
     });
-}
-
-
-////////////////////////////////////////////////////////////////////////
-// Create Quiz /////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////
-
-function isInstructorReq(req: express.Request) {
-    return !!(req && req.user && req.user.username === 'instructor');
-}
-
-export function createQuiz(req: express.Request, res: express.Response) {
-    if (isInstructorReq(req)) {
-        let user         = req.user;
-        let course       = req.params.course_id;
-        let isInstructor = true;
-        res.render('create', { user, isInstructor, course });
-    } else {
-        res.redirect('login');
-    }
-}
-
-export function saveQuiz(req: express.Request, res: express.Response) {
-    console.log('saveQuiz');
-    console.log(req.body);
-    Quiz.add(req.body);
-    res.end('success');
 }
