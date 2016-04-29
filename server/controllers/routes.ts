@@ -1,11 +1,11 @@
 
-import * as express  from 'express';
-import * as passport from 'passport';
-import * as t        from 'types';
-import * as Account  from '../models/account';
-import * as Quiz     from '../models/quiz';
-import * as Click    from '../models/click';
-import * as Course   from '../models/course';
+import * as express     from 'express';
+import * as passport    from 'passport';
+import * as t           from 'types';
+import * as Account     from '../models/account';
+import * as Quiz        from '../models/quiz';
+import * as Click       from '../models/click';
+import * as Course      from '../models/course';
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -82,30 +82,36 @@ export function quizSelect(req: express.Request, res: express.Response, next: an
 
 // GET
 export function quizNew(req: express.Request, res: express.Response, next: any) {
-    res.render('503');
-}
-
-// POST - TODO: fix?
-export function quizNewSubmit(req: express.Request, res: express.Response) {
-    console.log('saveQuiz');
-    console.log(req.body);
-    Quiz.add(req.body);
-    res.end('success');
-}
-
-export function newQuiz(req: express.Request, res: express.Response) {
+    console.log('New quiz...');
+    // TODO: require instructor
     if (req && req.user && req.user.username === 'instructor') {
-        let user         = req.user;
-        let course       = req.params.course_id;
-        let isInstructor = true;
-        res.render('create', { user, isInstructor, course });
-    } else {
-        res.redirect('login');
+        let user = req.user;
+        let course = req.params.course_id;
+        res.render('create', { user, course });
     }
 }
 
+// POST
+export function quizNewSubmit(req: express.Request, res: express.Response) {
+    console.log('Saving new quiz:');
+    console.log(req.body);
+    res.json(Quiz.add(req.body));
+}
+
 export function quizHome(req: express.Request, res: express.Response, next: any) {
-    res.render('503');
+    let qid = req.params.quiz_id;
+    Quiz.findWithId(qid)
+        .then(qs => {
+            if (qs.length === 1) {
+                let quiz = qs[0];
+                res.render('quiz', { quiz });
+            } else {
+                console.log('[ERROR] quizHome impossible');
+            }
+        })
+        .catch(err => {
+            res.render('404');
+        });
 }
 
 // GET
@@ -124,13 +130,14 @@ export function quizEditSubmit(req: express.Request, res: express.Response, next
 ////////////////////////////////////////////////////////////////////////
 
 export function courseHome(req: express.Request, res: express.Response, next: any) {
-    let course       = req.params.course_id;
-    let user         = req.user;
+    let course = req.params.course_id;
+    let user = req.user;
     let isInstructor = user.username === 'instructor';
-    Quiz.find(course)
+    Quiz.findWithCourse(course)
         .then(quizList => {
             res.render('course', {
                 user,
+                course,
                 isInstructor,
                 quizList: quizList.map((q, i) => {
                     return {
@@ -171,8 +178,7 @@ export function userHome(req: express.Request, res: express.Response) {
             });
         })
         .catch((reason) => {
-            console.log('error at accessing classes!!!');
-            res.json(JSON.stringify([]));
+            console.log('[ERROR] Cannot access classes.');
         });
 }
 
@@ -201,7 +207,7 @@ export function historyData(req: express.Request, res: express.Response) {
 
 export function questions(req: express.Request, res: express.Response) {
     let course = req.params.course_id;
-    Quiz.find(course).then((qs) => {
+    Quiz.findWithCourse(course).then((qs) => {
         let jqs = JSON.stringify(qs);
         res.json(jqs);
     });

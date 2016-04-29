@@ -6,7 +6,7 @@
     <div class="row">
     {{#each quizList}}
         <div class="col-md-4">
-            <a href="/quiz/{{this.hash}}" class="btn btn-block btn-default" type="button" style="white-space: normal; text-align: left;">
+            <a href="/course/{{../course}}/quiz/{{this.hash}}" class="btn btn-block btn-default" type="button" style="white-space: normal; text-align: left;">
                <b>Quiz {{this.id}}</b><br/><i style="color:#888;">{{this.text}}</i>
             </a>
         </div>
@@ -17,7 +17,7 @@
     <br/>
     <div class="row">    
         <div class="col-md-4">
-            <a href="/quiz/new" class="btn btn-block btn-primary" type="button">Create new Quiz</a>   
+            <a href="/course/{{course}}/quiz/new" class="btn btn-block btn-primary" type="button">Create new Quiz</a>   
         </div>
     </div>
     <br/>

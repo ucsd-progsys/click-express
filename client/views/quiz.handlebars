@@ -1,21 +1,10 @@
 
 
+<h3>This is {{quiz._id}}</h3>
 
-<div ng-controller="instructorCtrl" data-ng-init="instructorInit()">
-
-        
-        <!-- Create a question -->
-        <button class="btn btn-default" ng-click="createQuestion()">
-            <span>Create Question
-        </button>
-        
-                
-        <!--<select class="btn btn-default  btn-large" ng-model="selectedQuestion" ng-change="loadQuestion()" ng-disabled="quizStarted">
-            <option class="btn btn-default" ng-repeat='option in questionPool track by $index' value="\{{ option }}">
-                \{{ option.description.substring(0,40) }} ...
-            </option>
-        </select>    -->
     
+<div ng-controller="instructorCtrl" data-ng-init="instructorInit()">
+        
     <!-- Play/Stop buttons -->
         
         <button class="btn btn-default" ng-disabled="!quizReady" ng-click="startQuiz()" tooltip-class="btn" tooltip-placement="top" uib-tooltip="Start the Quiz!">
@@ -70,3 +59,4 @@
     </div>
     
 </div>
+

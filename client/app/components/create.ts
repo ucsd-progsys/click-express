@@ -1,13 +1,13 @@
 
 import * as t from 'types';
+import { charFromInt, questionToHtml } from '../shared/misc';
+import { getPostQuizURL }              from '../shared/url';
 
 declare let username: string;
-declare let socket  : any;
+// declare let socket  : any;
 
 // import these correctly
-declare let charFromInt: any;
 declare let serverError: any;
-declare let questionToHtml: any; 
 
 ////////////////////////////////////////////////////////////////////
 // Auxiliary ///////////////////////////////////////////////////////
@@ -29,11 +29,11 @@ function toTagged<A>(x: A): t.Tagged<A> {
 // Create Quiz Controller //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-export function createQuizCtrl($scope, $http, $location, $timeout, Data) {
+export function createQuizCtrl($scope, $http: angular.IHttpService, $location, $timeout, $window: angular.IWindowService, Data) {
 
     // Populate CommonData
     $scope.CommonData = Data;
-    $scope.CommonData.socket = socket;
+    // $scope.CommonData.socket = socket;
     $scope.CommonData.username = username;
 
     // Auxiliary functions
@@ -154,22 +154,17 @@ export function createQuizCtrl($scope, $http, $location, $timeout, Data) {
             showNoUserNameNotification();
             return;
         }
-        // if (!getCourseName()) {
-        //     showNoCourseNameNotification();
-        //     return;
-        // }
+
         setSaving();
-        console.log('making quiz', getSaveQuizURL());
-        $http.post(getSaveQuizURL(), makeQuiz())
-             .success((data, status) => {
-                 console.log('saved!');
-                 showSaveNotification();
-                 unsetSaving();
-             })
-             .error((data, status) => {
-                 serverError($scope, data, status, "click");
-                 unsetSaving();
-             });
+
+        $http.post(getPostQuizURL(), makeQuiz()).success((quizId: string) => {
+            showSaveNotification();
+            unsetSaving();
+            $window.location.href = quizId;
+        }).error((data, status) => {
+            serverError($scope, data, status, "click");
+            unsetSaving();
+        });
     }
 
     $scope.saveQuiz  = saveQuiz;

@@ -22,19 +22,32 @@ export let Quiz = m.model<IQuizModel>('Quiz', quizSchema);
     pre: USER == 'instructor'  
     (course?: CourseId): Promise<t.IQuiz[]> 
  */
-export async function find(course?: t.CourseId): Promise<t.IQuiz[]> {
+export async function findWithCourse(course?: t.CourseId): Promise<t.IQuiz[]> {
     let query = new MgQuery();
     query.is('courseId', course);
     return Quiz.find(query.toFields()).exec();
 }
 
-export function add(quiz: t.IQuiz) {
+export async function findWithId(id: string): Promise<t.IQuiz[]> {
+    let query = new MgQuery();
+    query.is('_id', id);
+    return Quiz.find(query.toFields()).exec();
+}
+
+
+/**
+ * @param quiz The quiz to save
+ * @returns    The quiz '_id' assigned when saving 
+ */
+export function add(quiz: t.IQuiz): any {
     console.log('about to save');
-    new Quiz(quiz).save(function (err, res) {
+    let q = new Quiz(quiz);
+    q.save(function (err, res) {
         if (err) {
             console.log('error saving');
         } else {
             console.log('save successfully!');
         }
     });
+    return q._id;
 }

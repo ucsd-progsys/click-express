@@ -24,11 +24,11 @@ function inBold(s: string) {
     return wrapIn(s, 'b');
 }
 
-function charFromInt(n: number) {
+export function charFromInt(n: number) {
     return String.fromCharCode(65 + n);
 }
 
-function quizToHtml(q: t.IQuiz, showCorrect?: boolean) {
+export function quizToHtml(q: t.IQuiz, showCorrect?: boolean) {
     return (q) ? questionToHtml(q.description, q.options, showCorrect ? q.correct : undefined) : "";
 }
 
@@ -36,7 +36,7 @@ function quizDescriptionToHtml(q: t.IQuiz) {
     return marked(q.description);
 }
 
-function questionToHtml(msg: string, opts: string[], correct?: number) {    
+export function questionToHtml(msg: string, opts: string[], correct?: number) {    
     let withUndef = o => (o) ? o : "";
     let optStrs = opts.map((o, i) => 
         (i === correct) ? inBold(charFromInt(i) + '. ' + withUndef(o)) :

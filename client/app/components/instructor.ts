@@ -2,11 +2,11 @@
 import * as t from 'types';
 
 import { IFactoryService } from '../services/factory';
+import { charFromInt }     from '../shared/misc';
 
 // declare let username: string;
 declare let io      : any;
 
-declare let charFromInt: any;
 declare let serverError: any;
 declare let quizToHtml : any; 
 

@@ -132,33 +132,33 @@ app.use(express.static(path.join(__dirname, '../node_modules')));
 // Order matters here
 
 // Admin API
-app.get ('/register'                   ,              routes.registerWith({}));
-app.post('/register'                   ,              routes.register);
-app.get ('/'                           , routes.auth, routes.redirectHome);
-app.get ('/home'                       , routes.auth, routes.home(serverPort));
-app.get ('/login'                      ,              routes.getLogin);
-app.post('/login'                      ,              routes.postLogin);
-app.get ('/logout'                     ,              routes.logout);
-
-// Quiz API
-app.get ('/quiz'                       , routes.auth, routes.quizSelect);
-app.get ('/quiz/new'                   , routes.auth, routes.quizNew);
-app.post('/quiz/new'                   , routes.auth, routes.quizNewSubmit);
-app.get ('/quiz/:quiz_id'              , routes.auth, routes.quizHome);
-app.get ('/quiz/:quiz_id/edit'         , routes.auth, routes.quizEdit);
-app.post('/quiz/:quiz_id/edit'         , routes.auth, routes.quizEditSubmit);
+app.get ('/register'                            ,              routes.registerWith({}));
+app.post('/register'                            ,              routes.register);
+app.get ('/'                                    , routes.auth, routes.redirectHome);
+app.get ('/home'                                , routes.auth, routes.home(serverPort));
+app.get ('/login'                               ,              routes.getLogin);
+app.post('/login'                               ,              routes.postLogin);
+app.get ('/logout'                              ,              routes.logout);
 
 // Course API
-app.get ('/course/:course_id'          ,              routes.courseHome);
-app.get ('/course/:course_id/students' , routes.auth, routes.courseStudents);
-app.get ('/course/:course_id/history'  , routes.auth, routes.courseHistory);
+app.get ('/course/:course_id'                   ,              routes.courseHome);
+app.get ('/course/:course_id/students'          , routes.auth, routes.courseStudents);
+app.get ('/course/:course_id/history'           , routes.auth, routes.courseHistory);
+
+// Quiz API
+app.get ('/course/:course_id/quiz'              , routes.auth, routes.quizSelect);
+app.get ('/course/:course_id/quiz/new'          , routes.auth, routes.quizNew);
+app.post('/course/:course_id/quiz/new'          , routes.auth, routes.quizNewSubmit);
+app.get ('/course/:course_id/quiz/:quiz_id'     , routes.auth, routes.quizHome);
+app.get ('/course/:course_id/quiz/:quiz_id/edit', routes.auth, routes.quizEdit);
+app.post('/course/:course_id/quiz/:quiz_id/edit', routes.auth, routes.quizEditSubmit);
 
 // User API
-app.get ('/user/:user_id'              , routes.auth, routes.userHome);
-app.get ('/user/:user_id/history'      , routes.auth, routes.userHistory);
+app.get ('/user/:user_id'                       , routes.auth, routes.userHome);
+app.get ('/user/:user_id/history'               , routes.auth, routes.userHistory);
 
 // data access
-app.get ('/course/:course_id/questions', routes.auth, routes.questions);
+app.get ('/course/:course_id/questions'         , routes.auth, routes.questions);
 
 
 ////////////////////////////////////////////////////////////////////

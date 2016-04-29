@@ -9,8 +9,8 @@ function getHistoryURL() {
     return getServerURL() + '/history';
 }
 
-function getSaveQuizURL() {
-    return getServerURL() + '/savequiz';
+export function getPostQuizURL() {
+    return './new';
 }
 
 function isHomeURL() {
