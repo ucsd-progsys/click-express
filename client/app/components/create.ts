@@ -1,6 +1,6 @@
 
 import * as t from 'types';
-import { charFromInt, questionToHtml } from '../shared/misc';
+import { charFromInt, questionToHtml } from '../../../shared/misc';
 import { getPostQuizURL }              from '../shared/url';
 
 declare let username: string;

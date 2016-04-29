@@ -8,6 +8,9 @@ import * as Quiz        from '../models/quiz';
 import * as Click       from '../models/click';
 import * as Course      from '../models/course';
 
+import { arrangeGrid
+       , quizToHtml  }  from '../../shared/misc';
+
 
 ////////////////////////////////////////////////////////////////////////
 // Admin ///////////////////////////////////////////////////////////////
@@ -107,10 +110,11 @@ export function quizHome(req: express.Request, res: express.Response, next: any)
         .then(qs => {
             if (qs.length === 1) {
                 let quiz = qs[0];
+                // let html = quizToHtml(quiz, false);
                 res.render('quiz', {
                     user,
                     course,
-                    quiz
+                    quizRender: quizToHtml(quiz, false)
                 });
             } else {
                 console.log('[ERROR] quizHome impossible');
@@ -146,43 +150,13 @@ export function courseHome(req: express.Request, res: express.Response, next: an
                 user,
                 course,
                 isInstructor,
-                quizRows: qq(qs)
+                quizRows: arrangeGrid(qs, 3)
             });
         })
         .catch(err => {
             console.log(err);
             console.log('No course found.');
         });
-
-    type IQ = { id: number, hash: string, text: string };
-
-    function qq(qs: t.IQuiz[]) {
-        let l = qs.length;
-        let rowLen = 3;
-        let rows: { quizCols: IQ[] }[] = [];
-        let row: IQ[] = [];
-        _.range(l).forEach(i => {
-            let j = i % rowLen;
-            row.push(qqq(i, qs[i]));
-            if (j === rowLen - 1) {
-                rows.push({ quizCols: row });
-                row = [];
-            }
-        });
-        if (row.length > 0) {
-            rows.push({ quizCols: row });
-        }
-        console.log(rows);
-        return rows;
-    }
-
-    function qqq(i: number, q: t.IQuiz): IQ {
-        return {
-            id: i + 1,
-            hash: q._id,
-            text: q.description.substring(0, 80)
-        };
-    }
 }
 
 // TODO

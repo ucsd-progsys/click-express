@@ -2,7 +2,7 @@
 import * as t from 'types';
 
 import { IFactoryService } from '../services/factory';
-import { charFromInt }     from '../shared/misc';
+import { charFromInt }     from '../../../shared/misc';
 
 // declare let username: string;
 declare let io      : any;
@@ -107,70 +107,6 @@ export class InstructorCtrl {
 
 
 
-
-    // updateQuestionPool(questions: any) {
-    //     this.$scope.questionPool = questions;
-    // }
-    // $scope.updateQuestionPool = updateQuestionPool;
-
-    // function getQuestion(index: number) {
-    //     return $scope.questionPool[index];
-    // }
-
-    // // Add a binding to the shared data for the navbar to access
-    // $scope.CommonData.updateQuestionPool = updateQuestionPool;
-
-
-
-    // ////////////////////////////////////////////////////////////////////
-    // // Current Question ////////////////////////////////////////////////
-    // ////////////////////////////////////////////////////////////////////
-
-    // $scope.createQuestion = function() {
-    //     $window.location.href = replaceEndSlash(window.location.pathname) + '/create';    
-    // }
-
-
-
-    // ////////////////////////////////////////////////////////////////////
-    // // Current Question ////////////////////////////////////////////////
-    // ////////////////////////////////////////////////////////////////////
-
-    // // selectedQuestion: IQuiz
-    // $scope.selectedQuestion = undefined;
-
-    // // show correct answer
-    // $scope.showCorrectAnswer = false;
-    // function showAnswer() { return $scope.showCorrectAnswer; }
-
-    // // Load existing question
-    // function loadQuestion(index: number) {
-    //     acceptStates(['quizReady', 'quizStale', 'quizEmpty']);
-    //     let question = getQuestion(index);
-    //     setCurrentQuiz(question);
-    //     setQuizReady();
-    // }
-
-    // $scope.loadQuestion = loadQuestion;
-
-    // function setCorrectChoiceStyle() {
-    //     $scope.choices.forEach((_, i) => { $scope.choiceStyle[i] = {} });
-    //     $scope.choiceStyle[$scope.correctChoice.index] = { 'background-color': '#cdf1c0' };
-    // }
-
-    // ////////////////////////////////////////////////////////////////////
-    // // Current quiz ////////////////////////////////////////////////////
-    // ////////////////////////////////////////////////////////////////////
-
-    // function setCurrentQuiz(q: t.IQuiz) {
-    //     $scope.selectedQuestion = q;
-    // }
-    // function unsetCurrentQuiz() {
-    //     $scope.selectedQuestion = undefined;
-    // }
-    // function getCurrentQuiz(): t.IQuiz {
-    //     return $scope.selectedQuestion;
-    // }
 
     // ////////////////////////////////////////////////////////////////////
     // // Preview /////////////////////////////////////////////////////////
