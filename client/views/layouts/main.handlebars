@@ -39,7 +39,9 @@
             <a class="navbar-brand" href="/home">Click Express</a>
             <!-- Course -->
             {{#if course}}
-            <li><h5 class="navbar-text">{{course}}</h5></li>            
+            <!--<li><h5 class="navbar-text">{{course}}</h5></li>-->
+            <li><a href="/course/{{course}}"><b>{{course}}</b></a></li>
+            
             {{/if}}
             <!-- User -->
             {{#if user}}

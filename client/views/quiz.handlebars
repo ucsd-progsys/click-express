@@ -4,20 +4,16 @@
         
     <!-- Play/Stop buttons -->
         
-        <button class="btn btn-default" ng-disabled="!quizReady" ng-click="startQuiz()" tooltip-class="btn" tooltip-placement="top" uib-tooltip="Start the Quiz!">
+        <button class="btn btn-default" ng-disabled="quizStarted" ng-click="startQuiz()">
             <span class="glyphicon glyphicon-play"/>
         </button>
-        <button class="btn btn-default" ng-disabled="!quizStarted" ng-click="stopQuiz()" tooltip-class="btn" tooltip-placement="top" uib-tooltip="Stop the Quiz!">
+        <button class="btn btn-default" ng-disabled="!quizStarted" ng-click="stopQuiz()">
             <span class="glyphicon glyphicon-stop"/>
         </button>
         <!-- Show correct answer button -->
         <span style="float:right">        
-        <button type="button" class="btn btn-default" ng-model="showCorrectAnswer" ng-disabled="!quizReady" uib-btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false">
-            Show correct answer
-        </button>
-        <button type="button" class="btn btn-default" ng-model="showResponses" ng-disabled="!quizReady" uib-btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false">
-            View responses
-        </button>    
+        <!--<button type="button" class="btn btn-default">Show correct answer</button>-->
+        <button type="button" class="btn btn-default">View responses</button>    
         </span>
     </p>
     
@@ -27,7 +23,7 @@
     </div>
     <!-- Status -->
     <div>    
-        <table class="table table-nonfluid table-bordered" ng-show="quizStarted" ng-cloak>
+        <table class="table table-nonfluid table-bordered" ng-show="true" ng-cloak>
             <caption>Quiz In Progress</caption>
             <tr>
                 <td>Elapsed Time</td>

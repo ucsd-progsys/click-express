@@ -73,7 +73,6 @@ export class InstructorCtrl {
     // function setQuizEmpty() { setFlag('quizEmpty') }
     // function setQuizStale() { setFlag('quizStale') }
     // function setQuizReady() { setFlag('quizReady') }
-    // function setQuizStarted() { setFlag('quizStarted') }
     // // IMPORTANT initial state
     // setQuizEmpty();
 
@@ -114,79 +113,6 @@ export class InstructorCtrl {
 
     // $scope.preview = () => quizToHtml(getCurrentQuiz(), showAnswer());
 
-    // ////////////////////////////////////////////////////////////////////
-    // // Running the Quiz ////////////////////////////////////////////////
-    // ////////////////////////////////////////////////////////////////////
-
-    // // Timer    
-    // function prettyTime(secs: number) {
-    //     let res = "";
-    //     let div = Math.floor(secs / 60);
-    //     if (div > 0) {
-    //         res += (div + " min(s) ");
-    //     }
-    //     res += ((secs % 60) + " sec(s) ");
-    //     return res;
-    // }            
-    
-    // $scope.counter = 0;
-    // function resetTimeCounter() {
-    //     $scope.counter = 0;
-    // }
-    
-    // function resumeTimeCounter() {
-    //     $timeout(() => {
-    //         if (!$scope.quizStarted) return;
-    //         $scope.counter++;
-    //         $scope.counterString = prettyTime($scope.counter);
-    //         resumeTimeCounter();
-    //     }, 1000 /* 1 sec */);
-    // }
-    // function startTimeCounter() {
-    //     resetTimeCounter();
-    //     resumeTimeCounter();
-    // }
-
-    // // Quiz start/stop
-    // function startQuiz() {
-    //     acceptStates(['quizReady']);
-    //     let q = getCurrentQuiz()
-    //     if (q) {
-    //         socket.emit('QUIZ_START', q);
-    //         startTimeCounter();
-    //         resetAnswerCounters();
-    //         setQuizStarted();
-    //         return;
-    //     }
-    //     console.log('ERROR: quiz not found!');
-    // }
-
-    // function stopQuiz() {
-    //     acceptStates(['quizStarted']);
-    //     socket.emit('QUIZ_STOP', {});
-    //     resetTimeCounter();
-    //     setQuizReady();
-    // }
-
-    // $scope.startQuiz = startQuiz;
-    // $scope.stopQuiz = stopQuiz;
-
-    // // Number of students that have answered
-    // $scope.connectedStudentIds = [];
-
-    // socket.on('CONNECTED_STUDENTS', (data: { connectedStudentIds: string[] }) => {
-    //     $scope.totalStudentsInRoom = Object.keys(data.connectedStudentIds).length;
-    // });
-
-    // $scope.studentsAnsweredCount = -1;
-    // $scope.totalStudentsInRoom   = -1;
-
-    // function resetAnswerCounters() {
-    //     $scope.studentsAnsweredCount        = 0;
-    //     $scope.totalStudentsInRoom          = 0;
-    //     $scope.studentsAnsweredCorrectCount = 0;
-    //     $scope.studentsAnsweredWrongCount   = 0;
-    // }           
 
     // // Inform about a student answering a question
     // socket.on('ANSWER_RECEIVED', (data: { isCorrect: boolean }) => {
