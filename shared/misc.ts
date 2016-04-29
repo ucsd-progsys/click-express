@@ -1,7 +1,7 @@
 
-import * as t from 'types';
-import * as _ from 'underscore';
-let marked = require('marked');
+import * as t      from 'types';
+import * as _      from 'underscore';
+import * as marked from 'marked';
 
 
 function serverError(scope: any, data: any, status: any, e: any) {

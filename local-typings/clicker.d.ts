@@ -37,6 +37,7 @@ declare module 'types' {
         }
 
         interface IQuiz {
+            _id: any;
             courseId: string;
             description: string;
             options: string[];
