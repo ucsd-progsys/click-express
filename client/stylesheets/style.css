@@ -113,3 +113,5 @@ a {
   float: none;
   display: inline-block;
 }
+
+.classWithPad { margin:3px; padding:3px; }

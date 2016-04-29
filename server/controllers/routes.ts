@@ -2,6 +2,7 @@
 import * as express     from 'express';
 import * as passport    from 'passport';
 import * as t           from 'types';
+import * as _           from 'underscore';
 import * as Account     from '../models/account';
 import * as Quiz        from '../models/quiz';
 import * as Click       from '../models/click';
@@ -82,7 +83,6 @@ export function quizSelect(req: express.Request, res: express.Response, next: an
 
 // GET
 export function quizNew(req: express.Request, res: express.Response, next: any) {
-    console.log('New quiz...');
     // TODO: require instructor
     if (req && req.user && req.user.username === 'instructor') {
         let user = req.user;
@@ -93,18 +93,25 @@ export function quizNew(req: express.Request, res: express.Response, next: any) 
 
 // POST
 export function quizNewSubmit(req: express.Request, res: express.Response) {
-    console.log('Saving new quiz:');
-    console.log(req.body);
-    res.json(Quiz.add(req.body));
+    let course = req.params.course_id;
+    let quiz: t.IQuiz = req.body;
+    quiz.courseId = course;
+    res.json(Quiz.add(quiz));
 }
 
 export function quizHome(req: express.Request, res: express.Response, next: any) {
     let qid = req.params.quiz_id;
+    let user = req.user;
+    let course = req.params.course_id;
     Quiz.findWithId(qid)
         .then(qs => {
             if (qs.length === 1) {
                 let quiz = qs[0];
-                res.render('quiz', { quiz });
+                res.render('quiz', {
+                    user,
+                    course,
+                    quiz
+                });
             } else {
                 console.log('[ERROR] quizHome impossible');
             }
@@ -134,24 +141,48 @@ export function courseHome(req: express.Request, res: express.Response, next: an
     let user = req.user;
     let isInstructor = user.username === 'instructor';
     Quiz.findWithCourse(course)
-        .then(quizList => {
+        .then(qs => {
             res.render('course', {
                 user,
                 course,
                 isInstructor,
-                quizList: quizList.map((q, i) => {
-                    return {
-                        id: i + 1,
-                        hash: q._id,
-                        text: q.description.substring(0, 80)
-                    };
-                })
+                quizRows: qq(qs)
             });
         })
         .catch(err => {
             console.log(err);
             console.log('No course found.');
         });
+
+    type IQ = { id: number, hash: string, text: string };
+
+    function qq(qs: t.IQuiz[]) {
+        let l = qs.length;
+        let rowLen = 3;
+        let rows: { quizCols: IQ[] }[] = [];
+        let row: IQ[] = [];
+        _.range(l).forEach(i => {
+            let j = i % rowLen;
+            row.push(qqq(i, qs[i]));
+            if (j === rowLen - 1) {
+                rows.push({ quizCols: row });
+                row = [];
+            }
+        });
+        if (row.length > 0) {
+            rows.push({ quizCols: row });
+        }
+        console.log(rows);
+        return rows;
+    }
+
+    function qqq(i: number, q: t.IQuiz): IQ {
+        return {
+            id: i + 1,
+            hash: q._id,
+            text: q.description.substring(0, 80)
+        };
+    }
 }
 
 // TODO

@@ -18,6 +18,7 @@
     "passport-local-mongoose": "file:local-typings/passport-local-mongoose.d.ts",
     "serve-favicon": "registry:dt/serve-favicon#0.0.0+20160316155526",
     "serve-static": "registry:dt/serve-static#0.0.0+20160317120654",
-    "socket.io": "registry:dt/socket.io#1.4.4+20160317120654"
+    "socket.io": "registry:dt/socket.io#1.4.4+20160317120654",
+    "underscore": "registry:dt/underscore#1.7.0+20160412141459"
   }
 }
