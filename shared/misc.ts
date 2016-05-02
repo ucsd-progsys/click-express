@@ -77,6 +77,6 @@ function gridElt(i: number, q: t.IQuiz): GridElt {
     return {
         id: i + 1,
         hash: q._id,
-        text: q.description.substring(0, 80)
+        text: (q.description) ? q.description.substring(0, 80) : ''
     };
 }

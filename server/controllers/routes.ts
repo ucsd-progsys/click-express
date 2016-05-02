@@ -135,6 +135,19 @@ export function quizEditSubmit(req: express.Request, res: express.Response, next
     res.render('503');
 }
 
+export function quizDelete(req: express.Request, res: express.Response, next: any) {
+    let qid = req.params.quiz_id;
+    let course = req.params.course_id;
+    console.log('Deleting', qid);
+    Quiz.delete_(req.params.quiz_id)
+        .then(_ => {
+            res.status(200).send(course);
+        }).onReject(err => {
+            res.status(500).send(course);
+        });
+}
+
+
 
 ////////////////////////////////////////////////////////////////////////
 // Course API //////////////////////////////////////////////////////////

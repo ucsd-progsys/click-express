@@ -1,5 +1,4 @@
 
-
 {{#if isInstructor}}
     <!-- Instructor's' View -->
     <h3>Select a quiz</h3>
@@ -8,7 +7,10 @@
         {{#each this.quizCols}}    
             <div class="col-md-4">
                 <div class="classWithPad">
-                <a href="/course/{{../../course}}/quiz/{{hash}}" class="btn btn-block btn-default" type="button" style="white-space: normal; text-align: left;">
+                <a href="/course/{{../../course}}/quiz/{{hash}}" 
+                   class="btn btn-block btn-default" 
+                   type="button" 
+                   style="white-space: normal; text-align: left;">
                     <b>Quiz {{id}}</b><br/><i style="color:#888;">{{text}}</i>
                 </a>
                 </div>

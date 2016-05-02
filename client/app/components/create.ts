@@ -135,15 +135,14 @@ export function createQuizCtrl($scope, $http: angular.IHttpService, $location, $
     }
 
     function makeQuiz(): t.IQuiz {
-        return <any>{} 
-        // {
-        //     courseId   : getCourseName(),
-        //     description: $scope.textarea,
-        //     options    : $scope.choices.map(c => c.text),
-        //     correct    : $scope.correctChoice.index,
-        //     author     : getUserName(),
-        //     timeCreated: new Date()
-        // };
+        return {
+            courseId   : getCourseName(),
+            description: $scope.textarea,
+            options    : $scope.choices.map(c => c.text),
+            correct    : $scope.correctChoice.index,
+            author     : getUserName(),
+            timeCreated: new Date()
+        };
     }
 
     function saveQuiz() {

@@ -13,6 +13,10 @@ export function getPostQuizURL() {
     return './new';
 }
 
+export function getCurrentURL() {
+    return window.location.href;
+}
+
 function isHomeURL() {
     return (window.location.pathname === '/home');
 }

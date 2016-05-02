@@ -39,15 +39,21 @@ export async function findWithId(id: string): Promise<t.IQuiz[]> {
  * @param quiz The quiz to save
  * @returns    The quiz '_id' assigned when saving 
  */
-export function add(quiz: t.IQuiz): any {
+export function add(quiz: t.IQuiz): t.QuizId {
     console.log('about to save');
     let q = new Quiz(quiz);
     q.save(function (err, res) {
         if (err) {
-            console.log('error saving');
+            console.log(err);
         } else {
-            console.log('save successfully!');
+            console.log(q._id, 'saved successfully!');
         }
     });
     return q._id;
+}
+
+export function delete_(quizId: t.QuizId): m.Promise<any> {
+    let query = new MgQuery();
+    query.is('_id', quizId);
+    return Quiz.remove(query.toFields()).exec();
 }

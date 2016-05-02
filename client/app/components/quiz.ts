@@ -1,11 +1,13 @@
 
-import { quizToHtml } from '../../../shared/misc';
+import { quizToHtml    } from '../../../shared/misc';
+import { getCurrentURL } from '../shared/url';
+
 
 /*
     States: 'quizRunning', 'quizStopped'
 */
 
-export function quizCtrl($scope, $location, $timeout, Data) {
+export function quizCtrl($scope, $http: angular.IHttpService, $location, $timeout, Data) {
 
     // Counters
     $scope.studentsAnsweredCount        = 0;
@@ -37,6 +39,14 @@ export function quizCtrl($scope, $location, $timeout, Data) {
     }
 
 
+    $scope.deleteQuiz = function() {
+        $http.get(getCurrentURL() + '/delete').success((data: string) => {
+            console.log(data);
+            window.location.href = '/course/' + data;
+        });
+    }
+    
+    
     ////////////////////////////////////////////////////////////////////
     // Running the Quiz ////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
