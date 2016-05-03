@@ -3,19 +3,6 @@ import * as t        from 'types';
 import * as c        from '../../shared/consts';
 
 
-////////////////////////////////////////////////////////////////////
-// Auxiliary ///////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////
-
-// function toTagged<A>(tag: number, x: A): t.Tagged<A> {
-//     return { tag: tag, data: x }
-// }
-
-// Maps classrooms to active questions
-// Clicks after time has run out should be disregarded.
-let openQuestions: { [x: string]: t.IQuiz } = { };
-
-
 function instructor() {
     // TODO
     return true;

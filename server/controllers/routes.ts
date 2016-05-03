@@ -79,22 +79,15 @@ export function logout(req: express.Request, res: express.Response) {
 // Quiz API ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-// TODO
-export function quizSelect(req: express.Request, res: express.Response, next: any) {
-    res.render('503');
-}
-
-// GET
 export function quizNew(req: express.Request, res: express.Response, next: any) {
     // TODO: require instructor
     if (req && req.user && req.user.username === 'instructor') {
         let user = req.user;
         let course = req.params.course_id;
-        res.render('create', { user, course });
+        res.render('quiz-create', { user, course });
     }
 }
 
-// POST
 export function quizNewSubmit(req: express.Request, res: express.Response) {
     let course = req.params.course_id;
     let quiz: t.IQuiz = req.body;
@@ -106,70 +99,76 @@ export function quizHome(req: express.Request, res: express.Response, next: any)
     let qid = req.params.quiz_id;
     let user = req.user;
     let course = req.params.course_id;
-    Quiz.findWithId(qid)
-        .then(qs => {
-            if (qs.length === 1) {
-                let quiz = qs[0];
-                // let html = quizToHtml(quiz, false);
-                res.render('quiz', {
-                    user,
-                    course,
-                    quizRender: quizToHtml(quiz, false)
-                });
-            } else {
-                console.log('[ERROR] quizHome impossible');
-            }
-        })
-        .catch(err => {
-            res.render('404');
-        });
+    Quiz.findWithId(qid).then(quiz => {
+        res.render('quiz-instructor', { user, course, quizRender: quizToHtml(quiz, false) });
+    }).catch(err => {
+        res.render('404');
+    });
 }
 
-// GET
 export function quizEdit(req: express.Request, res: express.Response, next: any) {
     res.render('503');
 }
 
-// POST
 export function quizEditSubmit(req: express.Request, res: express.Response, next: any) {
     res.render('503');
 }
 
 export function quizDelete(req: express.Request, res: express.Response, next: any) {
-    let qid = req.params.quiz_id;
-    let course = req.params.course_id;
-    console.log('Deleting', qid);
-    Quiz.delete_(req.params.quiz_id)
-        .then(_ => {
-            res.status(200).send(course);
-        }).onReject(err => {
-            res.status(500).send(course);
-        });
+    let quizId   = req.params.quiz_id;
+    let courseId = req.params.course_id;
+    // console.log('Deleting', qid);
+    Quiz.delete_(quizId).then(_ => {
+        res.status(200).send(courseId);
+    }).onReject(err => {
+        res.status(500).send(courseId);
+    });
 }
 
+export function quizStart(io: SocketIO.Server) {
+    return (req: express.Request, res: express.Response, next: any) => {
+        let quizId   = req.params.quiz_id;
+        let courseId = req.params.course_id;
+        // TODO: mask result
+        Quiz.findWithId(quizId).then(quiz => {
+            console.log('emitting quiz', quiz, 'on', courseId);
+            io./*of(courseId).*/emit('quiz_start', quiz);
+        });
+    };
+}
+
+export function quizStop(io: SocketIO.Server) {
+    return (req: express.Request, res: express.Response, next: any) => {
+        let quizId   = req.params.quiz_id;
+        let courseId = req.params.course_id;
+
+    };
+}
 
 
 ////////////////////////////////////////////////////////////////////////
 // Course API //////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-export function courseHome(req: express.Request, res: express.Response, next: any) {
-    let course = req.params.course_id;
-    let user = req.user;
-    let isInstructor = user.username === 'instructor';
-    Quiz.findWithCourse(course)
-        .then(qs => {
-            res.render('course', {
+function isInstructor(req: express.Request) {
+    return req.user.username === 'instructor';
+}
+
+export function courseHome(io: SocketIO.Server) {
+    return (req: express.Request, res: express.Response, next: any) => {
+        let course = req.params.course_id;
+        let user = req.user;
+        Quiz.findWithCourse(course).then(qs => {
+            res.render('classroom', {
                 user,
                 course,
-                isInstructor,
+                isInstructor: isInstructor(req),
                 quizRows: arrangeGrid(qs, 3)
             });
-        })
-        .catch(err => {
+        }).catch(err => {
             console.log(err);
-            console.log('No course found.');
         });
+    };
 }
 
 // TODO
@@ -188,16 +187,14 @@ export function courseHistory(req: express.Request, res: express.Response, next:
 export function userHome(req: express.Request, res: express.Response) {
     // TODO: only get the courses that the 'user' is subscribed to
     let user = req.user;
-    Course.getAll()
-        .then((courses: t.ICourse[]) => {
-            res.render('user', {
-                user,
-                courseList: courses
-            });
-        })
-        .catch((reason) => {
-            console.log('[ERROR] Cannot access classes.');
+    Course.getAll().then((courses: t.ICourse[]) => {
+        res.render('course-select', {
+            user,
+            courseList: courses
         });
+    }).catch((reason) => {
+        console.log('[ERROR] Cannot access classes.');
+    });
 }
 
 export function userHistory(req: express.Request, res: express.Response) {
@@ -212,15 +209,13 @@ export function userHistory(req: express.Request, res: express.Response) {
 // Deprecated
 export function historyData(req: express.Request, res: express.Response) {
     let username = req.user.username;
-    Click.find({ quizId: username })
-         .then((clicks: t.IClick[]) => {
-             res.json(clicks);
-         })
-         .catch((reason) => {
-             res.render('history', {
-                 error: reason.toString()
-             });
-         });
+    Click.find({ quizId: username }).then((clicks: t.IClick[]) => {
+        res.json(clicks);
+    }).catch((reason) => {
+        res.render('history', {
+            error: reason.toString()
+        });
+    });
 }
 
 export function questions(req: express.Request, res: express.Response) {

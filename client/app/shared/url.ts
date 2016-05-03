@@ -1,7 +1,7 @@
 
 // URL API 
 
-function getServerURL() {
+export function getServerURL() {
     return window.location.protocol + "//" + window.location.host;
 }
 

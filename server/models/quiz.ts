@@ -28,10 +28,10 @@ export async function findWithCourse(course?: t.CourseId): Promise<t.IQuiz[]> {
     return Quiz.find(query.toFields()).exec();
 }
 
-export async function findWithId(id: string): Promise<t.IQuiz[]> {
+export async function findWithId(id: string): Promise<t.IQuiz> {
     let query = new MgQuery();
     query.is('_id', id);
-    return Quiz.find(query.toFields()).exec();
+    return Quiz.findOne(query.toFields()).exec();
 }
 
 

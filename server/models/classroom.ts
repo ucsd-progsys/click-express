@@ -12,7 +12,7 @@ export function initialize(): void {
     classRooms = {};
 }
 
-export function startQuiz(q: t.IQuiz): void {
+export function startQuiz(course: t.CourseId, q: t.IQuiz): void {
     quizInProgress = q;
 }
 

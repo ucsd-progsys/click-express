@@ -70,7 +70,7 @@ let app           = express();
 let httpServer    = http.createServer(app);
 
 // Socket
-let io            = socketIO(httpServer);
+let socketSrv     = socketIO(httpServer);
 
 
 ////////////////////////////////////////////////////////////////////
@@ -125,6 +125,15 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, '../client')));
 app.use(express.static(path.join(__dirname, '../node_modules')));
 
+
+
+////////////////////////////////////////////////////////////////////
+// socket.io ///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+
+socketSrv.on('connection', sockets.onConnect);
+
+
 ////////////////////////////////////////////////////////////////////
 // Routes //////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
@@ -141,18 +150,20 @@ app.post('/login'   ,              routes.postLogin);
 app.get ('/logout'  ,              routes.logout);
 
 // Course API
-app.get ('/course/:course_id'         ,              routes.courseHome);
+app.get ('/course/:course_id'         ,              routes.courseHome(socketSrv));
 app.get ('/course/:course_id/students', routes.auth, routes.courseStudents);
 app.get ('/course/:course_id/history' , routes.auth, routes.courseHistory);
 
 // Quiz API
-app.get ('/course/:course_id/quiz'                , routes.auth, routes.quizSelect);
 app.get ('/course/:course_id/quiz/new'            , routes.auth, routes.quizNew);
 app.post('/course/:course_id/quiz/new'            , routes.auth, routes.quizNewSubmit);
 app.get ('/course/:course_id/quiz/:quiz_id'       , routes.auth, routes.quizHome);
 app.get ('/course/:course_id/quiz/:quiz_id/edit'  , routes.auth, routes.quizEdit);
 app.post('/course/:course_id/quiz/:quiz_id/edit'  , routes.auth, routes.quizEditSubmit);
 app.get ('/course/:course_id/quiz/:quiz_id/delete', routes.auth, routes.quizDelete);
+app.get ('/course/:course_id/quiz/:quiz_id/start' , routes.auth, routes.quizStart(socketSrv));
+app.get ('/course/:course_id/quiz/:quiz_id/stop'  , routes.auth, routes.quizStop(socketSrv));
+
 
 
 // User API
@@ -177,13 +188,6 @@ passport.deserializeUser(Account.deserializeUser());
 
 mongoose.connect('mongodb://localhost/click-express-mongoose');
 
-////////////////////////////////////////////////////////////////////
-// Sockets /////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////
-
-// socket.setup(io);
-
-io.on('connection', sockets.onConnect);
 
 
 ////////////////////////////////////////////////////////////////////

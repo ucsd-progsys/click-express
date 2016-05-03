@@ -7,7 +7,7 @@ import { getCurrentURL } from '../shared/url';
     States: 'quizRunning', 'quizStopped'
 */
 
-export function quizCtrl($scope, $http: angular.IHttpService, $location, $timeout, Data) {
+export function quizCtrl($scope: any, $http: angular.IHttpService, $location: angular.ILocationService, $timeout: angular.ITimeoutService) {
 
     // Counters
     $scope.studentsAnsweredCount        = 0;
@@ -19,12 +19,23 @@ export function quizCtrl($scope, $http: angular.IHttpService, $location, $timeou
 
     $scope.startQuiz = function() {
         $scope.quizStarted = true;
+        
+        console.log('Issuing GET', getCurrentURL() + '/start');
+        
+        $http.get(getCurrentURL() + '/start').success((data: string) => {
+            console.log('quiz started');
+        }); 
+        
         startTimeCounter();
         resetAnswerCounters();
     }
 
     $scope.stopQuiz = function() {
         $scope.quizStarted = false;
+        $http.get(getCurrentURL() + '/stop').success((data: string) => {
+            console.log('quiz started');
+        }); 
+
     }
 
     // show correct answer

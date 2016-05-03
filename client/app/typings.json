@@ -8,6 +8,8 @@
     "clicker": "file:../../local-typings/clicker.d.ts",
     "jquery": "registry:dt/jquery#1.10.0+20160417213236",
     "marked": "registry:dt/marked#0.0.0+20160325085301",
+    "socket.io": "registry:dt/socket.io#1.4.4+20160317120654",
+    "socket.io-client": "registry:dt/socket.io-client#1.4.4+20160317120654",
     "underscore": "registry:dt/underscore#1.7.0+20160412141459"
   }
 }
