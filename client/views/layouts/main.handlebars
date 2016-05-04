@@ -8,23 +8,21 @@
     <meta name="author"      content="Ranjit Jhala">
 
     <!--Stylesheets-->
-    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link rel="stylesheet" href="/stylesheets/bootstrap-readable.css">
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css" media="screen">
+    <link rel="stylesheet" href="/bower_components/bootswatch/readable/bootstrap.css">
     <link rel="stylesheet" href="/stylesheets/style.css">
 
     <!--Libs-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-    <script src="http://code.jquery.com/jquery.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular-sanitize.js"></script>
-    <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.14.3.js"></script>
-    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script src="/vendor/marked/marked.min.js"></script>
-    <script src="/vendor/dropdown/bsDropdown.min.js"></script>
-
+    <script src="/bower_components/underscore/underscore-min.js"></script>    
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/bower_components/socket.io-client/socket.io.js"></script>
+    <script src="/bower_components/angular/angular.js"></script>
+    <script src="/bower_components/angular-route/angular-route.js"></script>
+    <script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="/bower_components/marked/marked.min.js"></script>
+    
   </head>
 
     <body data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="click">
@@ -58,11 +56,19 @@
 
     <!-- Actual Body ================================================== -->
 
-    <div class="container">
+    <!--
+      <div class="container">
         <div class="row-fluid">
         {{{body}}}
         </div>
+      </div>    
+    -->
+    <div class="container">
+        <div class="row-fluid">
+          <div ng-view></div>
+        </div>
     </div>
+    
 
   </body>
 
@@ -73,6 +79,6 @@
   {{/if}}
   </script>
 
-  <script src="/app/bundle.js"></script>
+  <script src="/app/clicker-{{role}}.js"></script>
 
 </html>

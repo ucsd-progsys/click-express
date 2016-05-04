@@ -1,0 +1,30 @@
+{
+  "name": "client",
+  "homepage": "https://github.com/ucsd-progsys/click-express",
+  "authors": [
+    "Panagiotis Vekris <pvekris@cs.ucsd.edu>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "underscore": "^1.8.3",
+    "socket-io": "^1.0.0",
+    "socket.io-client": "^1.4.6",
+    "angular": "^1.5.5",
+    "angular-route": "^1.5.5",
+    "angular-sanitize": "^1.5.5",
+    "ui-bootstrap": "^1.3.2",
+    "angular-bootstrap": "^1.3.2",
+    "marked": "^0.3.5",
+    "bootswatch": "^3.3.6+1"
+  }
+}

@@ -122,6 +122,11 @@ app.use(passport.session());
 // Static Content //////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
+app.use(express.static(path.join(__dirname, '../app/html')));
+
+
+console.log('serving', path.join(__dirname, '../app/html'));
+
 app.use(express.static(path.join(__dirname, '../client')));
 app.use(express.static(path.join(__dirname, '../node_modules')));
 
@@ -165,13 +170,26 @@ app.get ('/course/:course_id/quiz/:quiz_id/start' , routes.auth, routes.quizStar
 app.get ('/course/:course_id/quiz/:quiz_id/stop'  , routes.auth, routes.quizStop(socketSrv));
 
 
+// Html
+app.get ('/course.html'             , routes.courseHTML);
+app.get ('/select-course.html'      , routes.selectCourseHTML);
+
+app.get ('/instructor-course.html'  , routes.instructorCourseHTML);
+
+app.get ('/instructor-quiz.html'    , routes.instructorQuizHTML);
+
+app.get ('/courses'          , routes.courses);
+app.get ('/quiz/:quiz_id'    , routes.questions);
+
 
 // User API
 app.get ('/user/:user_id'                       , routes.auth, routes.userHome);
 app.get ('/user/:user_id/history'               , routes.auth, routes.userHistory);
 
+
 // data access
-app.get ('/course/:course_id/questions'         , routes.auth, routes.questions);
+app.get ('/course/:course_id/questions'         ,              routes.questions);
+
 
 
 ////////////////////////////////////////////////////////////////////

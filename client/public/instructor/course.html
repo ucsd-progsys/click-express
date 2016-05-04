@@ -1,0 +1,10 @@
+
+ <div class="row">
+    <div class="col-md-6">    
+    <div ng-repeat="quiz in quizzes">     
+        <a href="/quiz" class="btn btn-block btn-default classWithPad" type="button" style="white-space: normal; text-align: left;">
+            <b>Quiz {{$index + 1}}</b><br/><i style="color:#888;">{{quiz.description}}</i>
+        </a>
+        </div>        
+    </div>    
+</div>

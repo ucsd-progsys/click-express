@@ -1,8 +1,9 @@
-
+import * as url           from '../../shared/url';
 import * as t             from 'types';
-import { ISocketService } from '../services/socket';
+
+import { ISocketService } from '../../services/socket';
 import { charFromInt
-       , questionToHtml } from '../../../shared/misc';
+       , questionToHtml } from '../../../../shared/misc';
 
 function makeClick(scope: any, quiz: t.IQuiz, answer: number): t.IClick {
     return {
@@ -13,17 +14,23 @@ function makeClick(scope: any, quiz: t.IQuiz, answer: number): t.IClick {
     }
 }
 
-export function studentClickCtrl($scope, socketService: ISocketService) {
+// export function studentCtrl($scope: any, $http: angular.IHttpService, $location: angular.ILocationService, $timeout: angular.ITimeoutService) {
 
-    $scope.quizInProgress = false;
+export function courseCtrl($scope, socketService: ISocketService) {
+   
+    let course = url.getCurrentURL().split('/').reverse()[0];
+    let namespacePath = url.getServerURL() + '/' + course;    
+    let socket = io(namespacePath);
+    console.log('Connecting on', namespacePath);
+    socketService.registerSocket(socket);
 
-    let socket = socketService.getSocket();
-
+    $scope.quizStarted = false;
+        
     socket.on('quiz_start', (q: t.IQuiz) => {
-        $scope.quizInProgress = true;
-        $scope.quizHtml = questionToHtml(q.description, q.options);
         console.log('quiz_start on socket');
-        // console.log(data);
+        // let quizHtml = questionToHtml(q.description, q.options);
+        $scope.quizStarted = true;
+        // $scope.quizHtml = quizHtml;
     });
 
 }

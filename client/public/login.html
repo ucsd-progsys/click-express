@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>ClickExpress</title>
+    <meta name="viewport"    content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ClickExpress">
+    <meta name="author"      content="Ranjit Jhala">
+
+    <!--Stylesheets-->
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css" media="screen">
+    <link rel="stylesheet" href="/bower_components/bootswatch/readable/bootstrap.css">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+
+    <!--Libs-->
+    <script src="/bower_components/underscore/underscore-min.js"></script>    
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/bower_components/socket.io-client/socket.io.js"></script>
+    
+  </head>
+
+    <body data-spy="scroll" data-target=".bs-docs-sidebar">
+
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-default navbar-static-top" role="navigation">
+      <div class="container">
+      <!-- Brand and toggle get grouped for better mobile display -->
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <a class="navbar-brand" href="/home">Click Express</a>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+
+
+    <div class="container">
+    <h1>Login Page</h1>
+    <p class="lead">Welcome! Please log in.</p>
+    <br/>
+    <form role="form" action="/login" method="post" style="max-width: 300px;">
+        <div class="form-group">
+        <input type="text" name="username" placeholder="Enter Username" class="form-control"/>
+        </div>
+        <div class="form-group">
+        <input type="password" name="password" placeholder="Password" class="form-control"/>
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>&nbsp;
+        <a href="/"><button type="button" class="btn btn-primary">Cancel</button></a>
+    </form>
+    </div>
+
+    
+
+  </body>
+
+  <!--<script src="/app/bundle.js"></script>-->
+
+</html>

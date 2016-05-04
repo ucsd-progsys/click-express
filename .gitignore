@@ -1,4 +1,5 @@
 # ignore node packages
 node_modules
+bower_components
 typings
 .vscode

@@ -1,31 +1,46 @@
 
-import { quizToHtml    } from '../../../shared/misc';
-import { getCurrentURL } from '../shared/url';
+import * as t             from 'types';
+import * as url           from '../../shared/url';
 
+import { quizToHtml     } from '../../../../shared/misc';
+import { getCurrentURL  } from '../../shared/url';
+import { ISocketService } from '../../services/socket';
 
-/*
-    States: 'quizRunning', 'quizStopped'
-*/
+export function quizCtrl(
+    $scope       : any,
+    $http        : angular.IHttpService,
+    $timeout     : angular.ITimeoutService, 
+    socketService: ISocketService
+) {
 
-export function quizCtrl($scope: any, $http: angular.IHttpService, $location: angular.ILocationService, $timeout: angular.ITimeoutService) {
+    let course = getCurrentURL().split('/').reverse()[2];
+    let quizId = getCurrentURL().split('/').reverse()[0];
+    
+    let socket = socketService.getSocket();
+    console.log('got socket', socket)
 
     // Counters
     $scope.studentsAnsweredCount        = 0;
     $scope.totalStudentsInRoom          = 0;
     $scope.studentsAnsweredCorrectCount = 0;
     $scope.studentsAnsweredWrongCount   = 0;
-
     $scope.quizStarted = false;
+    
 
     $scope.startQuiz = function() {
+
         $scope.quizStarted = true;
-        
-        console.log('Issuing GET', getCurrentURL() + '/start');
-        
-        $http.get(getCurrentURL() + '/start').success((data: string) => {
-            console.log('quiz started');
-        }); 
-        
+
+        // Quiz Id is the last part of the current URL
+        let activeQuiz: t.IActiveQuiz =  { id: quizId, course: course };
+        socket.emit('quiz-start', activeQuiz);        
+        console.log('sending', activeQuiz);
+
+        // console.log('Issuing GET', getCurrentURL() + '/start');
+        // $http.get(getCurrentURL() + '/start').success((data: string) => {
+        //     console.log('quiz started');
+        // });
+
         startTimeCounter();
         resetAnswerCounters();
     }
@@ -34,7 +49,7 @@ export function quizCtrl($scope: any, $http: angular.IHttpService, $location: an
         $scope.quizStarted = false;
         $http.get(getCurrentURL() + '/stop').success((data: string) => {
             console.log('quiz started');
-        }); 
+        });
 
     }
 
@@ -56,8 +71,8 @@ export function quizCtrl($scope: any, $http: angular.IHttpService, $location: an
             window.location.href = '/course/' + data;
         });
     }
-    
-    
+
+
     ////////////////////////////////////////////////////////////////////
     // Running the Quiz ////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
@@ -97,7 +112,7 @@ export function quizCtrl($scope: any, $http: angular.IHttpService, $location: an
     // socket.on('CONNECTED_STUDENTS', (data: { connectedStudentIds: string[] }) => {
     //     $scope.totalStudentsInRoom = Object.keys(data.connectedStudentIds).length;
     // });
-    
+
     function resetAnswerCounters() {
         $scope.studentsAnsweredCount        = 0;
         $scope.totalStudentsInRoom          = 0;

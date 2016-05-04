@@ -1,8 +1,9 @@
+import * as path        from 'path';
 
 import * as express     from 'express';
 import * as passport    from 'passport';
 import * as t           from 'types';
-import * as _           from 'underscore';
+
 import * as Account     from '../models/account';
 import * as Quiz        from '../models/quiz';
 import * as Click       from '../models/click';
@@ -10,6 +11,8 @@ import * as Course      from '../models/course';
 
 import { arrangeGrid
        , quizToHtml  }  from '../../shared/misc';
+
+import * as Socket      from '../controllers/sockets';
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -36,7 +39,8 @@ export function register(req: express.Request, res: express.Response) {
 }
 
 export function getLogin(req: express.Request, res: express.Response) {
-    res.render('login', { user: req.user });
+    // res.render('login', { user: req.user });
+    res.sendFile(path.join(__dirname + '../../../client/public/login.html'));
 }
 
 export let postLogin = passport.authenticate('local', {
@@ -55,17 +59,25 @@ export function auth(req: express.Request, res: express.Response, next: Function
     if (req.isAuthenticated()) {
         return next();
     }
-    res.render('index');
+    res.sendFile(path.join(__dirname + '../../../client/public/login.html'));
+    // res.render('index');
 }
 
 export function redirectHome(req: express.Request, res: express.Response): void {
     res.redirect('/home');
 }
 
+// TODO: do we need the server port?
 export function home(url: string): express.RequestHandler {
     return (req: express.Request, res: express.Response, next: any) => {
-        let path = '/user/' + req.user.username;
-        res.redirect(path);
+        let role = (isInstructor(req)) ? 'instructor' : 'student';
+        let course = '???';
+        let user = req.user;
+
+        res.render('index', { role, course, user } );
+
+        // let path = '/user/' + req.user.username;
+        // res.redirect(path);
     };
 }
 
@@ -127,12 +139,17 @@ export function quizDelete(req: express.Request, res: express.Response, next: an
 
 export function quizStart(io: SocketIO.Server) {
     return (req: express.Request, res: express.Response, next: any) => {
+
+        console.log('Quiz Started');
+
         let quizId   = req.params.quiz_id;
         let courseId = req.params.course_id;
         // TODO: mask result
         Quiz.findWithId(quizId).then(quiz => {
-            console.log('emitting quiz', quiz, 'on', courseId);
+            console.log('emitting quiz on', courseId);
             io./*of(courseId).*/emit('quiz_start', quiz);
+        }).catch(err => {
+            console.log(err);
         });
     };
 }
@@ -158,6 +175,14 @@ export function courseHome(io: SocketIO.Server) {
     return (req: express.Request, res: express.Response, next: any) => {
         let course = req.params.course_id;
         let user = req.user;
+        console.log('Setting up socket');
+
+        if (isInstructor(req)) {
+            Socket.initInstructorConnection(course, io);
+        } else {
+            Socket.initStudentConnection(course, io);
+        }
+
         Quiz.findWithCourse(course).then(qs => {
             res.render('classroom', {
                 user,
@@ -168,6 +193,7 @@ export function courseHome(io: SocketIO.Server) {
         }).catch(err => {
             console.log(err);
         });
+
     };
 }
 
@@ -225,3 +251,31 @@ export function questions(req: express.Request, res: express.Response) {
         res.json(jqs);
     });
 }
+
+
+// Get HTML
+export function selectCourseHTML(req: express.Request, res: express.Response) {
+    res.sendFile(path.join(__dirname + '../../../client/public/shared/select-course.html'));
+}
+
+export function instructorCourseHTML(req: express.Request, res: express.Response) {
+    res.sendFile(path.join(__dirname + '../../../client/public/instructor/course.html'));
+}
+
+export function instructorQuizHTML(req: express.Request, res: express.Response) {
+    res.sendFile(path.join(__dirname + '../../../client/public/instructor/quiz.html'));
+}
+
+export function courseHTML(req: express.Request, res: express.Response) {
+    res.sendFile(path.join(__dirname + '../../../client/public/course.html'));
+}
+
+
+export function courses(req: express.Request, res: express.Response) {
+    Course.getAll().then(cs => {
+        res.json(JSON.stringify(cs));
+    });
+}
+
+
+// Quiz select

@@ -37,13 +37,18 @@ declare module 'types' {
         }
 
         interface IQuiz {
-            _id: any;
+            _id?: any;
             courseId: string;
             description: string;
             options: string[];
             correct: number;
             author: string;
             timeCreated: Date;
+        }
+
+        interface IActiveQuiz {
+            id: QuizId;
+            course: CourseId;
         }
 
         interface ICourse {
@@ -65,7 +70,7 @@ declare module 'types' {
         }
 
         interface IMaskedQuiz extends IQuiz {
-            correct: number;       // { v = -1 }    
+            correct: number;       // { v = -1 }
         }
 
         interface Tagged<A> {

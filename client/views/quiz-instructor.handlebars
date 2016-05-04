@@ -3,7 +3,7 @@
     <!-- Play/Stop buttons -->
     <div class="row">
         
-        <div class="col-md-10">
+        <div class="col-md-9">
                     
             <!-- Preview box -->
             <div class="panel panel-default">
@@ -12,7 +12,7 @@
             
         </div>
                 
-        <div class="col-md-2">            
+        <div class="col-md-3">            
             <div class="row">            
                 <button class="btn btn-block  classWithPad" ng-disabled="quizStarted" ng-click="startQuiz()" >
                     <span class="glyphicon glyphicon-play"/>
@@ -32,21 +32,23 @@
                <button class="btn btn-block  btn-danger classWithPad" ng-click="deleteQuiz()">
                     <span class="glyphicon glyphicon-trash"/>
                 </button>                
-            </div>   
-
+            </div>
+            
+            <!-- Status -->
+            <div class="row">
+                <table class="table table-bordered classWithPad">
+                    <caption ng-show="quizStarted" ng-cloak>Quiz in progress</caption>
+                    <caption ng-show="!quizStarted" ng-cloak>Quiz pending</caption>                    
+                    <tr><td>Elapsed Time   </td><td>\{{counterString}}               </td></tr>
+                    <tr><td>Participants   </td><td>\{{totalStudentsInRoom}}         </td></tr>
+                    <tr><td>Total answers  </td><td>\{{studentsAnsweredCount}}       </td></tr>
+                    <tr><td>Correct answers</td><td>\{{studentsAnsweredCorrectCount}}</td></tr>
+                    <tr><td>Wrong answers  </td><td>\{{studentsAnsweredWrongCount}}  </td></tr>
+                </table>
+            </div>
+            
         </div>  
         
-    </div>
-    <!-- Status -->
-    <div>
-        <table class="table table-nonfluid table-bordered" ng-show="true" ng-cloak>
-            <caption>Quiz In Progress</caption>
-            <tr><td>Elapsed Time    </td><td>\{{counterString}}               </td></tr>
-            <tr><td>Participants    </td><td>\{{totalStudentsInRoom}}         </td></tr>
-            <tr><td>Answers received</td><td>\{{studentsAnsweredCount}}       </td></tr>
-            <tr><td>Correct answers </td><td>\{{studentsAnsweredCorrectCount}}</td></tr>
-            <tr><td>Wrong answers   </td><td>\{{studentsAnsweredWrongCount}}  </td></tr>
-        </table>
     </div>
 
 </div>
