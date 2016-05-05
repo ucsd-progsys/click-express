@@ -3,11 +3,10 @@
 <div class="row">
     <div ng-repeat="course in courses">
         <div class="col-md-4">
-            <a href="/#course/{{course.name}}" class="btn btn-block btn-default" type="button" style="white-space: normal; text-align: left;">
-                <b>{{course.name}}</b>
-                <br/>
+            <button class="btn btn-block btn-default" type="button" style="white-space: normal; text-align: left;" ng-click="setCourse($index)">
+                <b>{{course.name}}</b><br/>
                 <i style="color:#888;" >{{course.description}}</i>
-            </a>
+            </button>
         </div>
 
     </div>

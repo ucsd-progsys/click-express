@@ -4,28 +4,33 @@ import * as t             from 'types';
 import * as url           from '../../shared/url';
 import * as _             from 'underscore';
 
-export function courseCtrl($scope, $http: angular.IHttpService, $routeParams) {
+interface ICourseScope extends angular.IScope {
+    quizzes: t.IQuiz[];
+    courseId: t.CourseId;
+    selectQuiz(i: number): void;    
+}
+
+export function courseCtrl($scope: ICourseScope, $location: angular.ILocationService, $http: angular.IHttpService, $routeParams) {
+    let courseId = $routeParams.courseId;
+    let quizzesURL = url.getServerURL() + '/course/' + courseId + '/quizzes';
+
     $scope.quizzes = [];
-    
-    let course = 'CSE130';
-    
-    console.log('course is', $routeParams.courseId);    
-    
-    let URL = url.getServerURL() + '/course/' + course + '/questions';
-    console.log(URL);
-    
-    $http.get(URL).success((data: string) => {
-        
-        let quizzes: t.IQuiz[] = _.pairs(JSON.parse(data)).map(kv => kv[1]);                
+    $scope.courseId = courseId;
+
+    $http.get(quizzesURL).success((data: string) => {
+        let quizzes: t.IQuiz[] = _.pairs(JSON.parse(data)).map(kv => kv[1]);
         $scope.quizzes = quizzes;
     });
+
+    $scope.selectQuiz = function(i: number) {
+        let quizId = $scope.quizzes[i]._id;
+        $location.path(['course', courseId, 'quiz', quizId].join('/'));
+    }
 }
 
 
-
-    
-// let course = getCurrentURL().split('/').reverse()[0];        
-// let namespacePath = url.getServerURL() + '/' + course;    
+// let course = getCurrentURL().split('/').reverse()[0];
+// let namespacePath = url.getServerURL() + '/' + course;
 // let socket = io(namespacePath);
 
 // console.log('Connecting on', namespacePath);

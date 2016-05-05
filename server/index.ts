@@ -171,24 +171,21 @@ app.get ('/course/:course_id/quiz/:quiz_id/stop'  , routes.auth, routes.quizStop
 
 
 // Html
-app.get ('/course.html'             , routes.courseHTML);
-app.get ('/select-course.html'      , routes.selectCourseHTML);
-
-app.get ('/instructor-course.html'  , routes.instructorCourseHTML);
-
-app.get ('/instructor-quiz.html'    , routes.instructorQuizHTML);
-
-app.get ('/courses'          , routes.courses);
-app.get ('/quiz/:quiz_id'    , routes.questions);
+app.get ('/course.html'              , routes.courseHTML);
+app.get ('/select-course.html'       , routes.selectCourseHTML);
+app.get ('/instructor-course.html'   , routes.instructorCourseHTML);
+app.get ('/instructor-quiz.html'     , routes.instructorQuizHTML);
+app.get ('/courses'                  , routes.courses);
+app.get ('/course/:course_id/quizzes', routes.getQuizzes);
+app.get ('/quiz/:quiz_id'            , routes.getQuiz);
 
 
 // User API
-app.get ('/user/:user_id'                       , routes.auth, routes.userHome);
-app.get ('/user/:user_id/history'               , routes.auth, routes.userHistory);
+app.get ('/user/:user_id'           , routes.auth, routes.userHome);
+app.get ('/user/:user_id/history'   , routes.auth, routes.userHistory);
 
 
 // data access
-app.get ('/course/:course_id/questions'         ,              routes.questions);
 
 
 

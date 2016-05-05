@@ -1,7 +1,7 @@
 import * as url           from '../../shared/url';
 import * as t             from 'types';
 
-import { ISocketService } from '../../services/socket';
+import { IClickerService } from '../../services/clicker';
 import { charFromInt
        , questionToHtml } from '../../../../shared/misc';
 
@@ -16,7 +16,7 @@ function makeClick(scope: any, quiz: t.IQuiz, answer: number): t.IClick {
 
 // export function studentCtrl($scope: any, $http: angular.IHttpService, $location: angular.ILocationService, $timeout: angular.ITimeoutService) {
 
-export function courseCtrl($scope, socketService: ISocketService) {
+export function courseCtrl($scope, socketService: IClickerService) {
    
     let course = url.getCurrentURL().split('/').reverse()[0];
     let namespacePath = url.getServerURL() + '/' + course;    

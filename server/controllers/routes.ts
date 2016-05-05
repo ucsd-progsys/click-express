@@ -71,13 +71,8 @@ export function redirectHome(req: express.Request, res: express.Response): void 
 export function home(url: string): express.RequestHandler {
     return (req: express.Request, res: express.Response, next: any) => {
         let role = (isInstructor(req)) ? 'instructor' : 'student';
-        let course = '???';
         let user = req.user;
-
-        res.render('index', { role, course, user } );
-
-        // let path = '/user/' + req.user.username;
-        // res.redirect(path);
+        res.render('index', { role, user });
     };
 }
 
@@ -244,13 +239,21 @@ export function historyData(req: express.Request, res: express.Response) {
     });
 }
 
-export function questions(req: express.Request, res: express.Response) {
+export function getQuizzes(req: express.Request, res: express.Response) {
     let course = req.params.course_id;
     Quiz.findWithCourse(course).then((qs) => {
         let jqs = JSON.stringify(qs);
         res.json(jqs);
     });
 }
+
+export function getQuiz(req: express.Request, res: express.Response) {
+    let quizId = req.params.quiz_id;
+    Quiz.findWithId(quizId).then(q => {
+        res.json(JSON.stringify(q));
+    });
+}
+
 
 
 // Get HTML

@@ -4,18 +4,15 @@ import * as url           from '../../shared/url';
 
 import { quizToHtml     } from '../../../../shared/misc';
 import { getCurrentURL  } from '../../shared/url';
-import { ISocketService } from '../../services/socket';
+import { IClickerService } from '../../services/clicker';
 
-export function quizCtrl(
-    $scope       : any,
-    $http        : angular.IHttpService,
-    $timeout     : angular.ITimeoutService, 
-    socketService: ISocketService
-) {
+export function quizCtrl($scope: any, $http: angular.IHttpService, $timeout: angular.ITimeoutService, socketService: IClickerService) {
 
     let course = getCurrentURL().split('/').reverse()[2];
     let quizId = getCurrentURL().split('/').reverse()[0];
-    
+
+    let quizURL = url.getServerURL() + '/quiz/' + quizId;
+
     let socket = socketService.getSocket();
     console.log('got socket', socket)
 
@@ -25,7 +22,13 @@ export function quizCtrl(
     $scope.studentsAnsweredCorrectCount = 0;
     $scope.studentsAnsweredWrongCount   = 0;
     $scope.quizStarted = false;
-    
+
+    // Render quiz
+    $http.get(quizURL).success((data: string) => {
+        let quiz = JSON.parse(data);
+        $scope.quizHtml = quizToHtml(quiz, false);
+    });
+
 
     $scope.startQuiz = function() {
 
@@ -33,7 +36,7 @@ export function quizCtrl(
 
         // Quiz Id is the last part of the current URL
         let activeQuiz: t.IActiveQuiz =  { id: quizId, course: course };
-        socket.emit('quiz-start', activeQuiz);        
+        socket.emit('quiz-start', activeQuiz);
         console.log('sending', activeQuiz);
 
         // console.log('Issuing GET', getCurrentURL() + '/start');

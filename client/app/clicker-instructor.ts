@@ -1,6 +1,7 @@
 
-import { SocketService      } from './services/socket';
+import { ClickerService      } from './services/clicker';
 
+import { navbarCtrl         } from './components/shared/navbar';
 import { selectCourseCtrl   } from './components/shared/select-course';
 import { courseCtrl         } from './components/instructor/course';
 import { createQuizCtrl     } from './components/instructor/create';
@@ -9,8 +10,9 @@ import { quizCtrl           } from './components/instructor/quiz';
 // 'ngSanitize',     --> Markdown html sanitization
 
 export let click = angular
-    .module   ('click'            , ['ngSanitize', 'ngRoute'])
-    .factory  ('socketService'    , () => new SocketService())
+    .module    ('click'           , ['ngSanitize', 'ngRoute'])
+    .factory   ('clickerService'  , () => new ClickerService())
+    .controller('navbarCtrl'      , navbarCtrl)
     .controller('selectCourseCtrl', selectCourseCtrl)
     .controller('courseCtrl'      , courseCtrl)
     .controller('createQuizCtrl'  , createQuizCtrl)
@@ -29,6 +31,6 @@ export let click = angular
                 }).
                 when('/course/:courseId/quiz/:quizId', {
                     templateUrl: 'instructor-quiz.html',
-                    controller: 'courseCtrl'
+                    controller: 'quizCtrl'
                 });
         }]);
