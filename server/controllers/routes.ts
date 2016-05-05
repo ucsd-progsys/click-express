@@ -39,8 +39,8 @@ export function register(req: express.Request, res: express.Response) {
 }
 
 export function getLogin(req: express.Request, res: express.Response) {
-    // res.render('login', { user: req.user });
-    res.sendFile(path.join(__dirname + '../../../client/public/login.html'));
+    console.log('Returning login');
+    res.render('login', { user: req.user, loginScreen: true });
 }
 
 export let postLogin = passport.authenticate('local', {
@@ -59,8 +59,8 @@ export function auth(req: express.Request, res: express.Response, next: Function
     if (req.isAuthenticated()) {
         return next();
     }
-    res.sendFile(path.join(__dirname + '../../../client/public/login.html'));
-    // res.render('index');
+    // res.sendFile(path.join(__dirname + '../../../client/public/login.html'));
+    res.render('login', { loginScreen: true });
 }
 
 export function redirectHome(req: express.Request, res: express.Response): void {
@@ -267,6 +267,10 @@ export function instructorCourseHTML(req: express.Request, res: express.Response
 
 export function instructorQuizHTML(req: express.Request, res: express.Response) {
     res.sendFile(path.join(__dirname + '../../../client/public/instructor/quiz.html'));
+}
+
+export function instructorCreateHTML(req: express.Request, res: express.Response) {
+    res.sendFile(path.join(__dirname + '../../../client/public/instructor/create.html'));
 }
 
 export function courseHTML(req: express.Request, res: express.Response) {

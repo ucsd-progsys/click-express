@@ -1,21 +1,15 @@
 <div ng-controller="createQuizCtrl">
-    <div class="container">
- 
-    <!--http://bootsnipp.com/snippets/6lW6K-->
-    
-    <div class="row">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#edit" data-toggle="tab">Edit</a></li>
-                    <li><a href="#preview" data-toggle="tab">Preview</a></li>
-                </ul>
-            </div>
-            <div class="panel-body">
-                <div class="tab-content">
-                    <div class="tab-pane fade in active" id="edit">
 
-                        <!--Text description-->
+    <div class="padded" md-whiteframe="3">
+    
+        <div ng-cloak>
+            <md-content>
+                <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="edit">
+                    <md-content class="md-padding">
+                    <!--<h1 class="md-display-2">Tab One</h1>-->
+
+                    <!--Text description-->
                         <textarea class="form-control"
                                 ng-model="textarea"
                                 ng-disabled="saving"
@@ -33,13 +27,13 @@
                                 <div class="col-lg-12">
                                     <div class="input-group">
                                         <span class="input-group-btn" data-toggle="buttons">
-                                            <button class="btn btn-default"
+                                            <button class="btn"
                                                     type="radio"
                                                     ng-model="correctChoice.index"
                                                     ng-disabled="saving"
                                                     ng-click="correctChoiceSelected($index)"
                                                     ng-cloak
-                                                    uib-btn-radio="charFromInt($index)">\{{ charFromInt($index) }}</button>
+                                                    uib-btn-radio="charFromInt($index)">{{ charFromInt($index) }}</button>
                                         </span>
                                         <input type="text"
                                                 class="form-control"
@@ -54,38 +48,36 @@
                         </div>
                         
                         <!--Add/remove options-->
-                        <button class="btn btn-default" ng-disabled="saving" ng-click="addNewChoice()" 
-                                tooltip-class="btn" tooltip-placement="bottom" uib-tooltip="Add choice">
+                        <md-button class="md-raised" ng-disabled="saving" ng-click="addNewChoice()">
                             <span class="glyphicon glyphicon-plus"/>
-                        </button>
-                        <button class="btn btn-default" ng-disabled="saving" ng-click="removeLastChoice()" tooltip-class="btn" tooltip-placement="bottom" uib-tooltip="Remove choice">
+                        </md-button>
+                        <md-button class="md-raised" ng-disabled="saving" ng-click="removeLastChoice()">
                             <span class="glyphicon glyphicon-minus"/>
-                        </button>
+                        </md-button>
                         
-                    </div>
-                    
-                    <div class="tab-pane fade" id="preview">
-                        <!--Preview-->
+
+                    </md-content>
+                </md-tab>
+                <md-tab label="preview">
+                    <md-content class="md-padding">
+                    <!--<h1 class="md-display-2">Tab Two</h1>-->
+                    <!--Preview-->
                         <div class="panel-body">
                             <p><span ng-bind-html="preview()"></span></p>
                         </div>
-                    </div>
-                </div>
-            </div>
+                    </md-content>
+                </md-tab>
+
+                </md-tabs>
+            </md-content>            
+    
         </div>
-
+        
+        <div class="bottom-sheet-demo inset" layout="row" layout-sm="column">
+            <md-button class="md-raised" ng-click="showListBottomSheet()">Commit question</md-button>
+            <md-button class="md-warn md-raised" ng-click="showGridBottomSheet()">Clear forms</md-button>
+        </div>
+ 
     </div>
-    
-    
-    <div class="row">
 
-        <button class="btn btn-success" ng-disabled="saving" ng-click="saveQuiz()">
-            <b>Commit question</b>
-        </button>
-        <button class="btn btn-danger" ng-disabled="saving" ng-click="clearForms()">
-            <b>Clear forms</b>
-        </button>
-    </div>  
-
-    </div>
 </div>

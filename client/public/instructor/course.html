@@ -1,10 +1,18 @@
 
- <div class="row">
+<div class="row">
     <div class="col-md-6">
-    <div ng-repeat="quiz in quizzes">
-        <button class="btn btn-block btn-default classWithPad" type="button" style="white-space: normal; text-align: left;" ng-click="selectQuiz($index)">
-            <b>Quiz {{$index + 1}}</b><br/><i style="color:#888;">{{quiz.description}}</i>
-        </button>
+        <label>Select a quiz</label>
+        <div ng-repeat="quiz in quizzes">
+            <button class="btn btn-block classWithPad" type="button" style="white-space: normal; text-align: left;" ng-click="selectQuiz($index)">
+                <b>Quiz {{$index + 1}}</b><br/><i>{{quiz.description}}</i>
+            </button>
         </div>
     </div>
+    <div class="col-md-6">
+        <label>Or</label>
+        <button class="btn btn-block classWithPad" type="button" style="white-space: normal; text-align: left;" ng-click="createQuiz()">
+            <b>Create a new quiz</b>
+        </button>
+    </div>
 </div>
+        

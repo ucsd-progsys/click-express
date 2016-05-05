@@ -25,6 +25,7 @@
     "ui-bootstrap": "^1.3.2",
     "angular-bootstrap": "^1.3.2",
     "marked": "^0.3.5",
-    "bootswatch": "^3.3.6+1"
+    "bootswatch": "^3.3.6+1",
+    "angular-material": "^1.0.8"
   }
 }

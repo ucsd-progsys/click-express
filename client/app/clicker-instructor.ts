@@ -10,7 +10,7 @@ import { quizCtrl           } from './components/instructor/quiz';
 // 'ngSanitize',     --> Markdown html sanitization
 
 export let click = angular
-    .module    ('click'           , ['ngSanitize', 'ngRoute'])
+    .module    ('click'           , ['ngSanitize', 'ngRoute', 'ngMaterial'])
     .factory   ('clickerService'  , () => new ClickerService())
     .controller('navbarCtrl'      , navbarCtrl)
     .controller('selectCourseCtrl', selectCourseCtrl)
@@ -32,5 +32,9 @@ export let click = angular
                 when('/course/:courseId/quiz/:quizId', {
                     templateUrl: 'instructor-quiz.html',
                     controller: 'quizCtrl'
+                }).
+                when('/course/:courseId/new', {
+                    templateUrl: 'instructor-create.html',
+                    controller: 'createQuizCtrl'  
                 });
         }]);

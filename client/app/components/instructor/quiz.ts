@@ -6,14 +6,14 @@ import { quizToHtml     } from '../../../../shared/misc';
 import { getCurrentURL  } from '../../shared/url';
 import { IClickerService } from '../../services/clicker';
 
-export function quizCtrl($scope: any, $http: angular.IHttpService, $timeout: angular.ITimeoutService, socketService: IClickerService) {
+export function quizCtrl($scope: any, $http: angular.IHttpService, $timeout: angular.ITimeoutService, clickerService: IClickerService) {
 
     let course = getCurrentURL().split('/').reverse()[2];
     let quizId = getCurrentURL().split('/').reverse()[0];
 
     let quizURL = url.getServerURL() + '/quiz/' + quizId;
 
-    let socket = socketService.getSocket();
+    let socket = clickerService.getSocket();
     console.log('got socket', socket)
 
     // Counters

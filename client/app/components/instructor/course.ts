@@ -7,7 +7,8 @@ import * as _             from 'underscore';
 interface ICourseScope extends angular.IScope {
     quizzes: t.IQuiz[];
     courseId: t.CourseId;
-    selectQuiz(i: number): void;    
+    selectQuiz(i: number): void;
+    createQuiz(): void;    
 }
 
 export function courseCtrl($scope: ICourseScope, $location: angular.ILocationService, $http: angular.IHttpService, $routeParams) {
@@ -25,6 +26,11 @@ export function courseCtrl($scope: ICourseScope, $location: angular.ILocationSer
     $scope.selectQuiz = function(i: number) {
         let quizId = $scope.quizzes[i]._id;
         $location.path(['course', courseId, 'quiz', quizId].join('/'));
+    }
+    
+    $scope.createQuiz = function() {
+        console.log('to create')
+        $location.path(['course', courseId, 'new'].join('/'));
     }
 }
 

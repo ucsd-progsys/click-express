@@ -2,55 +2,87 @@
 import * as t from 'types';
 import { charFromInt, questionToHtml } from '../../../../shared/misc';
 import { getPostQuizURL }              from '../../shared/url';
+import { IClickerService } from '../../services/clicker';
 
-declare let username: string;
-// declare let socket  : any;
 
-// import these correctly
-declare let serverError: any;
+type URL = string;
 
-////////////////////////////////////////////////////////////////////
-// Auxiliary ///////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////
-
-let __saveTag = 0;
-let __pendingTags = [];
-function newSaveTag() {
-    let x = __saveTag++;
-    __pendingTags.push(x);
-    return x;
+interface IChoice {
+    id: number;
+    text?: string;
 }
 
-function toTagged<A>(x: A): t.Tagged<A> {
-    return { tag: newSaveTag(), data: x };
+interface IChoiceStyle {
+    'background-color'?: string;
 }
 
-////////////////////////////////////////////////////////////////////
-// Create Quiz Controller //////////////////////////////////////////
-////////////////////////////////////////////////////////////////////
+interface ITab {
+    title: string;
+    url: URL;
+}
 
-export function createQuizCtrl($scope, $http: angular.IHttpService, $location, $timeout, $window: angular.IWindowService, Data) {
+interface ICreateQuizScope extends angular.IScope {
+    // Auxiliary
+    charFromInt: (n: number) => string;
 
-    // Populate CommonData
-    $scope.CommonData = Data;
-    // $scope.CommonData.socket = socket;
-    $scope.CommonData.username = username;
+    // Components
+    textarea: string;
+    tabs: ITab[];
 
-    // Auxiliary functions
+    // State
+    saving: boolean;
+    currentTab: URL;
+
+    // Quiz
+    choices: IChoice[];
+    choiceStyle: IChoiceStyle[];
+    correctChoice: IChoice;
+
+    // Tab API
+    onClickTab: (tab: ITab) => void;
+    isActiveTab: (url: URL) => boolean;
+
+    // Choices API
+    addNewChoice: () => void;
+    removeLastChoice: () => void;
+    correctChoiceSelected: (i: number) => void;
+
+    // Preview/Submit
+    preview: () => void;
+    saveQuiz: () => void;
+
+    // Clear
+    clearForms: () => void;
+}
+
+export function createQuizCtrl($scope: ICreateQuizScope, $http: angular.IHttpService, $location: angular.ILocationService, clickerService: IClickerService) {
+
+    // Auxiliary
     $scope.charFromInt = charFromInt;
 
-    function getUserName(): string {
-        return $scope.CommonData.username;
+    // Components
+    $scope.textarea = '';
+
+    $scope.tabs = [
+         { title: 'Edit'   , url: 'edit' },
+         { title: 'Preview', url: 'preview' }
+    ];
+
+    $scope.currentTab = $scope.tabs[0].url;
+
+    $scope.onClickTab = tab => {
+        $scope.currentTab = tab.url;
+        // $location.path(['course', clickerService.course, tab.url].join('/'));
     }
-    function getCourseName(): string {
-        return $scope.CommonData.courseName;
+
+    $scope.isActiveTab = tabUrl => {
+        return tabUrl === $scope.currentTab;
     }
 
     // States
     $scope.saving = false;
     function setSaving() { $scope.saving = true; }
     function unsetSaving() { $scope.saving = false; }
-
 
     // Choices
     $scope.choices = [];
@@ -67,21 +99,20 @@ export function createQuizCtrl($scope, $http: angular.IHttpService, $location, $
         onEdit();
     };
 
-    $scope.correctChoice = { index: -1 };
+    $scope.correctChoice = { id: -1 };
 
     // Setting the correct choice
     function setCorrectChoiceStyle() {
         $scope.choices.forEach((_,i) => { $scope.choiceStyle[i] = {} });
-        $scope.choiceStyle[$scope.correctChoice.index] = { 'background-color':'#cdf1c0' };
+        $scope.choiceStyle[$scope.correctChoice.id] = { 'background-color':'#cdf1c0' };
     }
 
-    function correctChoiceSelected(index: number) {
-        $scope.correctChoice.index = index;
+    $scope.correctChoiceSelected = (index: number) => {
+        $scope.correctChoice.id = index;
         setCorrectChoiceStyle();
         onEdit();
     }
 
-    $scope.correctChoiceSelected = correctChoiceSelected;
 
     function onEdit() {}
 
@@ -90,7 +121,7 @@ export function createQuizCtrl($scope, $http: angular.IHttpService, $location, $
         // acceptStates(['quizReady', 'quizStale', 'quizEmpty']);
         $scope.textarea = "";
         $scope.choices = [];
-        $scope.correctChoice.index = -1
+        $scope.correctChoice.id = -1
         $scope.choiceStyle = [];
     }
 
@@ -99,36 +130,36 @@ export function createQuizCtrl($scope, $http: angular.IHttpService, $location, $
     // Create Quiz Controller //////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
 
-    function showNotification(n: string) {
-        $scope[n] = true;
-        $timeout(() => { $scope[n] = false; }, 6000 /* 6 seconds */);
-    }
-    function dismissNotification(n: string) {
-        $scope[n] = false;
-        $timeout(() => { $scope.saveSuccessfulVisible = false; }, 6000 /* 6 seconds */);
-    }
+    // function showNotification(n: string) {
+    //     $scope[n] = true;
+    //     $timeout(() => { $scope[n] = false; }, 6000 /* 6 seconds */);
+    // }
+    // function dismissNotification(n: string) {
+    //     $scope[n] = false;
+    //     $timeout(() => { $scope.saveSuccessfulVisible = false; }, 6000 /* 6 seconds */);
+    // }
 
-    function showSaveNotification()         { dismissAllNotifications(); showNotification('saveSuccessfulVisible'); }
-    function showEmptyQuizNotification()    { dismissAllNotifications(); showNotification('saveEmptyQuizVisible'); }
-    function showNoUserNameNotification()   { dismissAllNotifications(); showNotification('saveNoCourseNameVisible'); }
+    // function showSaveNotification()         { dismissAllNotifications(); showNotification('saveSuccessfulVisible'); }
+    // function showEmptyQuizNotification()    { dismissAllNotifications(); showNotification('saveEmptyQuizVisible'); }
+    // function showNoUserNameNotification()   { dismissAllNotifications(); showNotification('saveNoCourseNameVisible'); }
     // function showNoCourseNameNotification() { dismissAllNotifications(); showNotification('saveNoCourseNameVisible'); }
 
-    function dismissSaveNotification()         { dismissNotification('saveSuccessfulVisible'); }
-    function dismissEmptyQuizNotification()    { dismissNotification('saveEmptyQuizVisible'); }
-    function dismissNoUserNameNotification()   { dismissNotification('saveNoCourseNameVisible'); }
+    // function dismissSaveNotification()         { dismissNotification('saveSuccessfulVisible'); }
+    // function dismissEmptyQuizNotification()    { dismissNotification('saveEmptyQuizVisible'); }
+    // function dismissNoUserNameNotification()   { dismissNotification('saveNoCourseNameVisible'); }
     // function dismissNoCourseNameNotification() { dismissNotification('saveNoCourseNameVisible'); }
 
-    function dismissAllNotifications() {
-        dismissSaveNotification();
-        dismissEmptyQuizNotification();
-        dismissNoUserNameNotification();
-        // dismissNoCourseNameNotification();
-    }
+    // function dismissAllNotifications() {
+    //     dismissSaveNotification();
+    //     dismissEmptyQuizNotification();
+    //     dismissNoUserNameNotification();
+    //     // dismissNoCourseNameNotification();
+    // }
 
     function emptyInputQuiz() {
-        let text: string = $scope.textarea;
-        let choices: string[] = $scope.choices;
-        let correctChoice: number = $scope.correctChoice.index;
+        let text = $scope.textarea;
+        let choices = $scope.choices;
+        let correctChoice = $scope.correctChoice.id;
         return (typeof text === 'undefined') || (text === '') ||
             (typeof choices === 'undefined') || (choices.length < 2) ||
             (correctChoice < 0) || (correctChoice >= choices.length);
@@ -136,38 +167,36 @@ export function createQuizCtrl($scope, $http: angular.IHttpService, $location, $
 
     function makeQuiz(): t.IQuiz {
         return {
-            courseId   : getCourseName(),
+            courseId   : clickerService.course,
             description: $scope.textarea,
             options    : $scope.choices.map(c => c.text),
-            correct    : $scope.correctChoice.index,
-            author     : getUserName(),
+            correct    : $scope.correctChoice.id,
+            author     : clickerService.username,
             timeCreated: new Date()
         };
     }
 
-    function saveQuiz() {
+    $scope.saveQuiz = () => {
         if (emptyInputQuiz()) {
-            showEmptyQuizNotification();
+            // showEmptyQuizNotification();
             return;
         }
-        if (!getUserName()) {
-            showNoUserNameNotification();
+        if (!(clickerService.username)) {
+            // showNoUserNameNotification();
             return;
         }
 
         setSaving();
 
         $http.post(getPostQuizURL(), makeQuiz()).success((quizId: string) => {
-            showSaveNotification();
+            // showSaveNotification();
             unsetSaving();
-            $window.location.href = quizId;
+            $location.path(['course', ':courseId', 'quiz', quizId].join('/'));
         }).error((data, status) => {
-            serverError($scope, data, status, "click");
+            // serverError($scope, data, status, "click");
             unsetSaving();
         });
     }
-
-    $scope.saveQuiz  = saveQuiz;
 
     ////////////////////////////////////////////////////////////////////
     // Preview /////////////////////////////////////////////////////////

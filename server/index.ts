@@ -85,12 +85,12 @@ let serverPort = app.get('port');
 ////////////////////////////////////////////////////////////////////
 
 app.set('views', path.join(__dirname, '/../client/views'));
-app.engine('handlebars', handlebars({
+app.engine('.hbs', handlebars({
     defaultLayout: 'main',
-    extname: '.handlebars',
+    extname: '.hbs',
     layoutsDir: path.join(__dirname, '/../client/views/layouts')
 }));
-app.set('view engine', 'handlebars');
+app.set('view engine', '.hbs');
 
 ////////////////////////////////////////////////////////////////////
 // Sessions ////////////////////////////////////////////////////////
@@ -123,10 +123,6 @@ app.use(passport.session());
 ////////////////////////////////////////////////////////////////////
 
 app.use(express.static(path.join(__dirname, '../app/html')));
-
-
-console.log('serving', path.join(__dirname, '../app/html'));
-
 app.use(express.static(path.join(__dirname, '../client')));
 app.use(express.static(path.join(__dirname, '../node_modules')));
 
@@ -175,6 +171,7 @@ app.get ('/course.html'              , routes.courseHTML);
 app.get ('/select-course.html'       , routes.selectCourseHTML);
 app.get ('/instructor-course.html'   , routes.instructorCourseHTML);
 app.get ('/instructor-quiz.html'     , routes.instructorQuizHTML);
+app.get ('/instructor-create.html'   , routes.instructorCreateHTML);
 app.get ('/courses'                  , routes.courses);
 app.get ('/course/:course_id/quizzes', routes.getQuizzes);
 app.get ('/quiz/:quiz_id'            , routes.getQuiz);

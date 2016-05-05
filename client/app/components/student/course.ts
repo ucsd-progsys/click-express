@@ -21,7 +21,6 @@ export function courseCtrl($scope, socketService: IClickerService) {
     let course = url.getCurrentURL().split('/').reverse()[0];
     let namespacePath = url.getServerURL() + '/' + course;    
     let socket = io(namespacePath);
-    console.log('Connecting on', namespacePath);
     socketService.registerSocket(socket);
 
     $scope.quizStarted = false;
