@@ -1,17 +1,26 @@
 
-<div class="row">
-    <div class="col-md-6">
-        <label>Select a quiz</label>
-        <md-button ng-repeat="quiz in quizzes" flex class="md-raised" style="white-space: normal; text-align: left;" ng-click="selectQuiz($index)">
-            <b>Quiz {{$index + 1}}</b><br/><i>{{quiz.description}}</i>
+<label>Select a quiz</label>    
+    
+<md-grid-list
+    md-cols-xs="1" md-cols-sm="2" md-cols-md="4" md-cols-gt-md="6"
+    md-row-height="120px"
+    md-gutter="12px" md-gutter-gt-sm="8px">
+    
+    <md-grid-tile md-rowspan="1" md-colspan="2" md-colspan-sm="1" md-colspan-xs="1" ng-repeat="quiz in quizzes">
+        <md-button class="md-raised" ng-click="selectQuiz($index)">
+            <md-card-content>
+            <b>Quiz {{$index + 1}}</b><br/><p><i>{{quiz.description.substring(0,40)}}...</p></i>
+            </md-card-content>            
         </md-button>
-        
-    </div>
-    <div class="col-md-6">
-        <label>Or</label>
-        <md-button class="md-raised" style="white-space: normal; text-align: left;" ng-click="createQuiz()">
-            <b>Create a new quiz</b>
-        </md-button>
-    </div>
+    </md-grid-tile>    
+    
+</md-grid-list>       
+
+<label>Or</label>
+
+<div layout="row" layout-padding layout-wrap layout-fill style="padding-bottom: 32px;" ng-cloak>
+    <md-button class="md-raised" style="white-space: normal; text-align: left;" ng-click="createQuiz()">
+        <b>Create a new quiz</b>
+    </md-button>
 </div>
         

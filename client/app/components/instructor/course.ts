@@ -2,6 +2,8 @@
 import * as t             from 'types';
 
 import * as url           from '../../shared/url';
+import * as m             from '../../../../shared/misc';
+
 import * as _             from 'underscore';
 
 import { IClickerService } from '../../services/clicker';
@@ -11,7 +13,8 @@ interface ICourseScope extends angular.IScope {
     quizzes: t.IQuiz[];
     courseId: t.CourseId;
     selectQuiz(i: number): void;
-    createQuiz(): void;    
+    createQuiz(): void;   
+    quizToHtml(q: t.IQuiz): string; 
 }
 
 export function courseCtrl($scope: ICourseScope, $location: angular.ILocationService, $http: angular.IHttpService, $routeParams, clickerService: IClickerService) {
@@ -49,6 +52,8 @@ export function courseCtrl($scope: ICourseScope, $location: angular.ILocationSer
         // Now you we can connect to it        
         clickerService.connectSocket(courseId);        
     });
+    
+    $scope.quizToHtml = m.quizToHtml;
     
 }
 
