@@ -9,8 +9,8 @@ function getHistoryURL() {
     return getServerURL() + '/history';
 }
 
-export function getPostQuizURL() {
-    return './new';
+export function getPostQuizURL(course: string) {
+    return getServerURL() + '/course/' + course + '/quiz/new';
 }
 
 export function getCurrentURL() {

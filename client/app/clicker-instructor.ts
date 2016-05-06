@@ -1,5 +1,5 @@
 
-import { ClickerService      } from './services/clicker';
+import { clickerService      } from './services/clicker';
 
 import { navbarCtrl         } from './components/shared/navbar';
 import { selectCourseCtrl   } from './components/shared/select-course';
@@ -11,7 +11,7 @@ import { quizCtrl           } from './components/instructor/quiz';
 
 export let click = angular
     .module    ('click'           , ['ngSanitize', 'ngRoute', 'ngMaterial'])
-    .factory   ('clickerService'  , () => new ClickerService())
+    .factory   ('clickerService'  , clickerService)
     .controller('navbarCtrl'      , navbarCtrl)
     .controller('selectCourseCtrl', selectCourseCtrl)
     .controller('courseCtrl'      , courseCtrl)

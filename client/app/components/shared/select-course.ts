@@ -16,7 +16,8 @@ export function selectCourseCtrl($scope: ISelectCourseScope, $location: angular.
     });
     $scope.setCourse = function(i: number) {
         let courseId = $scope.courses[i].name;
-        clickerService.course = courseId;           // update the service (point of reference)   
+        clickerService.course = courseId;           // update the service (point of reference)
+        console.log('setting courseId to', courseId);   
         $location.path('/course/' + courseId);     
     }
 }

@@ -126,36 +126,6 @@ export function createQuizCtrl($scope: ICreateQuizScope, $http: angular.IHttpSer
     }
 
 
-    ////////////////////////////////////////////////////////////////////
-    // Create Quiz Controller //////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////
-
-    // function showNotification(n: string) {
-    //     $scope[n] = true;
-    //     $timeout(() => { $scope[n] = false; }, 6000 /* 6 seconds */);
-    // }
-    // function dismissNotification(n: string) {
-    //     $scope[n] = false;
-    //     $timeout(() => { $scope.saveSuccessfulVisible = false; }, 6000 /* 6 seconds */);
-    // }
-
-    // function showSaveNotification()         { dismissAllNotifications(); showNotification('saveSuccessfulVisible'); }
-    // function showEmptyQuizNotification()    { dismissAllNotifications(); showNotification('saveEmptyQuizVisible'); }
-    // function showNoUserNameNotification()   { dismissAllNotifications(); showNotification('saveNoCourseNameVisible'); }
-    // function showNoCourseNameNotification() { dismissAllNotifications(); showNotification('saveNoCourseNameVisible'); }
-
-    // function dismissSaveNotification()         { dismissNotification('saveSuccessfulVisible'); }
-    // function dismissEmptyQuizNotification()    { dismissNotification('saveEmptyQuizVisible'); }
-    // function dismissNoUserNameNotification()   { dismissNotification('saveNoCourseNameVisible'); }
-    // function dismissNoCourseNameNotification() { dismissNotification('saveNoCourseNameVisible'); }
-
-    // function dismissAllNotifications() {
-    //     dismissSaveNotification();
-    //     dismissEmptyQuizNotification();
-    //     dismissNoUserNameNotification();
-    //     // dismissNoCourseNameNotification();
-    // }
-
     function emptyInputQuiz() {
         let text = $scope.textarea;
         let choices = $scope.choices;
@@ -182,27 +152,19 @@ export function createQuizCtrl($scope: ICreateQuizScope, $http: angular.IHttpSer
             return;
         }
         if (!(clickerService.username)) {
-            // showNoUserNameNotification();
             return;
         }
 
-        setSaving();
-
-        $http.post(getPostQuizURL(), makeQuiz()).success((quizId: string) => {
-            // showSaveNotification();
-            unsetSaving();
-            $location.path(['course', ':courseId', 'quiz', quizId].join('/'));
+        let quiz = makeQuiz();
+        let course = clickerService.course;
+        
+        $http.post(getPostQuizURL(course), quiz).success((quizId: string) => {
+            $location.path(['course', course, 'quiz', quizId].join('/'));
         }).error((data, status) => {
-            // serverError($scope, data, status, "click");
-            unsetSaving();
+            console.log('ERROR when saving quiz');
         });
     }
-
-    ////////////////////////////////////////////////////////////////////
-    // Preview /////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////
-
+    
     $scope.preview = () => questionToHtml($scope.textarea, $scope.choices.map(c => c.text));
 
 }
-
