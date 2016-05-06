@@ -273,8 +273,8 @@ export function instructorCreateHTML(req: express.Request, res: express.Response
     res.sendFile(path.join(__dirname + '../../../client/public/instructor/create.html'));
 }
 
-export function courseHTML(req: express.Request, res: express.Response) {
-    res.sendFile(path.join(__dirname + '../../../client/public/course.html'));
+export function studentCourseHTML(req: express.Request, res: express.Response) {
+    res.sendFile(path.join(__dirname + '../../../client/public/student/course.html'));
 }
 
 

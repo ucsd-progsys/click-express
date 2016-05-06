@@ -16,12 +16,13 @@ function makeClick(scope: any, quiz: t.IQuiz, answer: number): t.IClick {
 
 // export function studentCtrl($scope: any, $http: angular.IHttpService, $location: angular.ILocationService, $timeout: angular.ITimeoutService) {
 
-export function courseCtrl($scope, socketService: IClickerService) {
+export function courseCtrl($scope, clickerService: IClickerService) {
    
     let course = url.getCurrentURL().split('/').reverse()[0];
     let namespacePath = url.getServerURL() + '/' + course;    
     let socket = io(namespacePath);
-    socketService.registerSocket(socket);
+    
+    clickerService.registerSocket(socket);
 
     $scope.quizStarted = false;
         

@@ -167,11 +167,14 @@ app.get ('/course/:course_id/quiz/:quiz_id/stop'  , routes.auth, routes.quizStop
 
 
 // Html
-app.get ('/course.html'              , routes.courseHTML);
 app.get ('/select-course.html'       , routes.selectCourseHTML);
+
+app.get ('/student-course.html'      , routes.studentCourseHTML);
+
 app.get ('/instructor-course.html'   , routes.instructorCourseHTML);
 app.get ('/instructor-quiz.html'     , routes.instructorQuizHTML);
 app.get ('/instructor-create.html'   , routes.instructorCreateHTML);
+
 app.get ('/courses'                  , routes.courses);
 app.get ('/course/:course_id/quizzes', routes.getQuizzes);
 app.get ('/quiz/:quiz_id'            , routes.getQuiz);
