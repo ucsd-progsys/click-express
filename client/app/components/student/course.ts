@@ -7,25 +7,51 @@ import { charFromInt
        , questionToHtml } from '../../../../shared/misc';
 
 
+type HtmlString = string;
+
 interface ICourseScope extends angular.IScope {
-    
+    // State
+    quizInProgress: boolean;
+
+    quizHtml: HtmlString;
 }
 
-export function courseCtrl($scope: ICourseScope, clickerService: IClickerService) {
+export function courseCtrl($scope: ICourseScope, $rootScope, $http: angular.IHttpService, $timeout: angular.ITimeoutService, clickerService: IClickerService) {
 
-    let course = url.getCurrentURL().split('/').reverse()[0];
+    // Init
+    console.log('courseCtrl exec')
+    // $scope.quizInProgress = false;
 
-    clickerService.getSocket().on('quiz_start', (q: t.IQuiz) => {
+    let courseId = clickerService.getCourse();
+    let socketURL = url.getServerURL() + '/' + courseId;
+    let socket = io.connect(socketURL);
 
+    if (!socket) {
+        console.log('Could not connect to socket (namespace)', socketURL);
+    }
 
-        console.log('quiz_start on socket');
+    socket.on('quiz-start', function(q: t.IQuiz) {
 
+        let quizHtml = questionToHtml(q.description, q.options);
+        $scope.quizInProgress = true;
+        $scope.quizHtml = quizHtml;
+        console.log('quiz-start received');
 
-        // let quizHtml = questionToHtml(q.description, q.options);
-        // $scope.quizHtml = quizHtml;
-
+        // http://stackoverflow.com/a/30545450
+        // You need to apply scope changes because Angular doesn't know
+        // anything about changes made to model by socket event (it happens
+        // from "outside" of Angular digest lifecycle):
+        $scope.$apply();
 
     });
+
+    socket.on('quiz-stop', function(q: t.IQuiz) {
+        $scope.quizInProgress = false;
+        $scope.quizHtml = '';
+        console.log('quiz-stop received')
+        $scope.$apply();
+    });
+
 
     // function makeClick(scope: any, quiz: t.IQuiz, answer: number): t.IClick {
     //     return {
@@ -35,6 +61,5 @@ export function courseCtrl($scope: ICourseScope, clickerService: IClickerService
     //         submitTime : new Date()
     //     }
     // }
-
 
 }

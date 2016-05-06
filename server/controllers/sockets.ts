@@ -26,14 +26,12 @@ import * as express     from 'express';
  *
  */
 
-export function initInstructorConnection(io: SocketIO.Server) {
+export function initSocketConnection(io: SocketIO.Server) {
     return (req: express.Request, res: express.Response) => {
-
         let course = req.params.course_id;
 
         // Setup the course namespace
         let nsp = io.of(course);
-
         console.log('Creating a socket for course', course);
 
         nsp.on('connection', socket => {
@@ -43,7 +41,7 @@ export function initInstructorConnection(io: SocketIO.Server) {
             socket.on('quiz-start', quizStart(nsp));
             socket.on('quiz-stop' , quizStop(nsp));
         });
-        
+
         res.status(200).send(course);
     };
 }
@@ -58,7 +56,6 @@ export function initStudentConnection(course: t.CourseId, io: SocketIO.Server) {
 
 function quizStart(nsp: SocketIO.Namespace) {
     return (data: t.IActiveQuiz) => {
-        console.log('quiz-start', data);
         Quiz.findWithId(data.id).then(q => {
             nsp.emit('quiz-start', q);
         });

@@ -173,7 +173,7 @@ export function courseHome(io: SocketIO.Server) {
 
         // Socket
         if (isInstructor(req)) {
-            Socket.initInstructorConnection(course, io);
+            Socket.initSocketConnection(course, io);
         } else {
             Socket.initStudentConnection(course, io);
         }

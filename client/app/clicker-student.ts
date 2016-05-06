@@ -15,7 +15,6 @@ export let click = angular
     .factory   ('clickerService'  , clickerService)
     .controller('navbarCtrl'      , navbarCtrl)
     .controller('selectCourseCtrl', selectCourseCtrl)
-    .controller('homeCtrl'        , homeCtrl)
     .controller('courseCtrl'      , courseCtrl)
     
     .config(['$routeProvider',

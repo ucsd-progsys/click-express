@@ -1,6 +1,6 @@
 
 import * as t   from 'types';
-import * as url from '../shared/url'; 
+import * as url from '../shared/url';
 
 // TODO: get this asynchronously
 // http://blog.ninja-squad.com/2015/05/28/angularjs-promises/
@@ -15,15 +15,16 @@ export interface IClickerService {
     getCourse(): t.CourseId;
     getQuiz(): t.QuizId;
     connectSocket(course: t.CourseId): void;
+    // onSocket: any;
 }
 
-export function clickerService($http: angular.IHttpService, $location: angular.ILocationService, $routeParams): IClickerService {
-        
-        
+export function clickerService($http: angular.IHttpService, $location: angular.ILocationService, $routeParams, $rootScope): IClickerService {
+
+
     return {
         username : username,
         socket   : io.connect(url.getServerURL()),
-            
+
         registerSocket: (socket: SocketIOClient.Socket) => { this.socket = socket; },
         getCourse     : () => $routeParams.courseId,
         getQuiz       : () => $routeParams.quizId,
@@ -32,6 +33,7 @@ export function clickerService($http: angular.IHttpService, $location: angular.I
         connectSocket : (course: t.CourseId) => {
                             console.log('Setting service socket to', url.getServerURL() + '/' + course);
                             this.socket = io.connect(url.getServerURL() + '/' + course);
-                        }  
+                        }
+
     };
 }

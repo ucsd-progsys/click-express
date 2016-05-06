@@ -11,20 +11,20 @@ interface IQuizScope extends angular.IScope {
     totalStudentsInRoom: number;
     studentsAnsweredCorrectCount: number;
     studentsAnsweredWrongCount: number;
-    quizStarted: boolean;
+    quizRunning: boolean;
     quizHtml: string;
     showCorrectAnswer: boolean;
-    
+
     // Choice
     choices: any;
     correctChoice: any;
     choiceStyle: any;
-    
+
     // Counters
     counter: number;
     counterString: string;
-    connectedStudentIds: any[];   
-    
+    connectedStudentIds: any[];
+
     // API
     startQuiz: () => void;
     stopQuiz: () => void;
@@ -32,7 +32,7 @@ interface IQuizScope extends angular.IScope {
 }
 
 
-export function quizCtrl($scope: IQuizScope, $http: angular.IHttpService, $location: angular.ILocationService, 
+export function quizCtrl($scope: IQuizScope, $http: angular.IHttpService, $location: angular.ILocationService,
                          $timeout: angular.ITimeoutService, clickerService: IClickerService) {
 
     let course = getCurrentURL().split('/').reverse()[2];
@@ -47,7 +47,7 @@ export function quizCtrl($scope: IQuizScope, $http: angular.IHttpService, $locat
     $scope.totalStudentsInRoom          = 0;
     $scope.studentsAnsweredCorrectCount = 0;
     $scope.studentsAnsweredWrongCount   = 0;
-    $scope.quizStarted = false;
+    $scope.quizRunning = false;
 
     // Render quiz
     $http.get(quizURL).success((data: string) => {
@@ -59,27 +59,31 @@ export function quizCtrl($scope: IQuizScope, $http: angular.IHttpService, $locat
     $scope.startQuiz = function() {
 
         // Local state
-        $scope.quizStarted = true;
+        $scope.quizRunning = true;
 
         // Quiz Id is the last part of the current URL
         let activeQuiz: t.IActiveQuiz =  { id: quizId, course: course };
 
         let socket = clickerService.getSocket();
         socket.emit('quiz-start', activeQuiz);
-        console.log('sending', activeQuiz);
 
         // Timer
         startTimeCounter();
         resetAnswerCounters();
-        
+
     }
 
     $scope.stopQuiz = function() {
-        $scope.quizStarted = false;
-        $http.get(getCurrentURL() + '/stop').success((data: string) => {
-            
-        });
+        $scope.quizRunning = false;
 
+        // Quiz Id is the last part of the current URL
+        let activeQuiz: t.IActiveQuiz =  { id: quizId, course: course };
+
+        let socket = clickerService.getSocket();
+        socket.emit('quiz-stop', activeQuiz);
+
+        // Reset timer        
+        resetAnswerCounters();
     }
 
     // show correct answer
@@ -126,10 +130,11 @@ export function quizCtrl($scope: IQuizScope, $http: angular.IHttpService, $locat
 
     function resumeTimeCounter() {
         $timeout(() => {
-            if (!$scope.quizStarted) return;
-            $scope.counter++;
-            $scope.counterString = prettyTime($scope.counter);
-            resumeTimeCounter();
+            if ($scope.quizRunning) {
+                $scope.counter++;
+                $scope.counterString = prettyTime($scope.counter);
+                resumeTimeCounter();
+            }
         }, 1000 /* 1 sec */);
     }
     function startTimeCounter() {

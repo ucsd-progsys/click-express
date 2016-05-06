@@ -7,12 +7,12 @@
         </div>
         <div class="col-md-3">
             <div layout="row">
-                <md-button flex class="md-raised" ng-disabled="quizStarted" ng-click="startQuiz()" >
+                <md-button flex class="md-raised" ng-disabled="quizRunning" ng-click="startQuiz()" >
                     <span class="glyphicon glyphicon-play"/>
                 </md-button>
             </div>
             <div layout="row">
-                <md-button flex class="md-raised" ng-disabled="!quizStarted" ng-click="stopQuiz()">
+                <md-button flex class="md-raised" ng-disabled="!quizRunning" ng-click="stopQuiz()">
                     <span class="glyphicon glyphicon-stop"/>
                 </md-button>
             </div>
@@ -27,8 +27,8 @@
             <!-- Status -->
             <div layout="row">
                 <table flex class="table table-bordered classWithPad">
-                    <caption ng-show="quizStarted" ng-cloak>Quiz in progress</caption>
-                    <caption ng-show="!quizStarted" ng-cloak>Quiz pending</caption>
+                    <caption ng-show="quizRunning" ng-cloak>Quiz in progress</caption>
+                    <caption ng-show="!quizRunning" ng-cloak>Quiz pending</caption>
                     <tr><td>Elapsed Time   </td><td>{{counterString}}               </td></tr>
                     <tr><td>Participants   </td><td>{{totalStudentsInRoom}}         </td></tr>
                     <tr><td>Total answers  </td><td>{{studentsAnsweredCount}}       </td></tr>

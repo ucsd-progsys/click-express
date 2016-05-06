@@ -48,7 +48,7 @@ export function courseCtrl($scope: ICourseScope, $location: angular.ILocationSer
         console.log('socket inited on server');
         // Now you we can connect to it        
         clickerService.connectSocket(courseId);        
-    })
+    });
     
 }
 

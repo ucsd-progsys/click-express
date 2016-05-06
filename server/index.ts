@@ -179,7 +179,7 @@ app.get ('/courses'                  , routes.courses);
 app.get ('/course/:course_id/quizzes', routes.getQuizzes);
 app.get ('/quiz/:quiz_id'            , routes.getQuiz);
 
-app.get ('/course/:course_id/socket' , sockets.initInstructorConnection(io));
+app.get ('/course/:course_id/socket' , sockets.initSocketConnection(io));
 
 
 // User API
