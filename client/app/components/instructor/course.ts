@@ -4,6 +4,9 @@ import * as t             from 'types';
 import * as url           from '../../shared/url';
 import * as _             from 'underscore';
 
+import { IClickerService } from '../../services/clicker';
+
+
 interface ICourseScope extends angular.IScope {
     quizzes: t.IQuiz[];
     courseId: t.CourseId;
@@ -11,12 +14,15 @@ interface ICourseScope extends angular.IScope {
     createQuiz(): void;    
 }
 
-export function courseCtrl($scope: ICourseScope, $location: angular.ILocationService, $http: angular.IHttpService, $routeParams) {
+export function courseCtrl($scope: ICourseScope, $location: angular.ILocationService, $http: angular.IHttpService, $routeParams, clickerService: IClickerService) {
     let courseId = $routeParams.courseId;
-    let quizzesURL = url.getServerURL() + '/course/' + courseId + '/quizzes';
 
+    // Quizzes
+    
     $scope.quizzes = [];
     $scope.courseId = courseId;
+    
+    let quizzesURL = url.getServerURL() + '/course/' + courseId + '/quizzes';
 
     $http.get(quizzesURL).success((data: string) => {
         let quizzes: t.IQuiz[] = _.pairs(JSON.parse(data)).map(kv => kv[1]);
@@ -31,6 +37,19 @@ export function courseCtrl($scope: ICourseScope, $location: angular.ILocationSer
     $scope.createQuiz = function() {
         $location.path(['course', courseId, 'new'].join('/'));
     }
+    
+    // Socket init
+    
+    let socketURL = url.getServerURL() + '/course/' + courseId + '/socket';
+
+    // TODO: Check if we're already connected to this socket 
+
+    $http.get(socketURL).success((data: any) => {                       
+        console.log('socket inited on server');
+        // Now you we can connect to it        
+        clickerService.connectSocket(courseId);        
+    })
+    
 }
 
 

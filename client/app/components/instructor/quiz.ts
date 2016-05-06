@@ -6,7 +6,33 @@ import { quizToHtml     } from '../../../../shared/misc';
 import { getCurrentURL  } from '../../shared/url';
 import { IClickerService } from '../../services/clicker';
 
-export function quizCtrl($scope: any, $http: angular.IHttpService, $location: angular.ILocationService, 
+interface IQuizScope extends angular.IScope {
+    studentsAnsweredCount: number;
+    totalStudentsInRoom: number;
+    studentsAnsweredCorrectCount: number;
+    studentsAnsweredWrongCount: number;
+    quizStarted: boolean;
+    quizHtml: string;
+    showCorrectAnswer: boolean;
+    
+    // Choice
+    choices: any;
+    correctChoice: any;
+    choiceStyle: any;
+    
+    // Counters
+    counter: number;
+    counterString: string;
+    connectedStudentIds: any[];   
+    
+    // API
+    startQuiz: () => void;
+    stopQuiz: () => void;
+    deleteQuiz: () => void;
+}
+
+
+export function quizCtrl($scope: IQuizScope, $http: angular.IHttpService, $location: angular.ILocationService, 
                          $timeout: angular.ITimeoutService, clickerService: IClickerService) {
 
     let course = getCurrentURL().split('/').reverse()[2];
@@ -14,7 +40,6 @@ export function quizCtrl($scope: any, $http: angular.IHttpService, $location: an
 
     let quizURL = url.getServerURL() + '/quiz/' + quizId;
 
-    let socket = clickerService.getSocket();
     // console.log('got socket', socket)
 
     // Counters
@@ -33,20 +58,20 @@ export function quizCtrl($scope: any, $http: angular.IHttpService, $location: an
 
     $scope.startQuiz = function() {
 
+        // Local state
         $scope.quizStarted = true;
 
         // Quiz Id is the last part of the current URL
         let activeQuiz: t.IActiveQuiz =  { id: quizId, course: course };
+
+        let socket = clickerService.getSocket();
         socket.emit('quiz-start', activeQuiz);
         console.log('sending', activeQuiz);
 
-        // console.log('Issuing GET', getCurrentURL() + '/start');
-        // $http.get(getCurrentURL() + '/start').success((data: string) => {
-        //     console.log('quiz started');
-        // });
-
+        // Timer
         startTimeCounter();
         resetAnswerCounters();
+        
     }
 
     $scope.stopQuiz = function() {
@@ -63,10 +88,10 @@ export function quizCtrl($scope: any, $http: angular.IHttpService, $location: an
         return $scope.showCorrectAnswer;
     }
 
-    function setCorrectChoiceStyle() {
-        $scope.choices.forEach((_, i) => { $scope.choiceStyle[i] = {} });
-        $scope.choiceStyle[$scope.correctChoice.index] = { 'background-color': '#cdf1c0' };
-    }
+    // function setCorrectChoiceStyle() {
+    //     $scope.choices.forEach((_, i) => { $scope.choiceStyle[i] = {} });
+    //     $scope.choiceStyle[$scope.correctChoice.index] = { 'background-color': '#cdf1c0' };
+    // }
 
 
     $scope.deleteQuiz = function() {
@@ -125,9 +150,5 @@ export function quizCtrl($scope: any, $http: angular.IHttpService, $location: an
         $scope.studentsAnsweredCorrectCount = 0;
         $scope.studentsAnsweredWrongCount   = 0;
     }
-
-
-
-
 
 }

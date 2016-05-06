@@ -170,14 +170,15 @@ export function courseHome(io: SocketIO.Server) {
     return (req: express.Request, res: express.Response, next: any) => {
         let course = req.params.course_id;
         let user = req.user;
-        console.log('Setting up socket');
 
+        // Socket
         if (isInstructor(req)) {
             Socket.initInstructorConnection(course, io);
         } else {
             Socket.initStudentConnection(course, io);
         }
 
+        // Get Course info
         Quiz.findWithCourse(course).then(qs => {
             res.render('classroom', {
                 user,

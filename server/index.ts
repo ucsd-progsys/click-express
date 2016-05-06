@@ -70,7 +70,7 @@ let app           = express();
 let httpServer    = http.createServer(app);
 
 // Socket
-let socketSrv     = socketIO(httpServer);
+let io            = socketIO(httpServer);
 
 
 ////////////////////////////////////////////////////////////////////
@@ -132,7 +132,7 @@ app.use(express.static(path.join(__dirname, '../node_modules')));
 // socket.io ///////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-socketSrv.on('connection', sockets.onConnect);
+io.on('connection', sockets.onConnect);
 
 
 ////////////////////////////////////////////////////////////////////
@@ -151,7 +151,7 @@ app.post('/login'   ,              routes.postLogin);
 app.get ('/logout'  ,              routes.logout);
 
 // Course API
-app.get ('/course/:course_id'         ,              routes.courseHome(socketSrv));
+app.get ('/course/:course_id'         ,              routes.courseHome(io));
 app.get ('/course/:course_id/students', routes.auth, routes.courseStudents);
 app.get ('/course/:course_id/history' , routes.auth, routes.courseHistory);
 
@@ -162,8 +162,8 @@ app.get ('/course/:course_id/quiz/:quiz_id'       , routes.auth, routes.quizHome
 app.get ('/course/:course_id/quiz/:quiz_id/edit'  , routes.auth, routes.quizEdit);
 app.post('/course/:course_id/quiz/:quiz_id/edit'  , routes.auth, routes.quizEditSubmit);
 app.get ('/course/:course_id/quiz/:quiz_id/delete', routes.auth, routes.quizDelete);
-app.get ('/course/:course_id/quiz/:quiz_id/start' , routes.auth, routes.quizStart(socketSrv));
-app.get ('/course/:course_id/quiz/:quiz_id/stop'  , routes.auth, routes.quizStop(socketSrv));
+app.get ('/course/:course_id/quiz/:quiz_id/start' , routes.auth, routes.quizStart(io));
+app.get ('/course/:course_id/quiz/:quiz_id/stop'  , routes.auth, routes.quizStop(io));
 
 
 // Html
@@ -178,6 +178,8 @@ app.get ('/instructor-create.html'   , routes.instructorCreateHTML);
 app.get ('/courses'                  , routes.courses);
 app.get ('/course/:course_id/quizzes', routes.getQuizzes);
 app.get ('/quiz/:quiz_id'            , routes.getQuiz);
+
+app.get ('/course/:course_id/socket' , sockets.initInstructorConnection(io));
 
 
 // User API

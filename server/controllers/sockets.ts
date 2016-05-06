@@ -3,6 +3,9 @@ import * as t        from 'types';
 import * as c        from '../../shared/consts';
 import * as Quiz     from '../models/quiz';
 
+import * as express     from 'express';
+
+
 
 /**
  * Socket Incomming Routes:
@@ -23,25 +26,32 @@ import * as Quiz     from '../models/quiz';
  *
  */
 
-export function initInstructorConnection(course: t.CourseId, io: SocketIO.Server) {
-    // Setup the course namespace
-    let nsp = io.of(course);
+export function initInstructorConnection(io: SocketIO.Server) {
+    return (req: express.Request, res: express.Response) => {
 
-    if (io.nsps['/' + course]) {
-        console.log('namespace exists', course);
-    } else {
+        let course = req.params.course_id;
+
+        // Setup the course namespace
+        let nsp = io.of(course);
+
+        console.log('Creating a socket for course', course);
+
         nsp.on('connection', socket => {
+
             console.log(socket.id, 'connected on namespace', nsp.name);
+
             socket.on('quiz-start', quizStart(nsp));
             socket.on('quiz-stop' , quizStop(nsp));
         });
-    }
+        
+        res.status(200).send(course);
+    };
 }
 
 // XXX: state check
 export function initStudentConnection(course: t.CourseId, io: SocketIO.Server) {
     // TODO: only join if instructor is in
-    io.of(course).on('connection', socket => { 
+    io.of(course).on('connection', socket => {
         console.log('student connected on', course);
     });
 }

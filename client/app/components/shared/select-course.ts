@@ -6,16 +6,18 @@ import {IClickerService}  from '../../services/clicker'
 
 interface ISelectCourseScope extends angular.IScope {
     courses: t.ICourse[];
-    setCourse(i: number): void;    
+    setCourse(i: number): void;
 }
 
 export function selectCourseCtrl($scope: ISelectCourseScope, $location: angular.ILocationService, $http: angular.IHttpService, clickerService: IClickerService) {
-    $scope.courses = [];    
-    $http.get(url.getServerURL() + '/courses').success((data: string) => {        
+    $scope.courses = [];
+    $http.get(url.getServerURL() + '/courses').success((data: string) => {
         $scope.courses = _.pairs(JSON.parse(data)).map(kv => kv[1]);
     });
     $scope.setCourse = function(i: number) {
         let courseId = $scope.courses[i].name;
-        $location.path(['course', courseId].join('/'));     
+        // Set the angular location
+        $location.path(['course', courseId].join('/'));
+        // Set the socket in 'clickerService'
     }
 }
