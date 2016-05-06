@@ -1,7 +1,6 @@
 <div ng-controller="createQuizCtrl">
 
     <div class="padded" md-whiteframe="3">
-    
         <div ng-cloak>
             <md-content>
                 <md-tabs md-dynamic-height md-border-bottom>
@@ -20,7 +19,7 @@
                         </textarea>
 
                         <br/>
-                    
+
                         <!--Choices-->
                         <div class="form-group" data-ng-repeat="choice in choices">
                             <div class="row">
@@ -36,17 +35,17 @@
                                                     uib-btn-radio="charFromInt($index)">{{ charFromInt($index) }}</button>
                                         </span>
                                         <input type="text"
-                                                class="form-control"
-                                                ng-style="choiceStyle[$index]"
-                                                ng-model="choice.text"
-                                                ng-disabled="saving"
-                                                ng-cloak
-                                                placeholder="Enter a choice">
+                                               class="form-control"
+                                               ng-style="choiceStyle[$index]"
+                                               ng-model="choice.text"
+                                               ng-disabled="saving"
+                                               ng-cloak
+                                               placeholder="Enter a choice">
                                     </div><!-- /input-group -->
                                 </div><!-- /.col-lg-6 -->
                             </div>
                         </div>
-                        
+
                         <!--Add/remove options-->
                         <md-button class="md-raised" ng-disabled="saving" ng-click="addNewChoice()">
                             <span class="glyphicon glyphicon-plus"/>
@@ -54,7 +53,7 @@
                         <md-button class="md-raised" ng-disabled="saving" ng-click="removeLastChoice()">
                             <span class="glyphicon glyphicon-minus"/>
                         </md-button>
-                        
+
 
                     </md-content>
                 </md-tab>
@@ -69,15 +68,12 @@
                 </md-tab>
 
                 </md-tabs>
-            </md-content>            
-    
+            </md-content>
         </div>
-        
         <div class="bottom-sheet-demo inset" layout="row" layout-sm="column">
             <md-button class="md-raised" ng-click="saveQuiz()">Commit question</md-button>
             <md-button class="md-warn md-raised" ng-click="clearForms()">Clear forms</md-button>
         </div>
- 
     </div>
 
 </div>

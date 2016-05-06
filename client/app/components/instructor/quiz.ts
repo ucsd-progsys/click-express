@@ -6,7 +6,8 @@ import { quizToHtml     } from '../../../../shared/misc';
 import { getCurrentURL  } from '../../shared/url';
 import { IClickerService } from '../../services/clicker';
 
-export function quizCtrl($scope: any, $http: angular.IHttpService, $timeout: angular.ITimeoutService, clickerService: IClickerService) {
+export function quizCtrl($scope: any, $http: angular.IHttpService, $location: angular.ILocationService, 
+                         $timeout: angular.ITimeoutService, clickerService: IClickerService) {
 
     let course = getCurrentURL().split('/').reverse()[2];
     let quizId = getCurrentURL().split('/').reverse()[0];
@@ -14,7 +15,7 @@ export function quizCtrl($scope: any, $http: angular.IHttpService, $timeout: ang
     let quizURL = url.getServerURL() + '/quiz/' + quizId;
 
     let socket = clickerService.getSocket();
-    console.log('got socket', socket)
+    // console.log('got socket', socket)
 
     // Counters
     $scope.studentsAnsweredCount        = 0;
@@ -51,7 +52,7 @@ export function quizCtrl($scope: any, $http: angular.IHttpService, $timeout: ang
     $scope.stopQuiz = function() {
         $scope.quizStarted = false;
         $http.get(getCurrentURL() + '/stop').success((data: string) => {
-            console.log('quiz started');
+            
         });
 
     }
@@ -69,9 +70,11 @@ export function quizCtrl($scope: any, $http: angular.IHttpService, $timeout: ang
 
 
     $scope.deleteQuiz = function() {
-        $http.get(getCurrentURL() + '/delete').success((data: string) => {
+        console.log(url.getDeleteQuizURL(clickerService.getCourse(), quizId));
+        $http.get(url.getDeleteQuizURL(clickerService.getCourse(), quizId)).success((data: string) => {
             console.log(data);
-            window.location.href = '/course/' + data;
+            $location.path(['course', clickerService.getCourse()].join('/'));
+            // window.location.href = '/course/' + data;
         });
     }
 

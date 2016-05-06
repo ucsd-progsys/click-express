@@ -29,7 +29,6 @@ export function courseCtrl($scope: ICourseScope, $location: angular.ILocationSer
     }
     
     $scope.createQuiz = function() {
-        console.log('to create')
         $location.path(['course', courseId, 'new'].join('/'));
     }
 }

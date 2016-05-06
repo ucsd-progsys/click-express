@@ -1,44 +1,41 @@
 <div class="row">
-        
-    <div class="col-md-9">
-        <div class="panel panel-default">
-            <div class="panel-body" ng-bind-html="quizHtml"/>
-        </div>                               
-    </div>
-            
-    <div class="col-md-3">            
-        <div layout="row">
-            <md-button flex class="md-raised" ng-disabled="quizStarted" ng-click="startQuiz()" >
-                <span class="glyphicon glyphicon-play"/>
-            </md-button>            
-        </div>           
-        <div layout="row">         
-            <md-button flex class="md-raised" ng-disabled="!quizStarted" ng-click="stopQuiz()">
-                <span class="glyphicon glyphicon-stop"/>
-            </md-button>  
-        </div>    
-        <div layout="row">        
-            <md-button flex class="md-raised">View Responses</md-button>
-        </div>                
-        <div layout="row">        
-            <md-button flex class="md-raised md-warn" ng-click="deleteQuiz()">
-                <span class="glyphicon glyphicon-trash"/>
-            </md-button>      
-        </div>       
-        
-        <!-- Status -->
-        <div layout="row">
-            <table flex class="table table-bordered classWithPad">
-                <caption ng-show="quizStarted" ng-cloak>Quiz in progress</caption>
-                <caption ng-show="!quizStarted" ng-cloak>Quiz pending</caption>                    
-                <tr><td>Elapsed Time   </td><td>{{counterString}}               </td></tr>
-                <tr><td>Participants   </td><td>{{totalStudentsInRoom}}         </td></tr>
-                <tr><td>Total answers  </td><td>{{studentsAnsweredCount}}       </td></tr>
-                <tr><td>Correct answers</td><td>{{studentsAnsweredCorrectCount}}</td></tr>
-                <tr><td>Wrong answers  </td><td>{{studentsAnsweredWrongCount}}  </td></tr>
-            </table>
+    <div class="padded" md-whiteframe="3">
+        <div class="col-md-9">
+            <div class="panel panel-default">
+                <div class="panel-body" ng-bind-html="quizHtml"/>
+            </div>
         </div>
-        
-    </div>  
-    
+        <div class="col-md-3">
+            <div layout="row">
+                <md-button flex class="md-raised" ng-disabled="quizStarted" ng-click="startQuiz()" >
+                    <span class="glyphicon glyphicon-play"/>
+                </md-button>
+            </div>
+            <div layout="row">
+                <md-button flex class="md-raised" ng-disabled="!quizStarted" ng-click="stopQuiz()">
+                    <span class="glyphicon glyphicon-stop"/>
+                </md-button>
+            </div>
+            <div layout="row">
+                <md-button flex class="md-raised">View Responses</md-button>
+            </div>
+            <div layout="row">
+                <md-button flex class="md-raised md-warn" ng-click="deleteQuiz()">
+                    <span class="glyphicon glyphicon-trash"/>
+                </md-button>
+            </div>
+            <!-- Status -->
+            <div layout="row">
+                <table flex class="table table-bordered classWithPad">
+                    <caption ng-show="quizStarted" ng-cloak>Quiz in progress</caption>
+                    <caption ng-show="!quizStarted" ng-cloak>Quiz pending</caption>
+                    <tr><td>Elapsed Time   </td><td>{{counterString}}               </td></tr>
+                    <tr><td>Participants   </td><td>{{totalStudentsInRoom}}         </td></tr>
+                    <tr><td>Total answers  </td><td>{{studentsAnsweredCount}}       </td></tr>
+                    <tr><td>Correct answers</td><td>{{studentsAnsweredCorrectCount}}</td></tr>
+                    <tr><td>Wrong answers  </td><td>{{studentsAnsweredWrongCount}}  </td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>

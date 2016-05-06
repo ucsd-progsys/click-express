@@ -13,6 +13,10 @@ export function getPostQuizURL(course: string) {
     return getServerURL() + '/course/' + course + '/quiz/new';
 }
 
+export function getDeleteQuizURL(course: string, quiz: string) {
+    return [getServerURL(), 'course', course, 'quiz', quiz, 'delete'].join('/');
+}
+
 export function getCurrentURL() {
     return window.location.href;
 }

@@ -52,7 +52,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <a class="navbar-brand" href="/home">Click Express</a>
-                    <li><a href="/course/"><b>\{{service.course}}</b></a></li>
+                    <li><a><b ng-bind="getCourse()" ng-click="courseHome()"></b></a></li>
                     <!-- User panel -->
                     <li class="active pull-right"><a href="/logout">Logout <span class="sr-only">(current)</span></a></li>
                     <li class="social pull-right"><a href="/user/{{ user.username }}">{{ user.username }}</a></li>

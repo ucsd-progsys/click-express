@@ -137,7 +137,7 @@ export function createQuizCtrl($scope: ICreateQuizScope, $http: angular.IHttpSer
 
     function makeQuiz(): t.IQuiz {
         return {
-            courseId   : clickerService.course,
+            courseId   : clickerService.getCourse(),
             description: $scope.textarea,
             options    : $scope.choices.map(c => c.text),
             correct    : $scope.correctChoice.id,
@@ -156,7 +156,7 @@ export function createQuizCtrl($scope: ICreateQuizScope, $http: angular.IHttpSer
         }
 
         let quiz = makeQuiz();
-        let course = clickerService.course;
+        let course = clickerService.getCourse();
         
         $http.post(getPostQuizURL(course), quiz).success((quizId: string) => {
             $location.path(['course', course, 'quiz', quizId].join('/'));

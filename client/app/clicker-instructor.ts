@@ -18,7 +18,7 @@ export let click = angular
     .controller('createQuizCtrl'  , createQuizCtrl)
     .controller('quizCtrl'        , quizCtrl)   
 
-    .config(['$routeProvider',
+    .config(['$routeProvider', 
         function($routeProvider) {
             $routeProvider.
                 when('/', {
