@@ -52,7 +52,9 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <a class="navbar-brand" href="/home">Click Express</a>
+                    <a class="navbar-brand">
+                        <span ng-click="goHome()">Click Express</span>
+                    </a>
                     <li><a><b ng-bind="getCourse()" ng-click="courseHome()"></b></a></li>
                     <!-- User panel -->
                     <li class="active pull-right"><a href="/logout">Logout <span class="sr-only">(current)</span></a></li>

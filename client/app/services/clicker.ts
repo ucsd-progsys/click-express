@@ -19,6 +19,8 @@ export interface IClickerService {
 }
 
 export function clickerService($http: angular.IHttpService, $location: angular.ILocationService, $routeParams, $rootScope): IClickerService {
+    
+    console.log('restarting service')
 
 
     return {
